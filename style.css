@@ -1,7 +1,7 @@
 body{
   font-family: 'Nunito', 'Roboto', sans-serif;
   margin: 0;
-  color: #444;
+  color: #bdbdbd;
   background-color: #333435;
 }
 
@@ -40,8 +40,8 @@ body{
 }
 
 .subject-card{
-  box-shadow: 0 0 1em rgba(0, 0, 0, 0.4);
-  background-color: #fff;
+  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.1);
+  background-color: #242424;
   margin: 1em;
   border-radius: 0.5em;
   padding: 1em;
@@ -76,14 +76,14 @@ body{
   display: flex;
   justify-content: space-between;
   border-radius: 0.5em;
-  background-color: #ddd;
-  color: #666;
+  background-color: #383838;
+  color: #aaa;
   margin-top: 1em;
   line-height: 1;
 }
 .subject-bar > div{
   flex-grow: 1;
-  border-right: solid medium white;
+  border-right: solid medium #242424;
   overflow: hidden;
   text-align: center;
   padding: 0.5em 0;

@@ -41,7 +41,7 @@ function createSubjectCardCollapsed(subject) {
   card.className = 'subject-card collaped-sc';
 
   card.innerHTML = '<h2>' + subject.name +
-  '</h2><p style="color: ' + (subject.finalMark>=5 ? '#008000' : '#C0392B') + 
+  '</h2><p style="color: ' + (subject.finalMark>=5 ? '#639c6c' : '#ad5050') + 
   ';">' + subject.finalMark + '</p><div class="subject-bar small-sb">';
 
   var necessaryMark;
