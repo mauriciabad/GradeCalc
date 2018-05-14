@@ -1,16 +1,96 @@
 body{
   font-family: 'Nunito', 'Roboto', sans-serif;
   margin: 0;
+  color: #444;
+  background-color: #ecf0f1;
 }
 
-top-bar{
+.top-bar{
   position: fixed;
   top: 0;
   left: 0;
-  padding: 0.5em;
+  padding: 0 1em;
+  box-sizing: border-box;
   background-color: #27ae60;
+  color: #fff;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.4);
+  height: 3em;
 }
 
-top-bar > img{
+.top-bar > img{
   height: 1.5em;
+}
+
+.dashboard{
+  padding-top: 3em;
+}
+
+.subject-card{
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.4);
+  margin: 1em;
+  border-radius: 0.5em;
+  padding: 1em;
+  max-width: 20em;  
+  text-align: center;
+  transition: 200ms;
+}
+
+.subject-card:hover{
+  box-shadow: 0 0.25em 1.5em rgba(0, 0, 0, 0.4);
+
+}
+
+.subject-card > h2{
+  margin: 0;
+  font-size: 3em;
+  line-height: 1;
+  display: inline-block;
+}
+
+.subject-card > p{
+  font-size: 1.5em;
+  font-weight: lighter;
+  margin: 0 0 0 0.25em;
+  display: inline-block;
+  color: #c0392b;
+}
+
+.subject-bar{
+  display: flex;
+  justify-content: space-between;
+  border-radius: 0.5em;
+  background-color: #ddd;
+  color: #666;
+  margin-top: 1em;
+  line-height: 1;
+}
+.subject-bar > div{
+  flex-grow: 1;
+  border-right: solid medium white;
+  overflow: hidden;
+  text-align: center;
+  padding: 0.5em 0;
+}
+.subject-bar :last-child{
+  border-right: none;
+}
+.subject-bar :first-child{
+  border-radius: 0.5em 0 0 0.5em;
+}
+.subject-bar > div > div{
+  margin-top: 0.5em;
+  color: #2980b9;
+  font-weight: bold;
+}
+
+.done-sb{
+  background-color: #2980b9;
+  color: white;
+}
+.done-sb > div{
+  color: white !important;
 }
