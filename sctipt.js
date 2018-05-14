@@ -57,7 +57,7 @@ function createSubjectCardCollapsed(subject) {
         mark = necessaryMark;
       }
 
-      card.children[2].innerHTML += '<div class="scol' + (isNull ? '' : subject.color) + '" style="flex-grow: ' + subject.evaluation[typeExam][exam]*100 + 
+      card.children[2].innerHTML += '<div class="scol' + (isNull ? 'N' : subject.color) + '" style="flex-grow: ' + subject.evaluation[typeExam][exam]*100 + 
       '">' + exam + '<div>' + mark + '</div></div>';
 
     }
