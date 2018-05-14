@@ -1,0 +1,16 @@
+body{
+  font-family: 'Nunito', 'Roboto', sans-serif;
+  margin: 0;
+}
+
+top-bar{
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 0.5em;
+  background-color: #27ae60;
+}
+
+top-bar > img{
+  height: 1.5em;
+}
