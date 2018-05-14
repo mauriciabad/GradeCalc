@@ -15,27 +15,27 @@
     <img src="media/user-circle.svg" alt="Profile">
   </div>
 
-  <div class="dashboard">
-    <div class="subject-card collaped-sc">
+  <div id="dashboard" class="dashboard">
+    <div id="card0" class="subject-card collaped-sc" onclick="openSubject(this.id)">
       <h2>AC</h2>
-      <p>3.4</p>
+      <p style="color: #c0392b;">3.4</p>
       <div class="subject-bar small-sb">
-        <div class="done-sb" style="flex-grow: 20">C1<div>2.3</div></div>
-        <div class="done-sb" style="flex-grow: 20">C2<div>5.0</div></div>
+        <div style="flex-grow: 20" class="scol1">C1<div>2.3</div></div>
+        <div style="flex-grow: 20" class="scol1">C2<div>5.0</div></div>
         <div style="flex-grow: 40">F<div>6</div></div>
-        <div class="done-sb" style="flex-grow: 5">L1<div>9.5</div></div>
-        <div class="done-sb" style="flex-grow: 5">L2<div>4.3</div></div>
-        <div class="done-sb" style="flex-grow: 5">L3<div>7.5</div></div>
-        <div style="flex-grow: 5">L4</div>
+        <div style="flex-grow: 5" class="scol1">L1<div>9.5</div></div>
+        <div style="flex-grow: 5" class="scol1">L2<div>4.3</div></div>
+        <div style="flex-grow: 5" class="scol1">L3<div>7.5</div></div>
+        <div style="flex-grow: 5">L4<div>5</div></div>
       </div>
     </div>
-    <div class="subject-card collaped-sc">
+    <div id="card1" class="subject-card collaped-sc">
       <h2>IDI</h2>
       <p style="color: green;">6.1</p>
       <div class="subject-bar small-sb">
-        <div class="done2-sb" style="flex-grow: 20">C1<div>2.3</div></div>
-        <div class="done2-sb" style="flex-grow: 20">C2<div>5.0</div></div>
-        <div style="flex-grow: 40">F<div>6</div></div>
+        <div class="scol2" style="flex-grow: 20">C1<div>8.5</div></div>
+        <div class="scol2" style="flex-grow: 20">C2<div>9</div></div>
+        <div style="flex-grow: 40">F<div>0</div></div>
       </div>
     </div>
   </div>

@@ -1,0 +1,20 @@
+{
+  "id": "2E4TDt64s",
+  "name": "IES",
+  "fullName": "Introducció a l'Enginyeria del Software",
+  "evaluation": {
+    "Teoria": {
+      "T1": 0.25,
+      "T2": 0.15,
+      "T3": 0.25
+    },
+    "Lab": {
+      "C1": 0.1,
+      "C2": 0.15,
+      "P": 0.1
+    }
+  },
+  "color": 1,
+  "uni": "UPC",
+  "faculty": "FIB"
+}
