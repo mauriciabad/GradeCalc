@@ -1,8 +1,8 @@
 body{
   font-family: 'Nunito', 'Roboto', sans-serif;
   margin: 0;
-  color: #bdbdbd;
-  background-color: #333435;
+  color: #444;
+  background-color: #dce0e0;
 }
 
 .top-bar{
@@ -11,7 +11,7 @@ body{
   left: 0;
   padding: 0 1em;
   box-sizing: border-box;
-  background-color: #4b4b4b;
+  background-color: #6254ce;
   color: #fff;
   width: 100%;
   display: flex;
@@ -40,8 +40,8 @@ body{
 }
 
 .subject-card{
-  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.1);
-  background-color: #242424;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.4);
+  background-color: #e8e8e8;
   margin: 1em;
   border-radius: 0.5em;
   padding: 1em;
@@ -76,14 +76,14 @@ body{
   display: flex;
   justify-content: space-between;
   border-radius: 0.5em;
-  background-color: #383838;
-  color: #aaa;
+  background-color: #ddd;
+  color: #666;
   margin-top: 1em;
   line-height: 1;
 }
 .subject-bar > div{
   flex-grow: 1;
-  border-right: solid medium #242424;
+  border-right: solid medium white;
   overflow: hidden;
   text-align: center;
   padding: 0.5em 0;
