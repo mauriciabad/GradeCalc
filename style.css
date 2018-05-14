@@ -26,7 +26,11 @@ body{
 }
 
 .dashboard{
-  padding-top: 3em;
+  padding-top: 4em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .subject-card{
@@ -34,7 +38,8 @@ body{
   margin: 1em;
   border-radius: 0.5em;
   padding: 1em;
-  max-width: 20em;  
+  max-width: 20em;
+  flex-basis: 15em;
   text-align: center;
   transition: 200ms;
 }
@@ -92,5 +97,12 @@ body{
   color: white;
 }
 .done-sb > div{
+  color: white !important;
+}
+.done2-sb{
+  background-color: #9464a8;
+  color: white;
+}
+.done2-sb > div{
   color: white !important;
 }
