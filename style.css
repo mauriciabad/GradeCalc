@@ -3,6 +3,7 @@ body{
   margin: 0;
   color: #444;
   background-color: #dce0e0;
+  text-align: center;
 }
 
 .top-bar{
@@ -37,6 +38,21 @@ body{
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  max-width: 70em;
+  margin: 0 auto;
+}
+
+.add-button > img{
+  height: 4em;
+  border-radius: 50%;
+}
+
+.add-button{
+  border: none;
+  background-color: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  margin: 2em 0;
 }
 
 .subject-card{
