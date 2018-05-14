@@ -67,7 +67,7 @@ button{
   flex-basis: 15em;
   flex-grow: 1;
   text-align: center;
-  transition: 200ms;
+  transition: all 200ms;
 }
 
 .subject-card:hover{
@@ -162,4 +162,27 @@ button{
   height: 2em;
   padding: 1em;
   margin-bottom: -1em;
+}
+
+.grades-input > div{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.grades-input > div > div{
+  
+}
+.grades-input span{
+  margin-right: 0.5em;
+}
+.grades-input input{
+  border: none;
+  background-color: #cfcfcf;
+  border-radius: 0.75em;
+  color: #333;
+  padding: 0.5em 0;
+  line-height: 1;
+  width: 3em;
+  box-sizing: border-box;
+  text-align: center;
 }
