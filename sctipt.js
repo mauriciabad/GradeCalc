@@ -18,7 +18,7 @@ function createSubjectCardCollapsed(subject) {
 
   card.innerHTML = '<h2>' + subject.name +
   '</h2><p style="color: ' + (subject.finalMark>=5 ? '#008000' : '#C0392B') + 
-  ';">' + subject.finalMark + '</p><div class="subject-bar small-sb">';
+  ';">' + subject.finalMark + '</p><div class="subject-bar">';
 
   var necessaryMark;
   if (subject.finalMark < 5) necessaryMark = round(gradeCalcAllEqual(subject.grades, subject.evaluation, subject.finalMark));

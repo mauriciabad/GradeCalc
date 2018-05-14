@@ -5,6 +5,11 @@ body{
   background-color: #dce0e0;
   text-align: center;
 }
+button{
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
 
 .top-bar{
   position: fixed;
@@ -48,11 +53,8 @@ body{
 }
 
 .add-button{
-  border: none;
-  background-color: transparent;
-  border-radius: 50%;
-  cursor: pointer;
   margin: 2em 0;
+  border-radius: 50%;
 }
 
 .subject-card{
@@ -66,7 +68,6 @@ body{
   flex-grow: 1;
   text-align: center;
   transition: 200ms;
-  cursor: pointer;
 }
 
 .subject-card:hover{
@@ -149,3 +150,16 @@ body{
   color: white;
 }
 
+
+.subject-action-bar{
+  border-top: solid thin #ccc;
+  margin-top: 1em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.subject-action-bar img{
+  height: 2em;
+  padding: 1em;
+  margin-bottom: -1em;
+}
