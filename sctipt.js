@@ -1,39 +1,15 @@
 var dashboard = document.getElementById('dashboard');
+var subjectCookies = [];
 
-createSubjectCardCollapsed(
-  {
-    "id": "2E4TDt64s",
-    "name": "IES",
-    "finalMark": 2.925,
-    "grades": {
-      "Teoria": {
-        "T1": 5.5,
-        "T2": null,
-        "T3": null
-      },
-      "Lab": {
-        "C1": 5.5,
-        "C2": null,
-        "P": 10
-      }
-    },
-    "evaluation": {
-      "Teoria": {
-        "T1": 0.25,
-        "T2": 0.15,
-        "T3": 0.25
-      },
-      "Lab": {
-        "C1": 0.1,
-        "C2": 0.15,
-        "P": 0.1
-      }
-    },
-    "color": 3,
-    "uni": "UPC",
-    "faculty": "FIB"
+loadData();
+
+function loadData(){
+  subjectCookies = [];
+  getAllCookies();
+  for (let i = 0; i < subjectCookies.length; i++) {
+    createSubjectCardCollapsed(subjectCookies[i]);    
   }
-);
+}
 
 function createSubjectCardCollapsed(subject) {
   var card = document.createElement('div');
@@ -81,3 +57,28 @@ function gradeCalcAllEqual(grades, evaluation, finalMark) {
 function round(n) {
     return Math.floor(Math.round(n*100))/100;
 }
+
+function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getAllCookies() {
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf('subject-') == 0) {
+      while (c.charAt(0) != '=') {
+        c = c.substring(1);
+      }
+      c = c.substring(1);
+      subjectCookies.push(JSON.parse(c.substring(name.length, c.length)))
+    }
+  }
+} 
