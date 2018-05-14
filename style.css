@@ -41,7 +41,7 @@ body{
 
 .subject-card{
   box-shadow: 0 0 1em rgba(0, 0, 0, 0.4);
-  background-color: #e8e8e8;
+  background-color: #efefef;
   margin: 1em;
   border-radius: 0.5em;
   padding: 1em;
@@ -76,14 +76,14 @@ body{
   display: flex;
   justify-content: space-between;
   border-radius: 0.5em;
-  background-color: #ddd;
+  background-color: #ccc;
   color: #666;
   margin-top: 1em;
   line-height: 1;
 }
 .subject-bar > div{
   flex-grow: 1;
-  border-right: solid medium white;
+  border-right: solid medium #efefef;
   overflow: hidden;
   text-align: center;
   padding: 0.5em 0;
