@@ -8,55 +8,41 @@
   <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,700" rel="stylesheet">
   <link href="style.css" rel="stylesheet" type="text/css">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#6254CE">
+  <meta name="theme-color" content="#3D3D3D">
 </head>
 <body>
   <div class="top-bar">
-    <img src="media/archive.svg" alt="Archivado">
+    <button><img src="media/user-circle.svg" alt="Perfil"></button>
     <h1>Grade Calc</h1>
-    <img src="media/user-circle.svg" alt="Perfil">
+    <button><img src="media/edit.svg" alt="Editar"></button>
   </div>
 
   <div id="dashboard" class="dashboard">
-    <div id="card0" class="subject-card collaped-sc">
-      <h2>AC</h2>
-      <p style="color: #c0392b;">3.4</p>
-      <div class="subject-bar">
-        <div style="flex-grow: 20" class="scol1">C1<div>2.3</div></div>
-        <div style="flex-grow: 20" class="scol1">C2<div>5.0</div></div>
-        <div style="flex-grow: 40">F<div>6</div></div>
-        <div style="flex-grow: 5" class="scol1">L1<div>9.5</div></div>
-        <div style="flex-grow: 5" class="scol1">L2<div>4.3</div></div>
-        <div style="flex-grow: 5" class="scol1">L3<div>7.5</div></div>
-        <div style="flex-grow: 5">L4<div>5</div></div>
-      </div>
-    </div>
-    <div id="card1" class="subject-card collaped-sc">
+    <div id="card1" class="subject-card expanded-sc" onkeydown="updateCard(this)">
       <h2>IDI</h2>
-      <p style="color: #008000;">6.1</p>
+      <p style="color: #5a9764;">6.63</p>
       <div class="subject-bar">
-        <div class="scol2" style="flex-grow: 20">C1<div>8.5</div></div>
-        <div class="scol2" style="flex-grow: 20">C2<div>9</div></div>
-        <div style="flex-grow: 40">F<div>0</div></div>
+        <div class="scol2" style="flex-grow: 25">T1<div>8.5</div></div>
+        <div class="scol2" style="flex-grow: 50">T2<div>9</div></div>
+        <div style="flex-grow: 25">L<div>0</div></div>
       </div>
-      <form action="" class="grades-input">
+      <div class="grades-input">
         <h3>Teoria</h3>
         <div>
-          <div><span>C1:</span><input type="number"></div>
-          <div><span>C2:</span><input type="number"></div>
-          <div><span>C3:</span><input type="number"></div>
-          <div><span>C4:</span><input type="number"></div>
-          <div><span>C5:</span><input type="number"></div>
-          <div><span>C5:</span><input type="number"></div>
-          <div><span>C5:</span><input type="number"></div>
+          <div><span>T1:</span><input type="number" class="scol2" placeholder="0" value="8.5" autocomplete="off"></div>
+          <div><span>T2:</span><input type="number" class="scol2" placeholder="0" value="9"  autocomplete="off"></div>
         </div>
-      </form>
-      <div class="subject-action-bar">
+        <h3>Laboratorio</h3>
+          <div>
+            <div><span>L:</span><input type="number" class="scolN2" placeholder="0"  autocomplete="off"></div>
+          </div>
+        </div>
+      <!-- <div class="subject-action-bar">
         <button><img src="media/bin.svg" alt="Eliminar"></button>
         <button><img src="media/tag.svg" alt="Editar"></button>
         <button><img src="media/folder.svg" alt="Archivar"></button>
         <button><img src="media/save.svg" alt="Guardar"></button>
-      </div>
+      </div> -->
     </div>
   </div>
   <button class="add-button" >
