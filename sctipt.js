@@ -44,6 +44,9 @@ function createSubjectCardCollapsed(subject) {
   '</h2><p style="color: ' + (subject.finalMark>=5 ? '#008000' : '#C0392B') + 
   ';">' + subject.finalMark + '</p><div class="subject-bar small-sb">';
 
+  var necessaryMark;
+  if (subject.finalMark < 5) necessaryMark = round(gradeCalcAllEqual(subject.grades, subject.evaluation, subject.finalMark));
+  else necessaryMark = 0;
 
   for (const typeExam in subject.grades) {
     for (const exam in subject.grades[typeExam]) {
@@ -51,7 +54,7 @@ function createSubjectCardCollapsed(subject) {
       var isNull = mark === null;
       
       if (isNull) {
-        mark = '?';
+        mark = necessaryMark;
       }
 
       card.children[2].innerHTML += '<div class="scol' + (isNull ? '' : subject.color) + '" style="flex-grow: ' + subject.evaluation[typeExam][exam]*100 + 
@@ -63,4 +66,18 @@ function createSubjectCardCollapsed(subject) {
   card.innerHTML += '</div></div>';
 
   dashboard.appendChild(card);
+}
+
+function gradeCalcAllEqual(grades, evaluation, finalMark) {
+    var sumNull = 0;
+    for (const typeExam in grades) {
+        for (const exam in grades[typeExam]) {
+            if (grades[typeExam][exam] === null) sumNull += evaluation[typeExam][exam];
+        }
+    }
+    return (5-finalMark)/sumNull;
+}
+
+function round(n) {
+    return Math.floor(Math.round(n*100))/100;
 }
