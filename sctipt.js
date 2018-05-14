@@ -1,7 +1,40 @@
 var dashboard = document.getElementById('dashboard');
 var subjectCookies = [];
 
-loadData();
+//loadData();
+createSubjectCardCollapsed({
+  "id": "2E4TDt64s",
+  "name": "IES",
+  "finalMark": 2.925,
+  "grades": {
+    "Teoria": {
+      "T1": 5.5,
+      "T2": null,
+      "T3": null
+    },
+    "Lab": {
+      "C1": 5.5,
+      "C2": null,
+      "P": 10
+    }
+  },
+  "evaluation": {
+    "Teoria": {
+      "T1": 0.25,
+      "T2": 0.15,
+      "T3": 0.25
+    },
+    "Lab": {
+      "C1": 0.1,
+      "C2": 0.15,
+      "P": 0.1
+    }
+  },
+  "color": 3,
+  "uni": "UPC",
+  "faculty": "FIB"
+}
+);
 
 function loadData(){
   subjectCookies = [];
