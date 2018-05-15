@@ -212,8 +212,14 @@ button:active{
   border: none;
   border-radius: 0.5em;
   padding: 0.5em 0;
+  height: 2em;
   line-height: 1;
   width: 3em;
   box-sizing: border-box;
   text-align: center;
+  vertical-align: middle;
+  transition: border 300ms ease-out, background-color 200ms ease-out, color 200ms ease-out;
+}
+.grades-input input:invalid{
+  border: solid medium#cf5155;
 }

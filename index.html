@@ -18,23 +18,23 @@
   </div>
 
   <div id="dashboard" class="dashboard">
-    <div id="card1" class="subject-card expanded-sc" onkeydown="updateCard(this)">
+    <div id="card-a0" class="subject-card expanded-sc" onkeydown="updateCard(this)">
       <h2>IDI</h2>
       <p style="color: #5a9764;">6.63</p>
       <div class="subject-bar">
-        <div class="scol2" style="flex-grow: 25">T1<div>8.5</div></div>
-        <div class="scol2" style="flex-grow: 50">T2<div>9</div></div>
-        <div style="flex-grow: 25">L<div>0</div></div>
+        <div class="scol2" style="flex-grow: 25">T1<div id="bar-a0TeoriaT1">8.5</div></div>
+        <div class="scol2" style="flex-grow: 50">T2<div id="bar-a0TeoriaT2">9</div></div>
+        <div style="flex-grow: 25">L<div id="bar-a0LaboratorioL">0</div></div>
       </div>
       <div class="grades-input">
         <h3>Teoria</h3>
         <div>
-          <div><span>T1:</span><input type="number" class="scol2" placeholder="0" value="8.5" autocomplete="off"></div>
-          <div><span>T2:</span><input type="number" class="scol2" placeholder="0" value="9"  autocomplete="off"></div>
+          <div><span>T1:</span><input type="number" id="in-a0TeoriaT1" class="scol2" data-examtype="Teoria" data-exam="T1" placeholder="0" value="8.5" autocomplete="off" step="0.01" min="0" max="10"></div>
+          <div><span>T2:</span><input type="number" id="in-a0TeoriaT2" class="scol2" data-examtype="Teoria" data-exam="T2" placeholder="0" placeholder="0" value="9" autocomplete="off" step="0.01" min="0" max="10"></div>
         </div>
         <h3>Laboratorio</h3>
           <div>
-            <div><span>L:</span><input type="number" class="scolN2" placeholder="0"  autocomplete="off"></div>
+            <div><span>L:</span><input type="number" id="in-a0LaboratorioL" class="scolN2" data-examtype="Laboratorio" data-exam="L" placeholder="0" placeholder="0" autocomplete="off" step="0.01" min="0" max="10"></div>
           </div>
         </div>
       <!-- <div class="subject-action-bar">
