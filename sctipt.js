@@ -124,6 +124,7 @@ function updateCard(card) {
       updateFinalMark(subjects[id]);
       updateNecesaryMark(subjects[id]);
       card.children[1].textContent = subjects[id].finalMark;
+      card.children[1].style.color = (subjects[id].finalMark>=5 ? '#5a9764' : '#b9574c');
 
       if(mark == undefined) {
         barElem.textContent = subjects[id].necesaryMark;
