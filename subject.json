@@ -1,7 +1,8 @@
 {
-  "id": "2E4TDt64s",
+  "id": "a1",
   "name": "IES",
-  "finalMark": 2.925,
+  "finalMark": 2.93,
+  "necesaryMark": 2.7,
   "grades": {
     "Teoria": {
       "T1": 5.5,

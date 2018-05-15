@@ -1,8 +1,8 @@
 var dashboard = document.getElementById('dashboard');
 var subjectCookies = [];
 var subjects = {};
-subjects['a1'] = {"name": "AC","finalMark": 3.92,"necesaryMark": 2.7,"grades": {"Teoria": {"C1": 6.3,"C2": 5.5,"C3": undefined},"Laboratorio": {"L": 8}},"evaluation": {"Teoria": {"C1": 0.15,"C2": 0.25,"C3": 0.4},"Laboratorio": {"L": 0.2}},"color": 4,"uni": "UPC","faculty": "FIB"};
-subjects['a2'] = {"name": "IES","finalMark": 2.93,"necesaryMark": 3.76,"grades": {"Teoria": {"T1": 5.5,"T2": undefined,"T3": undefined},"Lab": {"C1": 5.5,"C2": undefined,"P": 10}},"evaluation": {"Teoria": {"T1": 0.25,"T2": 0.15,"T3": 0.25},"Lab": {"C1": 0.1,"C2": 0.15,"P": 0.1}},"color": 3,"uni": "UPC","faculty": "FIB"};
+subjects['a1'] = {"name": "AC","finalMark": 3.92,"necesaryMark": 2.7,"grades": {"Teoria": {"C1": 6.3,"C2": 5.5,"C3": null},"Laboratorio": {"L": 8}},"evaluation": {"Teoria": {"C1": 0.15,"C2": 0.25,"C3": 0.4},"Laboratorio": {"L": 0.2}},"color": 4,"uni": "UPC","faculty": "FIB"};
+subjects['a2'] = {"name": "IES","finalMark": 2.93,"necesaryMark": 3.76,"grades": {"Teoria": {"T1": 5.5,"T2": null,"T3": null},"Lab": {"C1": 5.5,"C2": null,"P": 10}},"evaluation": {"Teoria": {"T1": 0.25,"T2": 0.15,"T3": 0.25},"Lab": {"C1": 0.1,"C2": 0.15,"P": 0.1}},"color": 3,"uni": "UPC","faculty": "FIB"};
 
 //loadData();
 for (const id in subjects) {
@@ -34,11 +34,11 @@ function createSubjectCardCollapsed(id, subject) {
     
     for (const exam in subject.grades[examType]) {
       let mark = subject.grades[examType][exam];
-      let isUndefined = mark == undefined;     
+      let isNull = mark == null;     
       
-      card.children[2].innerHTML += '<div class="scol' + (isUndefined ? 'N' : subject.color) + '" style="flex-grow: ' + subject.evaluation[examType][exam]*100 + '">' + exam + '<div id="bar-'+ id + examType + exam +'">' + (isUndefined ? necesaryMark : mark) + '</div></div>';
+      card.children[2].innerHTML += '<div class="scol' + (isNull ? 'N' : subject.color) + '" style="flex-grow: ' + subject.evaluation[examType][exam]*100 + '">' + exam + '<div id="bar-'+ id + examType + exam +'">' + (isNull ? necesaryMark : mark) + '</div></div>';
 
-      card.children[3].lastChild.innerHTML += '<div><span>'+ exam +':</span><input type="number" id="in-'+ id + examType + exam +'" data-examtype="'+ examType +'" data-exam="'+ exam +'" placeholder="'+ necesaryMark +'" value="'+ subject.grades[examType][exam] +'" class="scol' + (isUndefined ? 'N2' : subject.color) + '" autocomplete="off" step="0.01" min="0" max="10"></div>';
+      card.children[3].lastChild.innerHTML += '<div><span>'+ exam +':</span><input type="number" id="in-'+ id + examType + exam +'" data-examtype="'+ examType +'" data-exam="'+ exam +'" placeholder="'+ necesaryMark +'" value="'+ subject.grades[examType][exam] +'" class="scol' + (isNull ? 'N2' : subject.color) + '" autocomplete="off" step="0.01" min="0" max="10"></div>';
     }
   }
 
@@ -56,7 +56,7 @@ function gradeCalcAllEqual(grades, evaluation, finalMark) {
     let sumUndoneExams = 0;
     for (const examType in grades) {
       for (const exam in grades[examType]) {
-        if (grades[examType][exam] == undefined) sumUndoneExams += evaluation[examType][exam];
+        if (grades[examType][exam] == null) sumUndoneExams += evaluation[examType][exam];
       }
     }
     
@@ -67,7 +67,7 @@ function gradeCalcAllEqual(grades, evaluation, finalMark) {
     subject.finalMark = 0;
     for (const examType in subject.grades) {
       for (const exam in subject.grades[examType]) {    
-        if (subject.grades[examType][exam] != undefined)  subject.finalMark += subject.grades[examType][exam] * subject.evaluation[examType][exam];
+        if (subject.grades[examType][exam] != null)  subject.finalMark += subject.grades[examType][exam] * subject.evaluation[examType][exam];
       }
     }
     subject.finalMark = round(subject.finalMark);
@@ -77,7 +77,7 @@ function gradeCalcAllEqual(grades, evaluation, finalMark) {
 }
 
 function round(n) {
-  return (n==='' || n== undefined) ? undefined : Math.floor(Math.round(n*100))/100;
+  return (n==='' || n== null) ? null : Math.floor(Math.round(n*100))/100;
 }
 
 function setCookie(cname, cvalue, exdays) {
@@ -126,7 +126,7 @@ function updateCard(card) {
       card.children[1].textContent = subjects[id].finalMark;
       card.children[1].style.color = (subjects[id].finalMark>=5 ? '#5a9764' : '#b9574c');
 
-      if(mark == undefined) {
+      if(mark == null) {
         barElem.textContent = subjects[id].necesaryMark;
         barElem.parentElement.className = 'scolN';
         inElem.className = 'scolN2';
