@@ -36,7 +36,7 @@ function createSubjectCardCollapsed(id, subject) {
       let mark = subject.grades[examType][exam];
       let isNull = mark == null;     
       
-      card.children[2].innerHTML += '<div onclick="selecciona(id, examType, exam)" class="scol' + (isNull ? 'N' : subject.color) + '" style="flex-grow: ' + subject.evaluation[examType][exam]*100 + '">' + exam + '<div id="bar-'+ id + examType + exam +'">' + (isNull ? necesaryMark : mark) + '</div></div>';
+      card.children[2].innerHTML += '<div onclick="selectInput(\'in-' + id + examType + exam + '\')" class="scol' + (isNull ? 'N' : subject.color) + '" style="flex-grow: ' + subject.evaluation[examType][exam]*100 + '">' + exam + '<div id="bar-'+ id + examType + exam +'">' + (isNull ? necesaryMark : mark) + '</div></div>';
       card.children[3].lastChild.innerHTML += '<div><span>'+ exam +':</span><input type="number" id="in-'+ id + examType + exam +'" data-examtype="'+ examType +'" data-exam="'+ exam +'" placeholder="'+ necesaryMark +'" value="'+ subject.grades[examType][exam] +'" class="scol' + (isNull ? 'N2' : subject.color) + '" autocomplete="off" step="0.01" min="0" max="10"></div>';
     }
   }
@@ -46,9 +46,8 @@ function createSubjectCardCollapsed(id, subject) {
   dashboard.appendChild(card);
 }
 
-function selecciona(id, examType, exam) {
-  document.getElementById(`in-${id}${examType}${exam}`).select();
-  //focus(); el problema es que lo selecciona al principio -.-
+function selectInput(idInput) {
+  document.getElementById(idInput).select();
 }
 
 function updateNecesaryMark(subject) {
