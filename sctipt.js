@@ -2,7 +2,7 @@ var dashboard = document.getElementById('dashboard');
 var subjectCookies = [];
 var subjects = {};
 subjects['a1'] = {"name": "AC","finalMark": 0,"necesaryMark": 5,"grades": {"Teoria": {"C1": null,"C2": null,"C3": null},"Laboratorio": {"L": null}},"evaluation": {"Teoria": {"C1": 0.15,"C2": 0.25,"C3": 0.4},"Laboratorio": {"L": 0.2}},"color": 4,"uni": "UPC","faculty": "FIB"};
-subjects['a2'] = {"name": "IES","finalMark": 0,"necesaryMark": 5,"grades": {"Teoria": {"FHC1": null,"FHC2": null,"FHC3": null},"Lab": {"C1": null,"C2": null,"P": null}},"evaluation": {"Teoria": {"T1": 0.25,"T2": 0.15,"T3": 0.25},"Lab": {"C1": 0.1,"C2": 0.15,"P": 0.1}},"color": 3,"uni": "UPC","faculty": "FIB"};
+subjects['a2'] = {"name": "IES","finalMark": 0,"necesaryMark": 5,"grades": {"Teoria": {"FHC1": null,"FHC2": null,"FHC3": null},"Lab": {"C1": null,"C2": null,"P": null}},"evaluation": {"Teoria": {"FHC1": 0.25,"FHC2": 0.15,"FHC3": 0.25},"Lab": {"C1": 0.1,"C2": 0.15,"P": 0.1}},"color": 3,"uni": "UPC","faculty": "FIB"};
 subjects['a3'] = {
   "id": "a3",
   "name": "IDI",
