@@ -4,9 +4,9 @@
   "fullName": "Introducció a l'Enginyeria del Software",
   "evaluation": {
     "Teoria": {
-      "T1": 0.25,
-      "T2": 0.15,
-      "T3": 0.25
+      "FHC1": 0.25,
+      "FHC2": 0.15,
+      "FHC3": 0.25
     },
     "Lab": {
       "C1": 0.1,

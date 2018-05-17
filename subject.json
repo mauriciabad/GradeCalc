@@ -5,9 +5,9 @@
   "necesaryMark": 2.7,
   "grades": {
     "Teoria": {
-      "T1": 5.5,
-      "T2": null,
-      "T3": null
+      "FHC1": 5.5,
+      "FHC2": null,
+      "FHC3": null
     },
     "Lab": {
       "C1": 5.5,
