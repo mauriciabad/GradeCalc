@@ -16,6 +16,9 @@ subjects['a3'] = {
     },
     "Lab": {
       "L": null
+    },
+    "Extra": {
+      "E": 0
     }
   },
   "evaluation": {
@@ -25,6 +28,9 @@ subjects['a3'] = {
     },
     "Lab": {
       "L": 0.25
+    },
+    "Extra": {
+      "E": 0.025
     }
   },
   "color": 4,
@@ -53,6 +59,9 @@ subjects['a4'] = {
       "s6": null,
       "s7": null,
       "ExL": null
+    },
+    "Extra": {
+      "E": 0
     }
   },
   "evaluation": {
@@ -70,6 +79,9 @@ subjects['a4'] = {
       "s6": 0.00892857142,
       "s7": 0.00892857142,
       "ExL": 0.1875
+    },
+    "Extra": {
+      "E": 0.1
     }
   },
   "color": 5,
