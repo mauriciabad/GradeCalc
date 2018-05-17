@@ -33,7 +33,7 @@ subjects['a3'] = {
       "E": 0.025
     }
   },
-  "color": 4,
+  "color": 2,
   "uni": "UPC",
   "faculty": "FIB"
 };
