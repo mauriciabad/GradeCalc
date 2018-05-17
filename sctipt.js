@@ -3,6 +3,79 @@ var subjectCookies = [];
 var subjects = {};
 subjects['a1'] = {"name": "AC","finalMark": 3.92,"necesaryMark": 2.7,"grades": {"Teoria": {"C1": 6.3,"C2": 5.5,"C3": null},"Laboratorio": {"L": 8}},"evaluation": {"Teoria": {"C1": 0.15,"C2": 0.25,"C3": 0.4},"Laboratorio": {"L": 0.2}},"color": 4,"uni": "UPC","faculty": "FIB"};
 subjects['a2'] = {"name": "IES","finalMark": 2.93,"necesaryMark": 3.76,"grades": {"Teoria": {"T1": 5.5,"T2": null,"T3": null},"Lab": {"C1": 5.5,"C2": null,"P": 10}},"evaluation": {"Teoria": {"T1": 0.25,"T2": 0.15,"T3": 0.25},"Lab": {"C1": 0.1,"C2": 0.15,"P": 0.1}},"color": 3,"uni": "UPC","faculty": "FIB"};
+subjects['a3'] = {
+  "id": "a3",
+  "name": "IDI",
+  "fullName": "Interacció i Disseny d'Interfícies",
+  "finalMark": 0,
+  "necesaryMark": 5,
+  "grades": {
+    "Teoria": {
+      "T1": null,
+      "T2": null
+    },
+    "Lab": {
+      "L": null
+    }
+  },
+  "evaluation": {
+    "Teoria": {
+      "T1": 0.25,
+      "T2": 0.5
+    },
+    "Lab": {
+      "L": 0.25
+    }
+  },
+  "color": 4,
+  "uni": "UPC",
+  "faculty": "FIB"
+};
+
+subjects['a4'] = {
+  "id": "a4",
+  "name": "XC",
+  "fullName": "Xarxes de Computadors",
+  "finalMark": 0,
+  "necesaryMark": 5,
+  "grades": {
+    "Teoria": {
+      "T1": null,
+      "T2": null,
+      "T3": null
+    },
+    "Lab": {
+      "s1": null,
+      "s2": null,
+      "s3": null,
+      "s4": null,
+      "s5": null,
+      "s6": null,
+      "s7": null,
+      "ExL": null
+    }
+  },
+  "evaluation": {
+    "Teoria": {
+      "T1": 0.3,
+      "T2": 0.3,
+      "T3": 0.15
+    },
+    "Lab": {
+      "s1": 0.00892857142,
+      "s2": 0.00892857142,
+      "s3": 0.00892857142,
+      "s4": 0.00892857142,
+      "s5": 0.00892857142,
+      "s6": 0.00892857142,
+      "s7": 0.00892857142,
+      "ExL": 0.1875
+    }
+  },
+  "color": 5,
+  "uni": "UPC",
+  "faculty": "FIB"
+};
 
 //loadData();
 for (const id in subjects) {

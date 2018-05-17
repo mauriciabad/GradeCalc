@@ -1,0 +1,17 @@
+{
+  "id": "a3",
+  "name": "IDI",
+  "fullName": "Interacció i Disseny d'Interfícies",
+  "evaluation": {
+    "Teoria": {
+      "T1": 0.25,
+      "T2": 0.5
+    },
+    "Lab": {
+      "L": 0.25
+    }
+  },
+  "color": 4,
+  "uni": "UPC",
+  "faculty": "FIB"
+}
