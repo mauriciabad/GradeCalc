@@ -136,7 +136,7 @@ function selectInput(idInput) {
 }
 
 function updateNecesaryMark(subject) {
-  subject.necesaryMark = round(gradeCalcAllEqual(subject.grades, subject.evaluation,subject.finalMark));
+  subject.necesaryMark = Math.max(0, round(gradeCalcAllEqual(subject.grades, subject.evaluation,subject.finalMark)));
   return subject.necesaryMark;
 }
 
