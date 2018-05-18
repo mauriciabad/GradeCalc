@@ -105,8 +105,9 @@ function loadData(){
 function createSubjectCardCollapsed(id, subject) {
   var card = document.createElement('div');
   card.id = 'card-' + id;
-  card.className = 'subject-card collaped-sc';
+  card.className = 'subject-card collapsed-sc';
   card.addEventListener('keyup', function(){updateCard(this);});
+  card.addEventListener("click", function(){Effect(event, this)});
 
   card.innerHTML = '<h2>' + subject.name +
   '</h2><p style="color: ' + (subject.finalMark>=5 ? '#5a9764' : '#b9574c') + 
@@ -235,5 +236,22 @@ function updateCard(card) {
         inUndone[j].placeholder = subjects[id].necesaryMark;
       }
     }
+  }
+}
+/*
+  Se ha de añadir que al clicar en la nota en el subject-bar que se abra!
+  Y he puesto el nombre de las notas en medio por culpa del inline-block, para así poder clicar al lado y que se cierre.
+  No sé como echarlo a la izquierda, porque con un float queda todo mal.
+*/
+function Effect(event, card) {  
+  var clicked = '.subject-card, .grades-input';
+  if (event.target.matches(clicked)) {
+    if (card.classList.contains("collapsed-sc")) {
+		card.classList.remove("collapsed-sc");
+		card.classList.add("expanded-sc");
+  	} else {
+		card.classList.add("collapsed-sc");
+		card.classList.remove("expanded-sc");
+  	}
   }
 }
