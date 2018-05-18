@@ -242,6 +242,7 @@ function updateCard(card) {
   Se ha de añadir que al clicar en la nota en el subject-bar que se abra!
   Y he puesto el nombre de las notas en medio por culpa del inline-block, para así poder clicar al lado y que se cierre.
   No sé como echarlo a la izquierda, porque con un float queda todo mal.
+  Por cierto, si puede ser estaría bien que al clicar desde el móvil no se pusiera gris.
 */
 function Effect(event, card) {  
   var clicked = '.subject-card, .grades-input';

@@ -109,7 +109,7 @@ button:active{
   transition: max-height 2s cubic-bezier(0,0,0.38,1);
 }
 .expanded-sc{
-    max-height: 25em;
+    max-height: 50em;
     transition: max-height 2s cubic-bezier(0,0,0.68,1);
 }
 
