@@ -1,8 +1,8 @@
-#What is GradeCalc?
+# What is GradeCalc?
 GradeCalc is a progressive web app for students, it's main porpouse is calculating the necessary mark to pass a subject.
 It's curently in development.
 
-##Expected features
+## Expected features
 
 - Calculate the mark you need to pass.
 - Find your subjects in a database.
