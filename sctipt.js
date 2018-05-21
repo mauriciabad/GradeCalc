@@ -48,8 +48,7 @@ subjects['a4'] = {
     "Teoria": {
       "T1": null,
       "T2": null,
-      "T3": null,
-      "T4": null
+      "T3": null
     },
     "Lab": {
       "s1": null,
@@ -69,8 +68,7 @@ subjects['a4'] = {
     "Teoria": {
       "T1": 0.3,
       "T2": 0.3,
-      "T3": 0.15,
-      "T4": 0.15
+      "T3": 0.15
     },
     "Lab": {
       "s1": 0.00892857142,
@@ -107,13 +105,13 @@ function loadData(){
 function createSubjectCardCollapsed(id, subject) {
   var card = document.createElement('div');
   card.id = 'card-' + id;
-  card.className = 'subject-card collapsed-sc';
+  card.className = 'subject-card';
   card.addEventListener('keyup', function(){updateCard(this);});
   card.addEventListener("click", function(){Effect(event, this)});
 
   card.innerHTML = '<h2>' + subject.name +
   '</h2><p style="color: ' + (subject.finalMark>=5 ? '#5a9764' : '#b9574c') + 
-  ';">' + subject.finalMark + '</p><div class="subject-bar"></div><div class="grades-input"></div>';
+  ';">' + subject.finalMark + '</p><div class="subject-bar"></div><div class="grades-input hidden"></div>';
 
   let necesaryMark=subject.necesaryMark;
 
@@ -247,14 +245,5 @@ function updateCard(card) {
   Por cierto, si puede ser estaría bien que al clicar desde el móvil no se pusiera gris.
 */
 function Effect(event, card) {  
-  var clicked = '.subject-card, .grades-input';
-  if (event.target.matches(clicked)) {
-    if (card.classList.contains("collapsed-sc")) {
-		card.classList.remove("collapsed-sc");
-		card.classList.add("expanded-sc");
-  	} else {
-		card.classList.add("collapsed-sc");
-		card.classList.remove("expanded-sc");
-  	}
-  }
+  card.lastChild.classList.toggle("hidden");
 }

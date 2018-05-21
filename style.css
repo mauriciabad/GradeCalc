@@ -82,6 +82,7 @@ button:active{
   transition: box-shadow 200ms ease-out;
   /* height: 9em; */
   overflow: hidden;
+  cursor: pointer;
 }
 
 .subject-card:hover{
@@ -105,12 +106,10 @@ button:active{
 }
 
 .collapsed-sc{
-  max-height: 9em;
-  transition: max-height 2s cubic-bezier(0,0,0.38,1);
+  height: 9em;
 }
 .expanded-sc{
-    max-height: 50em;
-    transition: max-height 2s cubic-bezier(0,0,0.68,1);
+  height: auto;
 }
 
 .subject-bar{
@@ -128,6 +127,7 @@ button:active{
   overflow: hidden;
   text-align: center;
   padding: 0.5em 0;
+  cursor: pointer;
 }
 .subject-bar :last-child{
   border-right: none;
@@ -187,6 +187,10 @@ button:active{
   height: 2em;
   padding: 1em;
   margin-bottom: -1em;
+}
+
+.hidden{
+  display: none;
 }
 
 .grades-input > div{
