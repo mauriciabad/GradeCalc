@@ -48,7 +48,8 @@ subjects['a4'] = {
     "Teoria": {
       "T1": null,
       "T2": null,
-      "T3": null
+      "T3": null,
+      "T4": null
     },
     "Lab": {
       "s1": null,
@@ -68,7 +69,8 @@ subjects['a4'] = {
     "Teoria": {
       "T1": 0.3,
       "T2": 0.3,
-      "T3": 0.15
+      "T3": 0.15,
+      "T4": 0.15
     },
     "Lab": {
       "s1": 0.00892857142,
