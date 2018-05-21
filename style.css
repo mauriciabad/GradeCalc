@@ -81,7 +81,6 @@ button:active{
   text-align: center;
   transition: box-shadow 200ms ease-out;
   /* height: 9em; */
-  overflow: hidden;
   cursor: pointer;
 }
 
@@ -190,9 +189,13 @@ button:active{
 }
 
 .hidden{
-  display: none;
+  transform: scaleY(0);
 }
 
+.grades-input{
+  transition: all 200ms ease-out;
+  transform-origin: center top;
+}
 .grades-input > div{
   display: flex;
   flex-wrap: wrap;

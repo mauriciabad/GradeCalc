@@ -111,7 +111,7 @@ function createSubjectCardCollapsed(id, subject) {
 
   card.innerHTML = '<h2>' + subject.name +
   '</h2><p style="color: ' + (subject.finalMark>=5 ? '#5a9764' : '#b9574c') + 
-  ';">' + subject.finalMark + '</p><div class="subject-bar"></div><div class="grades-input hidden"></div>';
+  ';">' + subject.finalMark + '</p><div class="subject-bar"></div><div class="grades-input hidden" style="height: 0px;" ></div>';
 
   let necesaryMark=subject.necesaryMark;
 
@@ -245,5 +245,12 @@ function updateCard(card) {
   Por cierto, si puede ser estaría bien que al clicar desde el móvil no se pusiera gris.
 */
 function Effect(event, card) {  
-  card.lastChild.classList.toggle("hidden");
+  if ( !(event.target.tagName == 'INPUT')) {
+    if (card.children[2].contains(event.target)) {
+      card.lastChild.classList.remove('hidden');
+    } else{
+      card.lastChild.classList.toggle('hidden');
+    }
+    card.lastChild.style.height = (card.lastChild.classList.contains('hidden') ? 0 : card.lastChild.scrollHeight) +'px';
+  }
 }
