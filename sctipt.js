@@ -1,104 +1,18 @@
 var dashboard = document.getElementById('dashboard');
-var subjectCookies = [];
 var subjects = {};
-subjects['a1'] = {"name": "AC","finalMark": 0,"necesaryMark": 5,"grades": {"Teoria": {"C1": null,"C2": null,"C3": null},"Laboratorio": {"L": null}},"evaluation": {"Teoria": {"C1": 0.15,"C2": 0.25,"C3": 0.4},"Laboratorio": {"L": 0.2}},"color": 4,"uni": "UPC","faculty": "FIB"};
-subjects['a2'] = {"name": "IES","finalMark": 0,"necesaryMark": 5,"grades": {"Teoria": {"FHC1": null,"FHC2": null,"FHC3": null},"Lab": {"C1": null,"C2": null,"P": null}},"evaluation": {"Teoria": {"FHC1": 0.25,"FHC2": 0.15,"FHC3": 0.25},"Lab": {"C1": 0.1,"C2": 0.15,"P": 0.1}},"color": 3,"uni": "UPC","faculty": "FIB"};
-subjects['a3'] = {
-  "id": "a3",
-  "name": "IDI",
-  "fullName": "Interacció i Disseny d'Interfícies",
-  "finalMark": 0,
-  "necesaryMark": 5,
-  "grades": {
-    "Teoria": {
-      "T1": null,
-      "T2": null
-    },
-    "Lab": {
-      "L": null
-    },
-    "Extra": {
-      "E": 0
-    }
-  },
-  "evaluation": {
-    "Teoria": {
-      "T1": 0.25,
-      "T2": 0.5
-    },
-    "Lab": {
-      "L": 0.25
-    },
-    "Extra": {
-      "E": 0.025
-    }
-  },
-  "color": 2,
-  "uni": "UPC",
-  "faculty": "FIB"
-};
+var allSubjects = {};
+allSubjects['a1'] = {"id": "a1","name": "AC","finalMark": 0,"necesaryMark": 5,"grades": {"Teoria": {"C1": null,"C2": null,"C3": null},"Laboratorio": {"L": null}},"evaluation": {"Teoria": {"C1": 0.15,"C2": 0.25,"C3": 0.4},"Laboratorio": {"L": 0.2}},"color": 4,"uni": "UPC","faculty": "FIB"};
+allSubjects['a2'] = {"id": "a2","name": "IES","finalMark": 0,"necesaryMark": 5,"grades": {"Teoria": {"FHC1": null,"FHC2": null,"FHC3": null},"Lab": {"C1": null,"C2": null,"P": null}},"evaluation": {"Teoria": {"FHC1": 0.25,"FHC2": 0.15,"FHC3": 0.25},"Lab": {"C1": 0.1,"C2": 0.15,"P": 0.1}},"color": 3,"uni": "UPC","faculty": "FIB"};
+allSubjects['a3'] = {"id": "a3","name": "IDI","fullName": "Interacció i Disseny d'Interfícies","finalMark": 0,"necesaryMark": 5,"grades": {"Teoria": {"T1": null,"T2": null},"Lab": {"L": null},"Extra": {"E": 0}},"evaluation": {"Teoria": {"T1": 0.25,"T2": 0.5},"Lab": {"L": 0.25},"Extra": {"E": 0.025}},"color": 2,"uni": "UPC","faculty": "FIB"};
+allSubjects['a4'] = {"id": "a4","name": "XC","fullName": "Xarxes de Computadors","finalMark": 0,"necesaryMark": 5,"grades": {"Teoria": {"T1": null,"T2": null,"T3": null},"Lab": {"L": null,"ExL": null},"Extra": {"E": 0}},"evaluation": {"Teoria": {"T1": 0.3,"T2": 0.3,"T3": 0.15},"Lab": {"L": 0.0625,"ExL": 0.1875},"Extra": {"E": 0.1}},"color": 5,"uni": "UPC","faculty": "FIB"};
 
-subjects['a4'] = {
-  "id": "a4",
-  "name": "XC",
-  "fullName": "Xarxes de Computadors",
-  "finalMark": 0,
-  "necesaryMark": 5,
-  "grades": {
-    "Teoria": {
-      "T1": null,
-      "T2": null,
-      "T3": null
-    },
-    "Lab": {
-      "s1": null,
-      "s2": null,
-      "s3": null,
-      "s4": null,
-      "s5": null,
-      "s6": null,
-      "s7": null,
-      "ExL": null
-    },
-    "Extra": {
-      "E": 0
-    }
-  },
-  "evaluation": {
-    "Teoria": {
-      "T1": 0.3,
-      "T2": 0.3,
-      "T3": 0.15
-    },
-    "Lab": {
-      "s1": 0.00892857142,
-      "s2": 0.00892857142,
-      "s3": 0.00892857142,
-      "s4": 0.00892857142,
-      "s5": 0.00892857142,
-      "s6": 0.00892857142,
-      "s7": 0.00892857142,
-      "ExL": 0.1875
-    },
-    "Extra": {
-      "E": 0.1
-    }
-  },
-  "color": 5,
-  "uni": "UPC",
-  "faculty": "FIB"
-};
-
-//loadData();
-for (const id in subjects) {
-  createSubjectCardCollapsed(id, subjects[id]);
-}
+loadData();
 
 function loadData(){
-  subjectCookies = [];
-  getAllCookies();
-  for (let i = 0; i < subjectCookies.length; i++) {
-    createSubjectCardCollapsed(subjectCookies[i]);    
+  subjects = Cookies.getJSON();
+  
+  for (const id in subjects) {    
+    createSubjectCardCollapsed(id,subjects[id]);    
   }
 }
 
@@ -107,8 +21,7 @@ function createSubjectCardCollapsed(id, subject) {
   card.id = 'card-' + id;
   card.className = 'subject-card';
   card.addEventListener('keyup', function(){updateCard(this);});
-  card.addEventListener("click", function(){Effect(event, this)});
-
+  card.addEventListener('click', function(){toggleExpandCard(event, this)});
   card.innerHTML = '<h2>' + subject.name +
   '</h2><p style="color: ' + (subject.finalMark>=5 ? '#5a9764' : '#b9574c') + 
   ';">' + subject.finalMark + '</p><div class="subject-bar"></div><div class="grades-input hidden" style="height: 0px;" ></div>';
@@ -142,58 +55,32 @@ function updateNecesaryMark(subject) {
 }
 
 function gradeCalcAllEqual(grades, evaluation, finalMark) {
-    let sumUndoneExams = 0;
-    for (const examType in grades) {
-      for (const exam in grades[examType]) {
-        if (grades[examType][exam] == null) sumUndoneExams += evaluation[examType][exam];
-      }
+  let sumUndoneExams = 0;
+  for (const examType in grades) {
+    for (const exam in grades[examType]) {
+      if (grades[examType][exam] == null) sumUndoneExams += evaluation[examType][exam];
     }
-    
-    return (5-finalMark)/sumUndoneExams;
   }
   
-  function updateFinalMark(subject) {
-    subject.finalMark = 0;
-    for (const examType in subject.grades) {
-      for (const exam in subject.grades[examType]) {    
-        if (subject.grades[examType][exam] != null)  subject.finalMark += subject.grades[examType][exam] * subject.evaluation[examType][exam];
-      }
-    }
-    subject.finalMark = round(subject.finalMark);
-    console.log(subject.finalMark);
-  return subject.finalMark;
+  return (5-finalMark)/sumUndoneExams;
+}
 
+function updateFinalMark(subject) {
+  subject.finalMark = 0;
+  for (const examType in subject.grades) {
+    for (const exam in subject.grades[examType]) {    
+      if (subject.grades[examType][exam] != null)  subject.finalMark += subject.grades[examType][exam] * subject.evaluation[examType][exam];
+    }
+  }
+  subject.finalMark = round(subject.finalMark);
+  return subject.finalMark;
 }
 
 function round(n) {
   return (n==='' || n== null) ? null : Math.floor(Math.round(n*100))/100;
 }
 
-function setCookie(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  var expires = "expires="+ d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-
-function getAllCookies() {
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for(var i = 0; i <ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf('subject-') == 0) {
-      while (c.charAt(0) != '=') {
-        c = c.substring(1);
-      }
-      c = c.substring(1);
-      subjectCookies.push(JSON.parse(c.substring(name.length, c.length)))
-    }
-  }
-} 
-
+//this function is inefficient, it must be changed 
 function updateCard(card) {
   let inputs = card.getElementsByTagName('input');
   let id =  card.id.slice(5);
@@ -237,14 +124,10 @@ function updateCard(card) {
       }
     }
   }
+  Cookies.set(id, subjects[id], { expires: 365 });
 }
-/*
-  Se ha de añadir que al clicar en la nota en el subject-bar que se abra!
-  Y he puesto el nombre de las notas en medio por culpa del inline-block, para así poder clicar al lado y que se cierre.
-  No sé como echarlo a la izquierda, porque con un float queda todo mal.
-  Por cierto, si puede ser estaría bien que al clicar desde el móvil no se pusiera gris.
-*/
-function Effect(event, card) {  
+
+function toggleExpandCard(event, card) {  
   if ( !(event.target.tagName == 'INPUT')) {
     if (card.children[2].contains(event.target)) {
       card.lastChild.classList.remove('hidden');
@@ -253,4 +136,30 @@ function Effect(event, card) {
     }
     card.lastChild.style.height = (card.lastChild.classList.contains('hidden') ? 0 : card.lastChild.scrollHeight) +'px';
   }
+}
+
+function addSubjectPopupShow() {
+  document.getElementById('add-container').style.display = 'flex';
+}
+
+function addSubjectPopupHide() {
+  document.getElementById('add-container').style.display = 'none';
+}
+
+function addSubjects() {
+  let checked = document.querySelectorAll("#add-container input:checked");
+  
+  for (let i = 0; i < checked.length; i++) {
+    let id = checked[i].id.slice(9);
+
+    if (subjects[id] == undefined) {
+      subjects[id] = allSubjects[id];
+  
+      createSubjectCardCollapsed(id,subjects[id]);
+      
+    }
+  }
+  
+  addSubjectPopupHide();
+
 }

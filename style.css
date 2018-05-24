@@ -37,6 +37,7 @@ button:active{
   align-items: center;
   box-shadow: 0 0 1em rgba(0, 0, 0, 0.4);
   height: 3em;
+  z-index: 5;
 }
 
 .top-bar img{
@@ -82,6 +83,8 @@ button:active{
   transition: box-shadow 200ms ease-out;
   /* height: 9em; */
   cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .subject-card:hover{
@@ -217,6 +220,10 @@ button:active{
   margin: 0 0.5em;
   display: block;
 }
+.grades-input input::placeholder{
+  color: #666;
+  opacity: 1;
+}
 .grades-input input{
   flex-grow: 1;
   font-size: 1em;
@@ -233,4 +240,69 @@ button:active{
 }
 .grades-input input:invalid{
   border: solid medium#cf5155;
+}
+
+.add-popup{
+  background-color: #fefefe;
+  border-radius: 0.3em;
+  margin: 0 2em;
+
+  box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
+  padding: 1.5em;
+  max-width: 25em;
+  text-align: center;
+  z-index: 2;
+}
+#add-container{
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 100vw;
+  height: 100vh;
+  padding-top: 3em;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+.add-container-bg{
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+.add-popup button{
+  display: block;
+  margin: 1em 0 0 auto;
+  padding: 1em 1.5em;
+  background-color: #65a580;
+  box-shadow: 0 0.15em 0.65em rgba(0, 0, 0, 0.3);
+  color: white;
+  line-height: 1;
+  letter-spacing: 0.25em;
+  border-radius: 0.3em;
+}
+.add-popup h2{
+  margin: 0 0 0.5em;
+  line-height: 1;
+}
+.add-popup h3{
+  margin: 1em 0 0.5em;
+  line-height: 1;
+}
+.add-popup > div{
+  overflow-y: scroll;
+  overflow-x: auto;
+  max-height: 70vh;
+}
+.add-popup > div > div{
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
 }

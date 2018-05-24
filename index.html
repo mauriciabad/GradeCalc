@@ -18,10 +18,28 @@
   </div>
 
   <div id="dashboard" class="dashboard"></div>
-  <button class="add-button" >
+  <button class="add-button" onclick="addSubjectPopupShow()">
     <img src="media/plus.svg" alt="Añadir Asignatura">
   </button>
 
+  <div id="add-container" style="display: none;">
+    <div class="add-container-bg" onclick="addSubjectPopupHide();"></div>
+    <div class="add-popup">
+      <h2>Choose a subject to add</h2>
+      <div>
+        <h3>Q4</h3>
+        <div>
+          <span><input type="checkbox" name="AC" id="checkbox-a1"><label for="checkbox-a1">AC</label></span>
+          <span><input type="checkbox" name="IES" id="checkbox-a2"><label for="checkbox-a2">IES</label></span>
+          <span><input type="checkbox" name="IDI" id="checkbox-a3"><label for="checkbox-a3">IDI</label></span>
+          <span><input type="checkbox" name="XC" id="checkbox-a4"><label for="checkbox-a4">XC</label></span>
+        </div>
+      </div>
+      <button onclick="addSubjects();">Add</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
   <script src="sctipt.js"></script>
 </body>
 </html>
