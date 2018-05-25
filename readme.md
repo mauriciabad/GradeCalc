@@ -7,6 +7,7 @@ It's curently in development.
 - Calculate the mark you need to pass.
 - Find your subjects in a database.
 - Create your own subject template and share it.
-- Save your marks in your profile or device.
+- Save your marks in your profile or device (Cookies).
 - Facebook/Google+ login.
 - Works offline.
+- Add to homescreen (Android)
