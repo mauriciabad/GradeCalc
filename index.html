@@ -10,6 +10,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   
   <!-- FavIcons -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
@@ -53,6 +54,17 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+      .then(function(registration) {
+        console.log('Registration successful, scope is:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('Service worker registration failed, error:', error);
+      });
+    }
+  </script>
   <script src="sctipt.js"></script>
 </body>
 </html>
