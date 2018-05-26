@@ -1,8 +1,8 @@
 *{
-  font-family: 'Nunito', -apple-system, system, system-ui, 'Quicksand', 'Roboto', sans-serif;
+  font-family: 'Nunito', 'Quicksand', 'Roboto', -apple-system, system, system-ui, sans-serif;
 }
 body{
-  font-family: 'Nunito', -apple-system, system, system-ui, 'Quicksand', 'Roboto', sans-serif;
+  font-family: 'Nunito', 'Quicksand', 'Roboto', -apple-system, system, system-ui, sans-serif;
   margin: 0;
   color: #444;
   background-color: #dce0e0;
