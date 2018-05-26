@@ -15,6 +15,6 @@
     ],
     "theme_color": "#1b9f64",
     "background_color": "#1b9f64",
-    "start_url": "gradecalc.net",
+    "start_url": "https://gradecalc.net/index.html",
     "display": "standalone"
 }
