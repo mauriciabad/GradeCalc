@@ -1,0 +1,21 @@
+{
+  "id": "a7",
+  "name": "EDA",
+  "fullName": "Estructures de Dades i Algorismes",
+  "evaluation": {
+    "Examens": {
+      "P1": 0.3,
+      "PC": 0.3,
+      "F": 0.6
+    },
+    "Joc":{
+      "Joc": 0.2
+    }
+  },
+  "color": 2,
+  "uni": "UPC",
+  "faculty": "FIB",
+  "finalMark": 0,
+  "necesaryMark": 5,
+  "grades": {}
+}

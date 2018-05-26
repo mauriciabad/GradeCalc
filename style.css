@@ -24,7 +24,8 @@ button:active{
   transform: scale(0.85);
   outline: none;
 }
-button:focus{
+button:focus:not(:active){
+  transform: scale(1.10);
   outline: none;
 }
 
@@ -175,11 +176,15 @@ button:focus{
   color: white;
 }
 .scol6{
-  background-color: #33aab9;
+  background-color: #e29a28;
   color: white;
 }
 .scol7{
-  background-color: #e29a28;
+  background-color: #444;
+  color: white;
+}
+.scol8{
+  background-color: #33aab9;
   color: white;
 }
 

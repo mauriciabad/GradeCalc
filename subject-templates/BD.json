@@ -1,0 +1,24 @@
+{
+  "id": "a5",
+  "name": "BD",
+  "fullName": "Bases de dades",
+  "evaluation": {
+    "Lab": {
+      "L1": 0.1,
+      "L2": 0.075,
+      "L3": 0.075
+    },
+    "Prob": {
+      "Pr": 0.15
+    },
+    "Teoria": {
+      "F": 0.6
+    }
+  },
+  "color": 1,
+  "uni": "UPC",
+  "faculty": "FIB",
+  "finalMark": 0,
+  "necesaryMark": 5,
+  "grades": {}
+}

@@ -14,5 +14,8 @@
   },
   "color": 5,
   "uni": "UPC",
-  "faculty": "FIB"
+  "faculty": "FIB",
+  "finalMark": 0,
+  "necesaryMark": 5,
+  "grades": {}
 }
