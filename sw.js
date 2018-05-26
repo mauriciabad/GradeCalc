@@ -1,15 +1,11 @@
-self.addEventListener('activate', function(event) {
-  // Perform some task
-});
+var CACHE_NAME = 'static-cache';
 
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request)
-    .then(function(response) {
-      return response || fetchAndCache(event.request);
-    })
-  );
-});
+var urlsToCache = [
+  '.',
+  '/index.html',
+  '/script.js',
+  '/style.css'
+];
 
 function fetchAndCache(url) {
   return fetch(url)
@@ -30,20 +26,24 @@ function fetchAndCache(url) {
   });
 }
 
-var CACHE_NAME = 'static-cache';
-
-var urlsToCache = [
-  '.',
-  'index.html',
-  'script.js',
-  'styles.css'
-];
-
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME)
     .then(function(cache) {
       return cache.addAll(urlsToCache);
+    })
+  );
+});
+
+self.addEventListener('activate', function(event) {
+  // Perform some task
+});
+
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request)
+    .then(function(response) {
+      return response || fetchAndCache(event.request);
     })
   );
 });
