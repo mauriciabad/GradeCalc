@@ -4,7 +4,9 @@ var urlsToCache = [
   '.',
   '/index.html',
   '/script.js',
-  '/style.css'
+  '/style.css',
+  'https://fonts.googleapis.com/css?family=Nunito:300,400,700',
+  'https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'
 ];
 
 function fetchAndCache(url) {
