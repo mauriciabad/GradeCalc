@@ -24,6 +24,9 @@ button:active{
   transform: scale(0.85);
   outline: none;
 }
+button:focus{
+  outline: none;
+}
 
 .top-bar{
   position: fixed;
