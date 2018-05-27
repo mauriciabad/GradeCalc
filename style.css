@@ -57,8 +57,15 @@ button:focus:not(:active){
   font-size: 1.75em;
 }
 
+.screen{
+  overflow: scroll;
+  margin-top: 3em;
+  width: 100vw;
+  height: calc(100vh - 3em);
+}
+
 .dashboard{
-  padding: 4em 0.5em 0;
+  padding: 0.5em;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -253,23 +260,9 @@ button:focus:not(:active){
   border: solid medium#cf5155;
 }
 
-.add-popup{
-  background-color: #fefefe;
-  border-radius: 0.3em;
-  margin: 0 2em;
-
-  box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
-  padding: 1.5em;
-  max-width: 25em;
-  text-align: center;
-  z-index: 2;
-}
-#add-container{
-  background-color: rgba(0, 0, 0, 0.3);
+.popup{
   width: 100vw;
   height: 100vh;
-  padding-top: 3em;
-  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -277,18 +270,32 @@ button:focus:not(:active){
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 10;
 }
-.add-container-bg{
+.popup-content{
+  background-color: #fefefe;
+  border-radius: 0.3em;
+  margin: 0.5em 2em;
+  box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+.popup > div:first-child{
+  position: absolute;
   background-color: rgba(0, 0, 0, 0.3);
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  width: 100%;
+  height: 100%;
   top: 0;
   left: 0;
   cursor: pointer;
 }
-.add-popup button{
+.add-popup{
+  padding: 1.5em;
+  max-width: 25em;
+  text-align: center;
+}
+.popup button{
   display: block;
   margin: 1em 0 0 auto;
   padding: 1em 1.5em;
@@ -299,11 +306,11 @@ button:focus:not(:active){
   letter-spacing: 0.25em;
   border-radius: 0.3em;
 }
-.add-popup h2{
+.popup h2{
   margin: 0 0 0.5em;
   line-height: 1;
 }
-.add-popup h3{
+.popup h3{
   margin: 1em 0 0.5em;
   line-height: 1;
 }

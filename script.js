@@ -91,10 +91,10 @@ function updateMark(id, examType, exam, mark, input) {
   let barElem = document.getElementById('bar-'+id+examType+exam);
   let card = document.getElementById('card-' + id);
 
+  if (subjects[id].grades[examType] == undefined) {
+    subjects[id].grades[examType] = {};
+  }
   if (!isNaN(mark) && mark != '') {
-    if (subjects[id].grades[examType] == undefined) {
-      subjects[id].grades[examType] = {};
-    }
     subjects[id].grades[examType][exam] = mark;
     
     updateFinalMark(id);
@@ -106,6 +106,8 @@ function updateMark(id, examType, exam, mark, input) {
     barElem.textContent = mark;
     input.className = 'scol' + subjects[id].color;
   } else{
+    delete subjects[id].grades[examType][exam];
+
     barElem.parentElement.className = 'scolN';
     barElem.textContent = subjects[id].necesaryMark;
     input.className = 'scolN2';
@@ -154,6 +156,7 @@ function addSubjects() {
       subjects[id] = allSubjects[id];
   
       createSubjectCardCollapsed(id);
+      Cookies.set(id, subjects[id], { expires: 365 });
       
     }
   }
