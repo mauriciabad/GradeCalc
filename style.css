@@ -59,6 +59,7 @@ button:focus:not(:active){
 
 .screen{
   overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   margin-top: 3em;
   width: 100vw;
   height: calc(100vh - 3em);
@@ -316,7 +317,7 @@ button:focus:not(:active){
 }
 .add-popup > div{
   overflow-y: scroll;
-  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   max-height: 70vh;
 }
 .add-popup > div > div{
