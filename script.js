@@ -1,7 +1,9 @@
+/* ------------------------------ START UP ------------------------------ */
 var dashboard = document.getElementById('dashboard');
 var subjects = {};
 var allSubjects = {};
 
+//Hardcoded subject templates, will be replaced
 allSubjects.a1={id:"a1",finalMark:0,necesaryMark:5,grades:{},name:"AC",evaluation:{Teoria:{C1:.15,C2:.25,C3:.4},Laboratorio:{L:.2}},color:4,uni:"UPC",faculty:"FIB"},
 allSubjects.a2={id:"a2",finalMark:0,necesaryMark:5,grades:{},name:"IES",evaluation:{Teoria:{FHC1:.25,FHC2:.15,FHC3:.25},Lab:{C1:.1,C2:.15,P:.1}},color:3,uni:"UPC",faculty:"FIB"},
 allSubjects.a3={id:"a3",finalMark:0,necesaryMark:5,grades:{"Extra":{"E":0}},name:"IDI",fullName:"Interacció i Disseny d'Interfícies",evaluation:{Teoria:{T1:.25,T2:.5},Lab:{L:.25},Extra:{E:.025}},color:2,uni:"UPC",faculty:"FIB"},
@@ -15,6 +17,15 @@ allSubjects.a9={id:"a9",finalMark:0,necesaryMark:5,grades:{},name:"SO",fullName:
 
 loadData();
 
+
+
+
+
+
+
+/* ------------------------------ UI CREATION ------------------------------ */
+
+//Generate the cards with the subjects from cookies
 function loadData(){
   subjects = Cookies.getJSON();
   
@@ -23,6 +34,7 @@ function loadData(){
   }
 }
 
+//Creates the subject card and appends it to the dashboard
 function createSubjectCardCollapsed(id) {
   var card = document.createElement('div');
   card.id = 'card-' + id;
@@ -38,10 +50,10 @@ function createSubjectCardCollapsed(id) {
     for (const exam in subjects[id].evaluation[examType]) {
       if (isUndone(id,examType,exam)) {        
         card.children[2].innerHTML += '<div onclick="selectInput(\'in-' + id + examType + exam + '\')" class="scol' + 'N' + '" style="flex-grow: ' + subjects[id].evaluation[examType][exam]*100 + '">' + exam + '<div id="bar-'+ id + examType + exam +'">' + subjects[id].necesaryMark + '</div></div>';
-        card.children[3].lastChild.innerHTML += '<div><span>'+ exam +':</span><input type="number" id="in-'+ id + examType + exam +'" placeholder="'+ subjects[id].necesaryMark +'" value="" class="scol' + 'N2' + '" oninput="updateMark(\''+id+'\', \''+examType+'\', \''+exam+'\', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>';
+        card.children[3].lastChild.innerHTML += '<div><span>'+ exam +':</span><input type="number" id="in-'+ id + examType + exam +'" placeholder="'+ subjects[id].necesaryMark +'" value="" class="scol' + 'N2' + '" oninput="updateMarkFromCardInput(\''+id+'\', \''+examType+'\', \''+exam+'\', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>';
       }else{
         card.children[2].innerHTML += '<div onclick="selectInput(\'in-' + id + examType + exam + '\')" class="scol' + subjects[id].color + '" style="flex-grow: ' + subjects[id].evaluation[examType][exam]*100 + '">' + exam + '<div id="bar-'+ id + examType + exam +'">' + subjects[id].grades[examType][exam] + '</div></div>';
-        card.children[3].lastChild.innerHTML += '<div><span>'+ exam +':</span><input type="number" id="in-'+ id + examType + exam +'" placeholder="'+ subjects[id].necesaryMark +'" value="'+ subjects[id].grades[examType][exam] +'" class="scol' + subjects[id].color + '" oninput="updateMark(\''+id+'\', \''+examType+'\', \''+exam+'\', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>';
+        card.children[3].lastChild.innerHTML += '<div><span>'+ exam +':</span><input type="number" id="in-'+ id + examType + exam +'" placeholder="'+ subjects[id].necesaryMark +'" value="'+ subjects[id].grades[examType][exam] +'" class="scol' + subjects[id].color + '" oninput="updateMarkFromCardInput(\''+id+'\', \''+examType+'\', \''+exam+'\', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>';
       }
     }
   }
@@ -52,26 +64,24 @@ function createSubjectCardCollapsed(id) {
   dashboard.appendChild(card);
 }
 
-function selectInput(idInput) {
-  document.getElementById(idInput).select();
+/* ------------------------------ UI & DATA UPDATE ------------------------------ */
+
+//Updates, saves and shows the finalMark and necesaryMark
+function updateAndDisplayMarks(id) {
+  let card = document.getElementById('card-' + id);
+  updateFinalMark(id);
+  updateNecesaryMark(id);
+  card.children[1].textContent = subjects[id].finalMark;
+  card.children[1].style.color = (subjects[id].finalMark>=5 ? '#5a9764' : '#b9574c');
 }
 
+//Saves and updates the value of the necesaryMark to pass
 function updateNecesaryMark(id) {
   subjects[id].necesaryMark = Math.max(0, round(gradeCalcAllEqual(id)));
   return subjects[id].necesaryMark;
 }
 
-function gradeCalcAllEqual(id) {
-  let sumUndoneExams = 0;
-  for (const examType in subjects[id].evaluation) {
-    for (const exam in subjects[id].evaluation[examType]) {
-      if (isUndone(id, examType, exam)) sumUndoneExams += subjects[id].evaluation[examType][exam];
-    }
-  }
-  
-  return (5-subjects[id].finalMark)/sumUndoneExams;
-}
-
+//Saves and updates the value of the finalMark
 function updateFinalMark(id) {
   subjects[id].finalMark = 0;
   for (const examType in subjects[id].evaluation) {
@@ -83,12 +93,8 @@ function updateFinalMark(id) {
   return subjects[id].finalMark;
 }
 
-function round(n) {
-  return (n==='' || n == undefined) ? undefined : Math.floor(Math.round(n*100))/100;
-}
-
-//this function is inefficient, it must be changed 
-function updateMark(id, examType, exam, mark, input) {
+//Saves the changed mark, updates finalMark and necessaryMark, and shows the info in the UI
+function updateMarkFromCardInput(id, examType, exam, mark, input) {
   let barElem = document.getElementById('bar-'+id+examType+exam);
 
   if (subjects[id].grades[examType] == undefined) {
@@ -127,14 +133,28 @@ function updateMark(id, examType, exam, mark, input) {
   Cookies.set(id, subjects[id], { expires: 365 });
 }
 
-function updateAndDisplayMarks(id) {
-  let card = document.getElementById('card-' + id);
-  updateFinalMark(id);
-  updateNecesaryMark(id);
-  card.children[1].textContent = subjects[id].finalMark;
-  card.children[1].style.color = (subjects[id].finalMark>=5 ? '#5a9764' : '#b9574c');
+/* ------------------------------ MATH ------------------------------ */
+
+//Returns the mark you need to get in the remaining exams to pass
+function gradeCalcAllEqual(id) {
+  let sumUndoneExams = 0;
+  for (const examType in subjects[id].evaluation) {
+    for (const exam in subjects[id].evaluation[examType]) {
+      if (isUndone(id, examType, exam)) sumUndoneExams += subjects[id].evaluation[examType][exam];
+    }
+  }
+  
+  return (5-subjects[id].finalMark)/sumUndoneExams;
 }
 
+//returns n rounded to 2 decimals
+function round(n) {
+  return (n==='' || n == undefined) ? undefined : Math.floor(Math.round(n*100))/100;
+}
+
+/* ------------------------------ UI MANIPULATION ------------------------------ */
+
+//Expansd or collapes the card
 function toggleExpandCard(event, card) {  
   if ( !(event.target.tagName == 'INPUT')) {
     if (card.children[2].contains(event.target)) {
@@ -146,14 +166,24 @@ function toggleExpandCard(event, card) {
   }
 }
 
+//Puts the cursor and selects the content of the input
+function selectInput(idInput) {
+  document.getElementById(idInput).select();
+}
+
+/* ------------------------------ POPUP ------------------------------ */
+
+//Shows the popup
 function addSubjectPopupShow() {
   document.getElementById('add-container').style.display = 'flex';
 }
 
+//Hides the popup
 function addSubjectPopupHide() {
   document.getElementById('add-container').style.display = 'none';
 }
 
+//Adds the subjects selected in the popup
 function addSubjects() {
   let checked = document.querySelectorAll("#add-container input:checked");
   
@@ -173,6 +203,9 @@ function addSubjects() {
 
 }
 
+/* ------------------------------ USEFUL STUF ------------------------------ */
+
+//Returns if the exam is undone
 function isUndone(id, examType, exam) {
   return subjects[id].grades[examType] == undefined || subjects[id].grades[examType][exam] == undefined
 }
