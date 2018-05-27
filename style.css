@@ -7,6 +7,7 @@ body{
   color: #444;
   background-color: #dce0e0;
   text-align: center;
+  overflow: hidden;
 }
 button{
   border: none;
@@ -58,10 +59,12 @@ button:focus:not(:active){
 }
 
 .screen{
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin-top: 3em;
   width: 100vw;
+  box-sizing: border-box;
   height: calc(100vh - 3em);
 }
 

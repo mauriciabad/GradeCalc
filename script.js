@@ -89,7 +89,6 @@ function round(n) {
 //this function is inefficient, it must be changed 
 function updateMark(id, examType, exam, mark, input) {
   let barElem = document.getElementById('bar-'+id+examType+exam);
-  let card = document.getElementById('card-' + id);
 
   if (subjects[id].grades[examType] == undefined) {
     subjects[id].grades[examType] = {};
@@ -97,10 +96,7 @@ function updateMark(id, examType, exam, mark, input) {
   if (!isNaN(mark) && mark != '') {
     subjects[id].grades[examType][exam] = mark;
     
-    updateFinalMark(id);
-    updateNecesaryMark(id);
-    card.children[1].textContent = subjects[id].finalMark;
-    card.children[1].style.color = (subjects[id].finalMark>=5 ? '#5a9764' : '#b9574c');
+    updateAndDisplayMarks(id);
     
     barElem.parentElement.className = 'scol' + subjects[id].color;
     barElem.textContent = mark;
@@ -108,12 +104,15 @@ function updateMark(id, examType, exam, mark, input) {
   } else{
     delete subjects[id].grades[examType][exam];
 
+    updateAndDisplayMarks(id);
+
     barElem.parentElement.className = 'scolN';
     barElem.textContent = subjects[id].necesaryMark;
     input.className = 'scolN2';
     input.placeholder = subjects[id].necesaryMark;
   }
-  
+
+  let card = document.getElementById('card-' + id);
   let barUndone = card.getElementsByClassName('scolN');
   let inUndone = card.getElementsByClassName('scolN2');
   
@@ -125,6 +124,14 @@ function updateMark(id, examType, exam, mark, input) {
   }
   
   Cookies.set(id, subjects[id], { expires: 365 });
+}
+
+function updateAndDisplayMarks(id) {
+  let card = document.getElementById('card-' + id);
+  updateFinalMark(id);
+  updateNecesaryMark(id);
+  card.children[1].textContent = subjects[id].finalMark;
+  card.children[1].style.color = (subjects[id].finalMark>=5 ? '#5a9764' : '#b9574c');
 }
 
 function toggleExpandCard(event, card) {  
