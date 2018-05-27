@@ -27,7 +27,7 @@ function createSubjectCardCollapsed(id) {
   var card = document.createElement('div');
   card.id = 'card-' + id;
   card.className = 'subject-card';
-  card.onclick = 'toggleExpandCard(event, this);';
+  card.onclick = function(event){toggleExpandCard(event, this);};
   card.innerHTML = '<h2>' + subjects[id].name +
   '</h2><p style="color: ' + (subjects[id].finalMark>=5 ? '#5a9764' : '#b9574c') + 
   ';">' + subjects[id].finalMark + '</p><div class="subject-bar"></div><div class="grades-input hidden" style="height: 0px;" ></div>';
