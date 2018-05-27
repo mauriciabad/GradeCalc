@@ -11,7 +11,9 @@ body{
 }
 button{
   border: none;
+  outline: none;
   background-color: transparent;
+  font-size: 1em;
   margin: 0;
   padding: 0;
   cursor: pointer;

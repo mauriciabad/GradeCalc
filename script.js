@@ -60,8 +60,9 @@ function createSubjectCardCollapsed(id) {
 
   card.innerHTML += '</div>';
 
-  updateAndDisplayMarks(id); //because necesarymark is hardcoded
   dashboard.appendChild(card);
+  updateAndDisplayMarks(id); //because necesarymark is hardcoded
+  
 }
 
 /* ------------------------------ UI & DATA UPDATE ------------------------------ */
