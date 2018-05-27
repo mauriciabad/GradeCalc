@@ -4,8 +4,8 @@ var allSubjects = {};
 
 allSubjects.a1={id:"a1",finalMark:0,necesaryMark:5,grades:{},name:"AC",evaluation:{Teoria:{C1:.15,C2:.25,C3:.4},Laboratorio:{L:.2}},color:4,uni:"UPC",faculty:"FIB"},
 allSubjects.a2={id:"a2",finalMark:0,necesaryMark:5,grades:{},name:"IES",evaluation:{Teoria:{FHC1:.25,FHC2:.15,FHC3:.25},Lab:{C1:.1,C2:.15,P:.1}},color:3,uni:"UPC",faculty:"FIB"},
-allSubjects.a3={id:"a3",finalMark:0,necesaryMark:5,grades:{},name:"IDI",fullName:"Interacció i Disseny d'Interfícies",evaluation:{Teoria:{T1:.25,T2:.5},Lab:{L:.25},Extra:{E:.025}},color:2,uni:"UPC",faculty:"FIB"},
-allSubjects.a4={id:"a4",finalMark:0,necesaryMark:5,grades:{},name:"XC",fullName:"Xarxes de Computadors",evaluation:{Teoria:{T1:.3,T2:.3,T3:.15},Lab:{L:.0625,ExL:.1875},Extra:{E:.1}},color:5,uni:"UPC",faculty:"FIB"};
+allSubjects.a3={id:"a3",finalMark:0,necesaryMark:5,grades:{"Extra":{"E":0}},name:"IDI",fullName:"Interacció i Disseny d'Interfícies",evaluation:{Teoria:{T1:.25,T2:.5},Lab:{L:.25},Extra:{E:.025}},color:2,uni:"UPC",faculty:"FIB"},
+allSubjects.a4={id:"a4",finalMark:0,necesaryMark:5,grades:{"Extra":{"E":0}},name:"XC",fullName:"Xarxes de Computadors",evaluation:{Teoria:{T1:.3,T2:.3,T3:.15},Lab:{L:.0625,ExL:.1875},Extra:{E:.1}},color:5,uni:"UPC",faculty:"FIB"};
 allSubjects.a5={id:"a5",finalMark:0,necesaryMark:5,grades:{},name:"BD",fullName:"Bases de dades",evaluation:{Teoria:{F:.6},Lab:{L1:.1,L2:.075,L3:.075},Prob:{Pr:.15}},color:1,uni:"UPC",faculty:"FIB"},
 allSubjects.a6={id:"a6",finalMark:0,necesaryMark:5,grades:{},name:"CI",fullName:"Interfícies de Computadors",evaluation:{Teoria:{T1:.23333,T2:.23333,T3:.23333},Lab:{L:.3}},color:3,uni:"UPC",faculty:"FIB"},
 allSubjects.a7={id:"a7",finalMark:0,necesaryMark:5,grades:{},name:"EDA",fullName:"Estructures de Dades i Algorismes",evaluation:{Examens:{P1:.3,PC:.3,F:.6},Joc:{Joc:.2}},color:2,uni:"UPC",faculty:"FIB"},
@@ -48,6 +48,7 @@ function createSubjectCardCollapsed(id) {
 
   card.innerHTML += '</div>';
 
+  updateAndDisplayMarks(id); //because necesarymark is hardcoded
   dashboard.appendChild(card);
 }
 

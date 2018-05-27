@@ -19,5 +19,9 @@
   "faculty": "FIB",
   "finalMark": 0,
   "necesaryMark": 5,
-  "grades": {}
+  "grades": {
+    "Extra": {
+      "E": 0
+    }
+  }
 }
