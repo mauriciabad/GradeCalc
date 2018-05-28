@@ -284,6 +284,7 @@ button:focus:not(:active){
   margin: 0.5em 2em;
   box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
   z-index: 2;
+  position: relative;
 }
 .popup > div:first-child{
   position: absolute;
@@ -298,12 +299,12 @@ button:focus:not(:active){
 }
 .add-popup{
   padding: 1.5em;
+  padding-bottom: 2.5em;
   max-width: 25em;
   text-align: center;
 }
 .popup button{
   display: block;
-  margin: 1em 0 0 auto;
   padding: 0.7em 0.85em 0.7em 1em;
   font-weight: bold;
   background-color: #1B9F64;
@@ -313,7 +314,11 @@ button:focus:not(:active){
   line-height: 1;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  border-radius: 0.7em;
+  border-radius: 10em;
+  position: absolute;
+  z-index: 5;
+  right: 2em;
+  bottom: -1.5em;
 }
 .popup h2{
   margin: 0 0 0.5em;
