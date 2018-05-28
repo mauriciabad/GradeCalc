@@ -330,7 +330,7 @@ button:focus:not(:active){
   text-align: left;
 }
 .add-popup > div{
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   max-height: 70vh;
 }
@@ -339,6 +339,7 @@ button:focus:not(:active){
   justify-content: space-between;
   padding: 0;
 }
+<<<<<<< HEAD
 .popup-round-img-top{
   width: 8em;
   margin: -40% 0 0.5em;
@@ -352,3 +353,5 @@ button:focus:not(:active){
   width: 33.333%;
   border-radius: 100%;
 } */
+=======
+>>>>>>> 7b2fb7abac6b9fdf084dfe3c627cd8ea6e48b2f7
