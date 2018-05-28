@@ -285,6 +285,9 @@ button:focus:not(:active){
   box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
   z-index: 2;
   position: relative;
+  padding: 1.5em;
+  padding-bottom: 2.5em;
+  max-width: 25em;
 }
 .popup > div:first-child{
   position: absolute;
@@ -298,9 +301,6 @@ button:focus:not(:active){
   cursor: pointer;
 }
 .add-popup{
-  padding: 1.5em;
-  padding-bottom: 2.5em;
-  max-width: 25em;
   text-align: center;
 }
 .popup button{
@@ -309,7 +309,7 @@ button:focus:not(:active){
   font-weight: bold;
   background-color: #1B9F64;
   border: solid 0.3em #1f8155;
-  box-shadow: 0 0.15em 0.65em rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.4);
   color: white;
   line-height: 1;
   letter-spacing: 0.15em;
@@ -325,7 +325,7 @@ button:focus:not(:active){
   line-height: 1;
 }
 .popup h3{
-  margin: 1em 0 0.5em 0.5em;
+  margin: 1em 0 0.5em;
   line-height: 1;
   text-align: left;
 }
@@ -339,3 +339,16 @@ button:focus:not(:active){
   justify-content: space-between;
   padding: 0;
 }
+.popup-round-img-top{
+  width: 8em;
+  margin: -40% 0 0.5em;
+  border-radius: 100%;
+  box-shadow: 0 0.15em 1.5em rgba(0, 0, 0, 0.5);
+}
+/* .popup-round-img-top{
+  position: absolute;
+  left: 33.333%;
+  top: -40%;
+  width: 33.333%;
+  border-radius: 100%;
+} */

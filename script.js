@@ -175,13 +175,13 @@ function selectInput(idInput) {
 /* ------------------------------ POPUP ------------------------------ */
 
 //Shows the popup
-function addSubjectPopupShow() {
-  document.getElementById('add-container').style.display = 'flex';
+function popupShow(id) {
+  document.getElementById(id).style.display = 'flex';
 }
 
 //Hides the popup
-function addSubjectPopupHide() {
-  document.getElementById('add-container').style.display = 'none';
+function popupHide(popup) {  
+  popup.style.display = 'none';
 }
 
 //Adds the subjects selected in the popup
@@ -209,4 +209,16 @@ function addSubjects() {
 //Returns if the exam is undone
 function isUndone(id, examType, exam) {
   return subjects[id].grades[examType] == undefined || subjects[id].grades[examType][exam] == undefined
+}
+
+/* ------------------------------ USER ------------------------------ */
+
+function showUserInfo() {
+  popupShow('user-container');
+}
+
+/* ------------------------------ EDITOR ------------------------------ */
+
+function editSubjects() {
+  
 }

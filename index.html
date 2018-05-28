@@ -32,20 +32,20 @@
 </head>
 <body>
   <div class="top-bar">
-    <button><img src="media/user-circle.svg" alt="Perfil"></button>
+    <button onclick="showUserInfo();"><img src="media/user-circle.svg" alt="Perfil"></button>
     <h1>Grade Calc</h1>
-    <button><img src="media/edit.svg" alt="Editar"></button>
+    <button onclick="editSubjects();"><img src="media/edit.svg" alt="Editar"></button>
   </div>
 
   <div class="screen">
     <div id="dashboard" class="dashboard"></div>
-    <button class="add-button" onclick="addSubjectPopupShow()">
+    <button class="add-button" onclick="popupShow('add-container')">
       <img src="media/plus.svg" alt="Añadir Asignatura">
     </button>
   </div>
 
   <div id="add-container" class="popup" style="display: none;">
-    <div onclick="addSubjectPopupHide();"></div>
+    <div onclick="popupHide(this.parentNode);"></div>
     <div class="popup-content add-popup">
       <h2>Choose a subject</h2>
       <div>
@@ -66,6 +66,19 @@
         </div>
       </div>
       <button onclick="addSubjects();">Add</button>
+    </div>
+  </div>
+
+  <div id="user-container" class="popup" style="display: none;">
+    <div onclick="popupHide(this.parentNode);"></div>
+    <div class="popup-content user-popup">
+      <img class="popup-round-img-top" src="media/profile-pic.jpg" alt="Profile Picture">
+      <h2>My Account</h2>
+      <div>
+        <h3>In development</h3>
+        <p>Here you will have your account info.</p>
+      </div>
+      <button onclick="popupHide(this.parentNode.parentNode);">OK</button>
     </div>
   </div>
 
