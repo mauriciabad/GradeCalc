@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es-es">
+<html lang="es-ES">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -29,8 +29,29 @@
   <meta name="msapplication-config" content="icons/browserconfig.xml">
   <meta name="theme-color" content="#1b9f64">
 
+  <!-- Facebook SDK -->
+  <script src="https://sdk.accountkit.com/es_ES/sdk.js"></script>
+
 </head>
 <body>
+    <script>
+        window.fbAsyncInit = function() {
+          FB.init({
+            appId      : '191974028291011',
+            xfbml      : true,
+            version    : 'v3.0'
+          });
+          FB.AppEvents.logPageView();
+        };
+      
+        (function(d, s, id){
+           var js, fjs = d.getElementsByTagName(s)[0];
+           if (d.getElementById(id)) {return;}
+           js = d.createElement(s); js.id = id;
+           js.src = "https://connect.facebook.net/es_ES/sdk.js";
+           fjs.parentNode.insertBefore(js, fjs);
+         }(document, 'script', 'facebook-jssdk'));
+      </script>
   <div class="top-bar">
     <button onclick="showUserInfo();"><img src="media/user-circle.svg" alt="Perfil"></button>
     <h1>Grade Calc</h1>
@@ -39,6 +60,23 @@
 
   <div class="screen">
     <div id="dashboard" class="dashboard"></div>
+    <div id="tutorial">
+      <h2>🙋🏼‍♂️ Bienvenido 🙋🏼‍♀️</h2>
+      <p>Ésta aplicación web te permite administrar tus notas de exámenes.</p>
+      <p><i>Aún está en desarollo, así que no todas las funciones están disponibles. De todas formas, tiene las básicas, así que la puedes usar.</i></p>
+      <h3>Funciones:</h3>
+      <ul>
+        <li>- Calcular automáticamente la nota que necesitas para aprobar</li>
+        <li>- Crear tus asignaturas y compartirlas.</li>
+        <li>- Buscar y usar asignaturas ya hechas.</li>
+        <li>- Guarda tus notas en las cookies automaticamente.</li>
+        <li>- Iniciar sesión con Facebook y guardar tus notas.</li>
+        <li>Más próximamente ...</li>
+      </ul>
+      <br>
+      <p><i>Venga, registra tu primera asignatura con el botón de abajo.</i></p>
+      <p>Una vez creada, tócala para editar tus notas</p>
+    </div>
     <button class="add-button" onclick="popupShow('add-container')">
       <img src="media/plus.svg" alt="Añadir Asignatura">
     </button>
@@ -73,12 +111,18 @@
     <div onclick="popupHide(this.parentNode);"></div>
     <div class="popup-content user-popup">
       <img class="popup-round-img-top" src="media/profile-pic.jpg" alt="Profile Picture">
-      <h2>My Account</h2>
+      <h2>Mi perfil</h2>
       <div>
-        <h3>In development</h3>
-        <p>Here you will have your account info.</p>
+        <h3>En desarrollo</h3>
+        <p>Próximamente podrás iniciar sesión con Facebook.</p>
+        <p>Éstos son algunos de los beneficios que tendrás:</p>
+        <ul>
+          <li>Accede a tus notas en cualquier sitio.</li>
+          <li>Ten una copia de seguridad.</li>
+        </ul>
       </div>
-      <button onclick="popupHide(this.parentNode.parentNode);">OK</button>
+      <div class="fb-login-button" data-width="240" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="true" data-auto-logout-link="true" data-use-continue-as="true"></div>
+      <button onclick="popupHide(this.parentNode.parentNode);">Genial</button>
     </div>
   </div>
 

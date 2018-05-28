@@ -62,7 +62,27 @@ function createSubjectCardCollapsed(id) {
 
   dashboard.appendChild(card);
   updateAndDisplayMarks(id); //because necesarymark is hardcoded
+  hideTutorial();
+}
+
+//Adds the subjects selected in the popup
+function addSubjects() {
+  let checked = document.querySelectorAll("#add-container input:checked");
   
+  for (let i = 0; i < checked.length; i++) {
+    let id = checked[i].id.slice(9);
+
+    if (subjects[id] == undefined) {
+      subjects[id] = allSubjects[id];
+  
+      createSubjectCardCollapsed(id);
+      Cookies.set(id, subjects[id], { expires: 365 });
+      
+    }
+  }
+  
+  popupHide('add-container');
+
 }
 
 /* ------------------------------ UI & DATA UPDATE ------------------------------ */
@@ -184,26 +204,6 @@ function popupHide(popup) {
   popup.style.display = 'none';
 }
 
-//Adds the subjects selected in the popup
-function addSubjects() {
-  let checked = document.querySelectorAll("#add-container input:checked");
-  
-  for (let i = 0; i < checked.length; i++) {
-    let id = checked[i].id.slice(9);
-
-    if (subjects[id] == undefined) {
-      subjects[id] = allSubjects[id];
-  
-      createSubjectCardCollapsed(id);
-      Cookies.set(id, subjects[id], { expires: 365 });
-      
-    }
-  }
-  
-  addSubjectPopupHide();
-
-}
-
 /* ------------------------------ USEFUL STUF ------------------------------ */
 
 //Returns if the exam is undone
@@ -221,4 +221,14 @@ function showUserInfo() {
 
 function editSubjects() {
   
+}
+
+/* ------------------------------ TUTORIAL ------------------------------ */
+
+function hideTutorial() {
+  document.getElementById('tutorial').style.display = 'none';
+}
+
+function showTutorial() {
+  document.getElementById('tutorial').style.display = 'block';
 }

@@ -7,7 +7,9 @@ body{
   color: #444;
   background-color: #dce0e0;
   text-align: center;
-  overflow: hidden;
+}
+p{
+  margin: 0.5em auto 0.5em;
 }
 button{
   border: none;
@@ -30,6 +32,9 @@ button:active{
 button:focus:not(:active){
   transform: scale(1.10);
   outline: none;
+}
+::selection{
+  background-color: #E9FF99;
 }
 
 .top-bar{
@@ -61,13 +66,7 @@ button:focus:not(:active){
 }
 
 .screen{
-  overflow-y: scroll;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
   margin-top: 3em;
-  width: 100vw;
-  box-sizing: border-box;
-  height: calc(100vh - 3em);
 }
 
 .dashboard{
@@ -268,7 +267,7 @@ button:focus:not(:active){
 
 .popup{
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -281,7 +280,7 @@ button:focus:not(:active){
 .popup-content{
   background-color: #fefefe;
   border-radius: 0.3em;
-  margin: 0.5em 2em;
+  margin: 0.5em;
   box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
   z-index: 2;
   position: relative;
@@ -302,6 +301,12 @@ button:focus:not(:active){
 }
 .add-popup{
   text-align: center;
+}
+.add-popup > div{
+  box-sizing: border-box;
+  max-height: 50vh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .popup button{
   display: block;
@@ -329,29 +334,42 @@ button:focus:not(:active){
   line-height: 1;
   text-align: left;
 }
-.add-popup > div{
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  max-height: 70vh;
+.popup p{
+  text-align: left;
+}
+.popup li{
+  text-align: left;
 }
 .add-popup > div > div{
   display: flex;
   justify-content: space-between;
   padding: 0;
 }
-<<<<<<< HEAD
+.add-popup > div > div > span{
+  margin: 0 0.25em;
+}
 .popup-round-img-top{
   width: 8em;
-  margin: -40% 0 0.5em;
+  margin: -40% auto 0.5em;
   border-radius: 100%;
   box-shadow: 0 0.15em 1.5em rgba(0, 0, 0, 0.5);
 }
-/* .popup-round-img-top{
-  position: absolute;
-  left: 33.333%;
-  top: -40%;
-  width: 33.333%;
-  border-radius: 100%;
-} */
-=======
->>>>>>> 7b2fb7abac6b9fdf084dfe3c627cd8ea6e48b2f7
+.user-popup{
+  max-width: 17.5em;
+  margin-top: 4em;
+}
+
+#tutorial{
+  padding: 0 2em;
+}
+#tutorial ul{
+  list-style: none;
+  padding-left: 0;
+  margin-top: 0;
+}
+#tutorial li{
+  margin: 0.125em 0;
+}
+#tutorial h3{
+  margin: 0.5em 0 0;
+}
