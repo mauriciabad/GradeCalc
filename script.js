@@ -10,7 +10,7 @@ allSubjects.a3={id:"a3",finalMark:0,necesaryMark:5,grades:{"Extra":{"E":0}},name
 allSubjects.a4={id:"a4",finalMark:0,necesaryMark:5,grades:{"Extra":{"E":0}},name:"XC",fullName:"Xarxes de Computadors",evaluation:{Teoria:{T1:.3,T2:.3,T3:.15},Lab:{L:.0625,ExL:.1875},Extra:{E:.1}},color:5,uni:"UPC",faculty:"FIB"};
 allSubjects.a5={id:"a5",finalMark:0,necesaryMark:5,grades:{},name:"BD",fullName:"Bases de dades",evaluation:{Teoria:{F:.6},Lab:{L1:.1,L2:.075,L3:.075},Prob:{Pr:.15}},color:1,uni:"UPC",faculty:"FIB"},
 allSubjects.a6={id:"a6",finalMark:0,necesaryMark:5,grades:{},name:"CI",fullName:"Interfícies de Computadors",evaluation:{Teoria:{T1:.23333,T2:.23333,T3:.23333},Lab:{L:.3}},color:3,uni:"UPC",faculty:"FIB"},
-allSubjects.a7={id:"a7",finalMark:0,necesaryMark:5,grades:{},name:"EDA",fullName:"Estructures de Dades i Algorismes",evaluation:{Examens:{P1:.3,PC:.3,F:.6},Joc:{Joc:.2}},color:2,uni:"UPC",faculty:"FIB"},
+allSubjects.a7={id:"a7",finalMark:0,necesaryMark:5,grades:{},name:"EDA",fullName:"Estructures de Dades i Algorismes",evaluation:{Examens:{P1:.3,PC:.3,F:.3},Joc:{Joc:.2}},color:2,uni:"UPC",faculty:"FIB"},
 allSubjects.a8={id:"a8",finalMark:0,necesaryMark:5,grades:{},name:"PE",fullName:"Probabilitat i Estadística",evaluation:{"Examen 1":{B1:.11764705882,B2:.1294117647,B3:.14117647058},"Examen 2":{B4:.15294117647,B5:.16470588235,B6:.17647058823},Treball:{B7:.11764705882}},color:7,uni:"UPC",faculty:"FIB"},
 allSubjects.a9={id:"a9",finalMark:0,necesaryMark:5,grades:{},name:"SO",fullName:"Sistemes Operatius",evaluation:{Teoria:{T1:.2,T2:.3},Lab:{L1:.225,L2:.225,Test:.05}},color:4,uni:"UPC",faculty:"FIB"};
 
