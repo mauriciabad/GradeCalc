@@ -1,4 +1,4 @@
-var CACHE_NAME = 'v0.01';
+var CACHE_NAME = 'v0.02';
 
 var urlsToCache = [
   '.',
@@ -8,6 +8,7 @@ var urlsToCache = [
   '/media/plus.svg',
   '/media/edit.svg',
   '/media/user-circle.svg',
+  '/media/profile-pic.jpg',
   'https://fonts.googleapis.com/css?family=Nunito:300,400,700',
   'https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'
 ];

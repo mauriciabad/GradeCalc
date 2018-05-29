@@ -258,6 +258,7 @@ function editSubjects() {
 
 function hideTutorial() {
   document.getElementById('tutorial').style.display = 'none';
+  document.getElementById('add-button').classList.remove('focus-animation-loop');
 }
 
 function showTutorial() {

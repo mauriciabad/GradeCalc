@@ -34,7 +34,7 @@ button:focus:not(:active){
   outline: none;
 }
 ::selection{
-  background-color: #E9FF99;
+  background-color: #F0FF7A;
 }
 
 .top-bar{
@@ -79,14 +79,52 @@ button:focus:not(:active){
   margin: 0 auto;
 }
 
-.add-button > img{
+#add-button > img{
   height: 4em;
   border-radius: 50%;
 }
 
-.add-button{
+#add-button{
   margin: 2em 0 3em;
   border-radius: 50%;
+}
+.focus-animation-loop{
+  animation: rubberBand 5s 9s infinite;
+}
+
+@keyframes rubberBand {
+  0% {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+  6% {
+    -webkit-transform: scale3d(1.25, 0.75, 1);
+    transform: scale3d(1.25, 0.75, 1);
+  }
+  8% {
+    -webkit-transform: scale3d(0.75, 1.25, 1);
+    transform: scale3d(0.75, 1.25, 1);
+  }
+  10% {
+    -webkit-transform: scale3d(1.15, 0.85, 1);
+    transform: scale3d(1.15, 0.85, 1);
+  }
+  13% {
+    -webkit-transform: scale3d(0.95, 1.05, 1);
+    transform: scale3d(0.95, 1.05, 1);
+  }
+  15% {
+    -webkit-transform: scale3d(1.05, 0.95, 1);
+    transform: scale3d(1.05, 0.95, 1);
+  }
+  20% {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+  100% {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
 }
 
 .subject-card{
@@ -310,11 +348,12 @@ button:focus:not(:active){
 }
 .popup button{
   display: block;
-  padding: 0.7em 0.85em 0.7em 1em;
+  padding: 1em 1.35em 1em 1.5em;
   font-weight: bold;
-  background-color: #1B9F64;
-  border: solid 0.3em #1f8155;
-  box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.4);
+  background-color: #19925b;
+  /* border: solid 0.3em #1f8155; */
+  box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.7);
+  text-shadow: 0 0.15em 0.5em rgba(0, 0, 0, 0.4);
   color: white;
   line-height: 1;
   letter-spacing: 0.15em;

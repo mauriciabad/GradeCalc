@@ -56,7 +56,7 @@
       <p><i>Venga, registra tu primera asignatura con el botón de abajo.</i></p>
       <p>Una vez creada, tócala para editar tus notas</p>
     </div>
-    <button class="add-button" onclick="popupShow('add-container'); window.history.pushState({popup: 'add'}, 'Añade una asignatura', '#add');">
+    <button id="add-button" class="focus-animation-loop" onclick="popupShow('add-container'); window.history.pushState({popup: 'add'}, 'Añade una asignatura', '#add');">
       <img src="media/plus.svg" alt="Añadir Asignatura">
     </button>
   </div>
