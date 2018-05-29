@@ -81,7 +81,7 @@ function addSubjects() {
     }
   }
   
-  popupHide('add-container');
+  popupHide(document.getElementById('add-container'));
 
 }
 
@@ -200,8 +200,8 @@ function popupShow(id) {
 }
 
 //Hides the popup
-function popupHide(id) {  
-  document.getElementById(id).style.display = 'none';
+function popupHide(popup) {  
+  popup.style.display = 'none';
 }
 
 /* ------------------------------ USEFUL STUF ------------------------------ */
