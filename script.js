@@ -215,8 +215,8 @@ window.addEventListener('popstate', function(event) {
     }
   }
   
-  //window.history.pushState({index: 'user'}, 'Profile', 'user');
 })
+//window.history.pushState({popup: 'name'}, 'Page name', 'name');
 
 //Shows the popup
 function popupShow(id) {
@@ -232,8 +232,6 @@ function popupHide(popup) {
 function popupHideAll() {  
   popupHide(document.getElementById('user-container'));
   popupHide(document.getElementById('add-container'));
-  
-  window.history.back();
 }
 
 /* ------------------------------ USEFUL STUF ------------------------------ */
