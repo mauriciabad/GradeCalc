@@ -194,6 +194,30 @@ function selectInput(idInput) {
 
 /* ------------------------------ POPUP ------------------------------ */
 
+//What to do when page changed
+window.addEventListener('popstate', function(event) {
+  console.log(event);
+  if (event.state == null) {
+    popupHideAll();
+    return;
+  }
+
+  for (const pageType in event.state) {
+    if (pageType == 'popup') {
+      switch (event.state.popup) {
+        case 'user':
+          showUserInfo();
+          break;
+        case 'add':
+          popupShow('add-container');
+          break;
+      }
+    }
+  }
+  
+  //window.history.pushState({index: 'user'}, 'Profile', 'user');
+})
+
 //Shows the popup
 function popupShow(id) {
   document.getElementById(id).style.display = 'flex';
@@ -202,6 +226,14 @@ function popupShow(id) {
 //Hides the popup
 function popupHide(popup) {  
   popup.style.display = 'none';
+}
+
+//Hides all popups
+function popupHideAll() {  
+  popupHide(document.getElementById('user-container'));
+  popupHide(document.getElementById('add-container'));
+  
+  window.history.back();
 }
 
 /* ------------------------------ USEFUL STUF ------------------------------ */

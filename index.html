@@ -53,7 +53,7 @@
          }(document, 'script', 'facebook-jssdk'));
       </script>
   <div class="top-bar">
-    <button onclick="showUserInfo();"><img src="media/user-circle.svg" alt="Perfil"></button>
+    <button onclick="showUserInfo(); window.history.pushState({popup: 'user'}, 'Perfil', 'user');"><img src="media/user-circle.svg" alt="Perfil"></button>
     <h1>Grade Calc</h1>
     <button onclick="editSubjects();"><img src="media/edit.svg" alt="Editar"></button>
   </div>
@@ -77,15 +77,15 @@
       <p><i>Venga, registra tu primera asignatura con el botón de abajo.</i></p>
       <p>Una vez creada, tócala para editar tus notas</p>
     </div>
-    <button class="add-button" onclick="popupShow('add-container')">
+    <button class="add-button" onclick="popupShow('add-container'); window.history.pushState({popup: 'add'}, 'Añade una asignatura', 'add');">
       <img src="media/plus.svg" alt="Añadir Asignatura">
     </button>
   </div>
 
   <div id="add-container" class="popup" style="display: none;">
-    <div onclick="popupHide(this.parentNode);"></div>
+    <div onclick="popupHide(this.parentNode); window.history.back();"></div>
     <div class="popup-content add-popup">
-      <h2>Choose a subject</h2>
+      <h2>Escoge una asignatura</h2>
       <div>
         <h3>Q4</h3>
         <div>
@@ -103,12 +103,12 @@
           <span><input type="checkbox" name="SO" id="checkbox-a9"><label for="checkbox-a9">SO</label></span>
         </div>
       </div>
-      <button onclick="addSubjects();">Add</button>
+      <button onclick="addSubjects();">Añadir</button>
     </div>
   </div>
 
   <div id="user-container" class="popup" style="display: none;">
-    <div onclick="popupHide(this.parentNode);"></div>
+    <div onclick="popupHide(this.parentNode); window.history.back();"></div>
     <div class="popup-content user-popup">
       <img class="popup-round-img-top" src="media/profile-pic.jpg" alt="Profile Picture">
       <h2>Mi perfil</h2>
