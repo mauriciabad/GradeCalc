@@ -29,29 +29,8 @@
   <meta name="msapplication-config" content="icons/browserconfig.xml">
   <meta name="theme-color" content="#1b9f64">
 
-  <!-- Facebook SDK -->
-  <script src="https://sdk.accountkit.com/es_ES/sdk.js"></script>
-
 </head>
 <body>
-    <script>
-        window.fbAsyncInit = function() {
-          FB.init({
-            appId      : '191974028291011',
-            xfbml      : true,
-            version    : 'v3.0'
-          });
-          FB.AppEvents.logPageView();
-        };
-      
-        (function(d, s, id){
-           var js, fjs = d.getElementsByTagName(s)[0];
-           if (d.getElementById(id)) {return;}
-           js = d.createElement(s); js.id = id;
-           js.src = "https://connect.facebook.net/es_ES/sdk.js";
-           fjs.parentNode.insertBefore(js, fjs);
-         }(document, 'script', 'facebook-jssdk'));
-      </script>
   <div class="top-bar">
     <button onclick="showUserInfo(); window.history.pushState({popup: 'user'}, 'Perfil', '#user');"><img src="media/user-circle.svg" alt="Perfil"></button>
     <h1>Grade Calc</h1>
@@ -66,11 +45,11 @@
       <p><i>Aún está en desarollo, así que no todas las funciones están disponibles. De todas formas, tiene las básicas, así que la puedes usar.</i></p>
       <h3>Funciones:</h3>
       <ul>
-        <li>- Calcular automáticamente la nota que necesitas para aprobar</li>
-        <li>- Crear tus asignaturas y compartirlas.</li>
-        <li>- Buscar y usar asignaturas ya hechas.</li>
+        <li>- Calcula automáticamente la nota que necesitas para aprobar</li>
+        <li>- Crea tus asignaturas y compártelas.</li>
+        <li>- Busca y usa asignaturas ya hechas.</li>
         <li>- Guarda tus notas en las cookies automaticamente.</li>
-        <li>- Iniciar sesión con Facebook y guardar tus notas.</li>
+        <li>- Inicia sesión con Google y guarda tus notas en la nube.</li>
         <li>Más próximamente ...</li>
       </ul>
       <br>
@@ -115,15 +94,14 @@
       <h2>Mi perfil</h2>
       <div>
         <h3>En desarrollo</h3>
-        <p>Próximamente podrás iniciar sesión con Facebook.</p>
+        <p>Próximamente podrás iniciar sesión con Google.</p>
         <p>Éstos son algunos de los beneficios que tendrás:</p>
         <ul>
           <li>Accede a tus notas en cualquier sitio.</li>
-          <li>Ten una copia de seguridad.</li>
+          <li>Ten una copia en la nube.</li>
         </ul>
       </div>
-      <div class="fb-login-button" data-width="240" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="true" data-auto-logout-link="true" data-use-continue-as="true"></div>
-      <button onclick="popupHide(this.parentNode.parentNode);">Genial</button>
+      <button onclick="popupHide(this.parentNode.parentNode); window.history.back();">Genial</button>
     </div>
   </div>
 
