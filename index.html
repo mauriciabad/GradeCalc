@@ -53,7 +53,7 @@
          }(document, 'script', 'facebook-jssdk'));
       </script>
   <div class="top-bar">
-    <button onclick="showUserInfo(); window.history.pushState({popup: 'user'}, 'Perfil', 'user');"><img src="media/user-circle.svg" alt="Perfil"></button>
+    <button onclick="showUserInfo(); window.history.pushState({popup: 'user'}, 'Perfil', '#user');"><img src="media/user-circle.svg" alt="Perfil"></button>
     <h1>Grade Calc</h1>
     <button onclick="editSubjects();"><img src="media/edit.svg" alt="Editar"></button>
   </div>
@@ -77,7 +77,7 @@
       <p><i>Venga, registra tu primera asignatura con el botón de abajo.</i></p>
       <p>Una vez creada, tócala para editar tus notas</p>
     </div>
-    <button class="add-button" onclick="popupShow('add-container'); window.history.pushState({popup: 'add'}, 'Añade una asignatura', 'add');">
+    <button class="add-button" onclick="popupShow('add-container'); window.history.pushState({popup: 'add'}, 'Añade una asignatura', '#add');">
       <img src="media/plus.svg" alt="Añadir Asignatura">
     </button>
   </div>
@@ -93,6 +93,7 @@
           <span><input type="checkbox" name="IES" id="checkbox-a2"><label for="checkbox-a2">IES</label></span>
           <span><input type="checkbox" name="IDI" id="checkbox-a3"><label for="checkbox-a3">IDI</label></span>
           <span><input type="checkbox" name="XC" id="checkbox-a4"><label for="checkbox-a4">XC</label></span>
+          <span><input type="checkbox" name="EEE" id="checkbox-a10"><label for="checkbox-a10">EEE</label></span>
         </div>
         <h3>Q3</h3>
         <div>

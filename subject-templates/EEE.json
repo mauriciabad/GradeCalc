@@ -1,0 +1,26 @@
+{
+  "id": "a10",
+  "name": "EEE",
+  "fullName": "Empresa i Entorn Econòmic",
+  "evaluation": {
+    "Macro": {
+      "PEC1": 0.15,
+      "PEC2": 0.15,
+      "PEC3": 0.15
+    },
+    "Micro": {
+      "PEC4": 0.15,
+      "PEC5": 0.15,
+      "PEC6": 0.15
+    },
+    "Participación": {
+      "P": 0.1
+    }
+  },
+  "color": 8,
+  "uni": "UPC",
+  "faculty": "FIB",
+  "finalMark": 0,
+  "necesaryMark": 5,
+  "grades": {}
+}

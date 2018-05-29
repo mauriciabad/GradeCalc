@@ -13,6 +13,7 @@ allSubjects.a6={id:"a6",finalMark:0,necesaryMark:5,grades:{},name:"CI",fullName:
 allSubjects.a7={id:"a7",finalMark:0,necesaryMark:5,grades:{},name:"EDA",fullName:"Estructures de Dades i Algorismes",evaluation:{Examens:{P1:.3,PC:.3,F:.3},Joc:{Joc:.2}},color:2,uni:"UPC",faculty:"FIB"},
 allSubjects.a8={id:"a8",finalMark:0,necesaryMark:5,grades:{},name:"PE",fullName:"Probabilitat i Estadística",evaluation:{"Examen 1":{B1:.11764705882,B2:.1294117647,B3:.14117647058},"Examen 2":{B4:.15294117647,B5:.16470588235,B6:.17647058823},Treball:{B7:.11764705882}},color:7,uni:"UPC",faculty:"FIB"},
 allSubjects.a9={id:"a9",finalMark:0,necesaryMark:5,grades:{},name:"SO",fullName:"Sistemes Operatius",evaluation:{Teoria:{T1:.2,T2:.3},Lab:{L1:.225,L2:.225,Test:.05}},color:4,uni:"UPC",faculty:"FIB"};
+allSubjects.a10={id:"a10",name:"EEE",fullName:"Empresa i Entorn Econòmic",evaluation:{Macro:{PEC1:.15,PEC2:.15,PEC3:.15},Micro:{PEC4:.15,PEC5:.15,PEC6:.15},"Participación":{P:.1}},color:8,uni:"UPC",faculty:"FIB",finalMark:0,necesaryMark:5,grades:{}};
 
 
 loadData();
