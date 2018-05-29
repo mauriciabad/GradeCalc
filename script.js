@@ -200,8 +200,8 @@ function popupShow(id) {
 }
 
 //Hides the popup
-function popupHide(popup) {  
-  popup.style.display = 'none';
+function popupHide(id) {  
+  document.getElementById(id).style.display = 'none';
 }
 
 /* ------------------------------ USEFUL STUF ------------------------------ */
