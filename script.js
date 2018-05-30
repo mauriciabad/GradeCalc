@@ -2,6 +2,8 @@
 var dashboard = document.getElementById('dashboard');
 var subjects = {};
 var allSubjects = {};
+var toastTimer = 0;
+var removedSubject = {};
 
 //Hardcoded subject templates, will be replaced
 allSubjects.a1={id:"a1",finalMark:0,necesaryMark:5,grades:{},name:"AC",evaluation:{Teoria:{C1:.15,C2:.25,C3:.4},Laboratorio:{L:.2}},color:4,uni:"UPC",faculty:"FIB"},
@@ -41,20 +43,18 @@ function createSubjectCardCollapsed(id) {
   card.id = 'card-' + id;
   card.className = 'subject-card';
   card.onclick = function(event){toggleExpandCard(event, this);};
-  card.innerHTML = '<h2>' + subjects[id].name +
-  '</h2><p style="color: ' + (subjects[id].finalMark>=5 ? '#5a9764' : '#b9574c') + 
-  ';">' + subjects[id].finalMark + '</p><div class="subject-bar"></div><div class="grades-input hidden" style="height: 0px;" ></div>';
+  card.innerHTML = `<button onclick="deleteSubject('${id}')" class="subject-card-remove"><img src="media/trash.svg" alt="x" aria-label="Delete subject"></button><h2>${subjects[id].name}</h2><p style="color: ${subjects[id].finalMark>=5 ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark}</p><div class="subject-bar"></div><div class="grades-input hidden" style="height: 0px;"></div>`;
 
   for (const examType in subjects[id].evaluation) {
-    card.children[3].innerHTML += '<h3>' + examType + '</h3><div></div>';
+    card.children[4].innerHTML += `<h3>${examType}</h3><div></div>`;
     
     for (const exam in subjects[id].evaluation[examType]) {
       if (isUndone(id,examType,exam)) {        
-        card.children[2].innerHTML += '<div onclick="selectInput(\'in-' + id + examType + exam + '\')" class="scol' + 'N' + '" style="flex-grow: ' + subjects[id].evaluation[examType][exam]*100 + '">' + exam + '<div id="bar-'+ id + examType + exam +'">' + subjects[id].necesaryMark + '</div></div>';
-        card.children[3].lastChild.innerHTML += '<div><span>'+ exam +':</span><input type="number" id="in-'+ id + examType + exam +'" placeholder="'+ subjects[id].necesaryMark +'" value="" class="scol' + 'N2' + '" oninput="updateMarkFromCardInput(\''+id+'\', \''+examType+'\', \''+exam+'\', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>';
+        card.children[3].innerHTML += '<div onclick="selectInput(\'in-' + id + examType + exam + '\')" class="scol' + 'N' + '" style="flex-grow: ' + subjects[id].evaluation[examType][exam]*100 + '">' + exam + '<div id="bar-'+ id + examType + exam +'">' + subjects[id].necesaryMark + '</div></div>';
+        card.children[4].lastChild.innerHTML += '<div><span>'+ exam +':</span><input type="number" id="in-'+ id + examType + exam +'" placeholder="'+ subjects[id].necesaryMark +'" value="" class="scol' + 'N2' + '" oninput="updateMarkFromCardInput(\''+id+'\', \''+examType+'\', \''+exam+'\', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>';
       }else{
-        card.children[2].innerHTML += '<div onclick="selectInput(\'in-' + id + examType + exam + '\')" class="scol' + subjects[id].color + '" style="flex-grow: ' + subjects[id].evaluation[examType][exam]*100 + '">' + exam + '<div id="bar-'+ id + examType + exam +'">' + subjects[id].grades[examType][exam] + '</div></div>';
-        card.children[3].lastChild.innerHTML += '<div><span>'+ exam +':</span><input type="number" id="in-'+ id + examType + exam +'" placeholder="'+ subjects[id].necesaryMark +'" value="'+ subjects[id].grades[examType][exam] +'" class="scol' + subjects[id].color + '" oninput="updateMarkFromCardInput(\''+id+'\', \''+examType+'\', \''+exam+'\', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>';
+        card.children[3].innerHTML += '<div onclick="selectInput(\'in-' + id + examType + exam + '\')" class="scol' + subjects[id].color + '" style="flex-grow: ' + subjects[id].evaluation[examType][exam]*100 + '">' + exam + '<div id="bar-'+ id + examType + exam +'">' + subjects[id].grades[examType][exam] + '</div></div>';
+        card.children[4].lastChild.innerHTML += '<div><span>'+ exam +':</span><input type="number" id="in-'+ id + examType + exam +'" placeholder="'+ subjects[id].necesaryMark +'" value="'+ subjects[id].grades[examType][exam] +'" class="scol' + subjects[id].color + '" oninput="updateMarkFromCardInput(\''+id+'\', \''+examType+'\', \''+exam+'\', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>';
       }
     }
   }
@@ -93,8 +93,8 @@ function updateAndDisplayMarks(id) {
   let card = document.getElementById('card-' + id);
   updateFinalMark(id);
   updateNecesaryMark(id);
-  card.children[1].textContent = subjects[id].finalMark;
-  card.children[1].style.color = (subjects[id].finalMark>=5 ? '#5a9764' : '#b9574c');
+  card.children[2].textContent = subjects[id].finalMark;
+  card.children[2].style.color = (subjects[id].finalMark>=5 ? '#5a9764' : '#b9574c');
 }
 
 //Saves and updates the value of the necesaryMark to pass
@@ -179,7 +179,7 @@ function round(n) {
 //Expansd or collapes the card
 function toggleExpandCard(event, card) {  
   if ( !(event.target.tagName == 'INPUT')) {
-    if (card.children[2].contains(event.target)) {
+    if (card.children[3].contains(event.target)) {
       card.lastChild.classList.remove('hidden');
     } else{
       card.lastChild.classList.toggle('hidden');
@@ -252,6 +252,34 @@ function showUserInfo() {
 
 function editSubjects() {
   
+}
+
+function deleteSubject(id) {
+  removedSubject = subjects[id]
+  delete subjects[id];
+  Cookies.remove(id);
+  document.getElementById('card-'+id).remove();
+
+  let toast = document.getElementById('toast');
+  toast.style.display = 'none';
+  toast.offsetHeight;
+  toast.style.display = 'flex';
+  toast.firstChild.children[0].textContent = removedSubject.name;
+
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.style.display = 'none';
+  }, 7500);
+}
+
+function undoRemoveSubject() {
+  let id = removedSubject.id;
+  subjects[id] = removedSubject;
+  createSubjectCardCollapsed(id);
+  Cookies.set(id, subjects[id], { expires: 365 });
+
+  clearTimeout(toastTimer);
+  document.getElementById('toast').style.display = 'none';
 }
 
 /* ------------------------------ TUTORIAL ------------------------------ */
