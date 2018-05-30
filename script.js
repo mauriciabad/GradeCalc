@@ -197,7 +197,6 @@ function selectInput(idInput) {
 
 //What to do when page changed
 window.addEventListener('popstate', function(event) {
-  console.log(event);
   if (event.state == null) {
     popupHideAll();
     return;
@@ -242,6 +241,14 @@ function isUndone(id, examType, exam) {
   return subjects[id].grades[examType] == undefined || subjects[id].grades[examType][exam] == undefined
 }
 
+function isEmpty(obj) {
+  for(var key in obj) {
+      if(obj.hasOwnProperty(key))
+          return false;
+  }
+  return true;
+}
+
 /* ------------------------------ USER ------------------------------ */
 
 function showUserInfo() {
@@ -265,6 +272,7 @@ function deleteSubject(id) {
   toast.offsetHeight;
   toast.style.display = 'flex';
   toast.firstChild.children[0].textContent = removedSubject.name;
+  if (isEmpty(subjects)) showTutorial();
 
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {

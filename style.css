@@ -357,7 +357,11 @@ button:focus:not(:active){
   transition: border 300ms ease-out, background-color 200ms ease-out, color 200ms ease-out;
 }
 .grades-input input:invalid{
-  border: solid medium#cf5155;
+  border: solid 0.2em#cf5155;
+}
+.grades-input input:focus{
+  border: solid 0.2em #444;
+  outline: none;
 }
 
 .popup{
@@ -441,7 +445,7 @@ button:focus:not(:active){
   padding: 0;
 }
 .add-popup > div > div > span{
-  margin: 0 0.25em;
+  padding: 0 0.25em;
 }
 .popup-round-img-top{
   width: 8em;
