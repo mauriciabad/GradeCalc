@@ -277,7 +277,7 @@ function deleteSubject(id) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
     toast.style.display = 'none';
-  }, 7500);
+  }, 8000);
 }
 
 function undoRemoveSubject() {
