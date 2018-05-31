@@ -338,7 +338,16 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     document.getElementById('user-container').children[1].children[0].src = photoURL;
 
+    // var userDB = db.collection('users').doc(uid);
+    // var docData = {
+    //   name: "Hello world!",
+    //   test: "Me"
+    // };
+    // var setWithMerge = userDB.set(docData);
+
+
   } else { // User is signed out.
     console.log('Signed out')
   }
 });
+
