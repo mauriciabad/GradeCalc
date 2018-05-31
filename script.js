@@ -5,6 +5,12 @@ var allSubjects = {};
 var toastTimer = 0;
 var removedSubject = {};
 
+var db = firebase.firestore();
+var displayName = 'Anónimo';
+var photoURL = 'media/profile-pic.jpg';
+var isAnonymous = true;
+var uid = 0;
+
 //Hardcoded subject templates, will be replaced
 allSubjects.a1={id:"a1",finalMark:0,necesaryMark:5,grades:{},name:"AC",evaluation:{Teoria:{C1:.15,C2:.25,C3:.4},Laboratorio:{L:.2}},color:4,uni:"UPC",faculty:"FIB"},
 allSubjects.a2={id:"a2",finalMark:0,necesaryMark:5,grades:{},name:"IES",evaluation:{Teoria:{FHC1:.25,FHC2:.15,FHC3:.25},Lab:{C1:.1,C2:.15,P:.1}},color:3,uni:"UPC",faculty:"FIB"},
@@ -300,3 +306,39 @@ function hideTutorial() {
 function showTutorial() {
   document.getElementById('tutorial').style.display = 'block';
 }
+
+/* ------------------------------ FIREBASE ------------------------------ */
+
+var provider = new firebase.auth.GoogleAuthProvider();
+
+// provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+
+firebase.auth().useDeviceLanguage();
+
+function authGoogle() {
+  firebase.auth().signInWithRedirect(provider);
+  // firebase.auth().signOut().then(function() {
+  //   // Sign-out successful.
+  // }).catch(function(error) {
+  //   // An error happened.
+  // });
+}
+
+firebase.auth().getRedirectResult().catch(function(error) {console.log(error);});
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) { // User is signed in.
+    displayName = user.displayName;
+    photoURL = user.photoURL;
+    isAnonymous = user.isAnonymous;
+    uid = user.uid;
+        
+    console.log(`Signed in as ${displayName} whith ID: ${uid}`);
+
+    document.getElementById('user-container').children[1].children[0].src = photoURL;
+
+  } else { // User is signed out.
+    console.log('Signed out')
+  }
+});

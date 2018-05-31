@@ -101,11 +101,11 @@
           <li>Ten una copia en la nube.</li>
         </ul>
       </div>
-      <button onclick="popupHide(this.parentNode.parentNode); window.history.back();">Genial</button>
+      <button onclick="authGoogle(); popupHide(this.parentNode.parentNode); window.history.back();">Entrar</button>
     </div>
   </div>
+  <div id="toast" style="display: none;"><div>Has borrado <b>NADA</b><button onclick="undoRemoveSubject();">Deshacer</button></div></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
@@ -116,9 +116,23 @@
         console.log('Service worker registration failed, error:', error);
       });
     }
-
+    </script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+  <!-- <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-firestone.js"></script> -->
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyDQmE1YoLWHMJ0td05JiHd-0yIW2mvJojc",
+      authDomain: "gradecalc-2018.firebaseapp.com",
+      databaseURL: "https://gradecalc-2018.firebaseio.com",
+      projectId: "gradecalc-2018",
+      storageBucket: "gradecalc-2018.appspot.com",
+      messagingSenderId: "353677026446"
+    };
+    firebase.initializeApp(config);
   </script>
   <script src="script.js"></script>
-  <div id="toast" style="display: none;"><div>Has borrado <b>NADA</b><button onclick="undoRemoveSubject();">Deshacer</button></div></div>
 </body>
 </html>
