@@ -347,7 +347,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     bntLogin.className = 'btn-red';
     bntLogin.onclick = function(){logoutGoogle(); popupHide(this.parentNode.parentNode); window.history.back();};
 
-    showToast(`Bienvenido de nuevo <b>${displayName}</b> 😊`);
+    //showToast(`Bienvenido de nuevo <b>${displayName}</b> 😊`);
 
     // var userDB = db.collection('users').doc(uid);
     // var docData = {
@@ -362,7 +362,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     bntLogin.textContent = 'Iniciar sesión';
     bntLogin.className = 'btn-green';
     bntLogin.onclick = function(){loginGoogle(); popupHide(this.parentNode.parentNode); window.history.back();};
-    showToast('No has iniciado sesión', 'Iniciar sesión','loginGoogle();');
+    //showToast('No has iniciado sesión', 'Iniciar sesión','loginGoogle();');
   }
 });
 
