@@ -1,4 +1,4 @@
-var CACHE_NAME = 'v0.02';
+var CACHE_NAME = 'v0.03';
 
 var urlsToCache = [
   '.',
@@ -7,10 +7,12 @@ var urlsToCache = [
   '/style.css',
   '/media/plus.svg',
   '/media/edit.svg',
+  '/media/trash.svg',
   '/media/user-circle.svg',
   '/media/profile-pic.jpg',
   'https://fonts.googleapis.com/css?family=Nunito:300,400,700',
-  'https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'
+  'https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js',
+  'https://www.gstatic.com/firebasejs/5.0.4/firebase.js'
 ];
 
 self.addEventListener('install', function(event) {

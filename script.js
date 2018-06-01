@@ -3,6 +3,7 @@ var dashboard = document.getElementById('dashboard');
 var subjects = {};
 var allSubjects = {};
 var toastTimer = 0;
+var toast = document.getElementById('toast');
 var removedSubject = {};
 
 var db = firebase.firestore();
@@ -37,9 +38,10 @@ loadData();
 //Generate the cards with the subjects from cookies
 function loadData(){
   subjects = Cookies.getJSON();
+  console.log('Subjects loaded from cookies');
   
   for (const id in subjects) {    
-    createSubjectCardCollapsed(id);    
+    createSubjectCardCollapsed(id);
   }
 }
 
@@ -56,11 +58,11 @@ function createSubjectCardCollapsed(id) {
     
     for (const exam in subjects[id].evaluation[examType]) {
       if (isUndone(id,examType,exam)) {        
-        card.children[3].innerHTML += '<div onclick="selectInput(\'in-' + id + examType + exam + '\')" class="scol' + 'N' + '" style="flex-grow: ' + subjects[id].evaluation[examType][exam]*100 + '">' + exam + '<div id="bar-'+ id + examType + exam +'">' + subjects[id].necesaryMark + '</div></div>';
-        card.children[4].lastChild.innerHTML += '<div><span>'+ exam +':</span><input type="number" id="in-'+ id + examType + exam +'" placeholder="'+ subjects[id].necesaryMark +'" value="" class="scol' + 'N2' + '" oninput="updateMarkFromCardInput(\''+id+'\', \''+examType+'\', \''+exam+'\', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>';
+        card.children[3].innerHTML += `<div onclick="selectInput('in-${id+examType+exam}')" class="scolN" style="flex-grow: ${subjects[id].evaluation[examType][exam]*100}">${exam}<div id="bar-${id+examType+exam}">${subjects[id].necesaryMark}</div></div>`;
+        card.children[4].lastChild.innerHTML += `<div><span>${exam}:</span><input type="number" id="in-${id+examType+exam}" placeholder="${subjects[id].necesaryMark}" value="" class="scolN2" oninput="updateMarkFromCardInput('${id}', '${examType}', '${exam}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
       }else{
-        card.children[3].innerHTML += '<div onclick="selectInput(\'in-' + id + examType + exam + '\')" class="scol' + subjects[id].color + '" style="flex-grow: ' + subjects[id].evaluation[examType][exam]*100 + '">' + exam + '<div id="bar-'+ id + examType + exam +'">' + subjects[id].grades[examType][exam] + '</div></div>';
-        card.children[4].lastChild.innerHTML += '<div><span>'+ exam +':</span><input type="number" id="in-'+ id + examType + exam +'" placeholder="'+ subjects[id].necesaryMark +'" value="'+ subjects[id].grades[examType][exam] +'" class="scol' + subjects[id].color + '" oninput="updateMarkFromCardInput(\''+id+'\', \''+examType+'\', \''+exam+'\', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>';
+        card.children[3].innerHTML += `<div onclick="selectInput('in-${id+examType+exam}')" class="scol${subjects[id].color}" style="flex-grow: ${subjects[id].evaluation[examType][exam]*100}">${exam}<div id="bar-${id+examType+exam}">${subjects[id].grades[examType][exam]}</div></div>`;
+        card.children[4].lastChild.innerHTML += `<div><span>${exam}:</span><input type="number" id="in-${id+examType+exam}" placeholder="${subjects[id].necesaryMark}" value="${subjects[id].grades[examType][exam]}" class="scol${subjects[id].color}" oninput="updateMarkFromCardInput('${id}', '${examType}', '${exam}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
       }
     }
   }
@@ -248,11 +250,24 @@ function isUndone(id, examType, exam) {
 }
 
 function isEmpty(obj) {
-  for(var key in obj) {
-      if(obj.hasOwnProperty(key))
-          return false;
+  for(let key in obj) {
+    if(obj.hasOwnProperty(key))
+      return false;
   }
   return true;
+}
+
+function showToast(message,action,code) {
+  toast.style.display = 'none';
+  toast.offsetHeight;
+  toast.style.display = 'flex';
+  toast.firstChild.innerHTML = message;
+  if (action && code) toast.firstChild.innerHTML += `<button onclick="${code}">${action}</button>`;
+  
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.style.display = 'none';
+  }, 8000);
 }
 
 /* ------------------------------ USER ------------------------------ */
@@ -272,18 +287,9 @@ function deleteSubject(id) {
   delete subjects[id];
   Cookies.remove(id);
   document.getElementById('card-'+id).remove();
+  showToast(`Has borrado <b>${removedSubject.name}</b>`,'Deshacer','undoRemoveSubject();');
 
-  let toast = document.getElementById('toast');
-  toast.style.display = 'none';
-  toast.offsetHeight;
-  toast.style.display = 'flex';
-  toast.firstChild.children[0].textContent = removedSubject.name;
   if (isEmpty(subjects)) showTutorial();
-
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => {
-    toast.style.display = 'none';
-  }, 8000);
 }
 
 function undoRemoveSubject() {
@@ -316,18 +322,18 @@ provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
 
 firebase.auth().useDeviceLanguage();
 
-function authGoogle() {
+function loginGoogle() {
   firebase.auth().signInWithRedirect(provider);
-  // firebase.auth().signOut().then(function() {
-  //   // Sign-out successful.
-  // }).catch(function(error) {
-  //   // An error happened.
-  // });
+}
+
+function logoutGoogle() {
+  firebase.auth().signOut();
 }
 
 firebase.auth().getRedirectResult().catch(function(error) {console.log(error);});
 
 firebase.auth().onAuthStateChanged(function(user) {
+  let bntLogin = document.getElementById('loginButton');
   if (user) { // User is signed in.
     displayName = user.displayName;
     photoURL = user.photoURL;
@@ -337,6 +343,11 @@ firebase.auth().onAuthStateChanged(function(user) {
     console.log(`Signed in as ${displayName} whith ID: ${uid}`);
 
     document.getElementById('user-container').children[1].children[0].src = photoURL;
+    bntLogin.textContent = 'Cerrar sesión';
+    bntLogin.className = 'btn-red';
+    bntLogin.onclick = function(){logoutGoogle(); popupHide(this.parentNode.parentNode); window.history.back();};
+
+    showToast(`Bienvenido de nuevo <b>${displayName}</b> 😊`);
 
     // var userDB = db.collection('users').doc(uid);
     // var docData = {
@@ -348,6 +359,10 @@ firebase.auth().onAuthStateChanged(function(user) {
 
   } else { // User is signed out.
     console.log('Signed out')
+    bntLogin.textContent = 'Iniciar sesión';
+    bntLogin.className = 'btn-green';
+    bntLogin.onclick = function(){loginGoogle(); popupHide(this.parentNode.parentNode); window.history.back();};
+    showToast('No has iniciado sesión', 'Iniciar sesión','loginGoogle();');
   }
 });
 

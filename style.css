@@ -142,6 +142,7 @@ button:focus:not(:active){
   transition: box-shadow 200ms ease-out, transform 300ms ease-out;
   /* height: 9em; */
   cursor: pointer;
+  animation: fadeIn 500ms ease-out;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
 }
@@ -424,6 +425,12 @@ button:focus:not(:active){
   right: 2em;
   bottom: -1.5em;
 }
+.btn-green{
+  background-color: #1B9F64 !important;
+}
+.btn-red{
+  background-color: #cf5155 !important;
+}
 .popup h2{
   margin: 0 0 0.5em;
   line-height: 1;
@@ -523,6 +530,10 @@ button:focus:not(:active){
 @keyframes fadeOut{
   from{opacity: 1;}
   to{opacity: 0;}
+}
+@keyframes fadeIn{
+  from{opacity: 0;}
+  to{opacity: 1;}
 }
 @keyframes opaque{
   from{opacity: 1;}

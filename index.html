@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Grade Calc</title>
-  <meta name="description" content="GradeCalc is a progressive web app for students, it's main porpouse is calculating the necessary mark to pass a subject. Made for the FIB, Facultat d'Informàtica de Barcelona">
+  <meta name="description" content="GradeCalc es aplicación web para calcular la nota que necesitas en cada examen para aprobar una asignatura. Originalmente hecha para la FIB, Facultad de Informàtica de Barcelona">
   <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,700" rel="stylesheet">
   <link href="style.css" rel="stylesheet" type="text/css">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -31,13 +31,13 @@
 
 </head>
 <body>
-  <div class="top-bar">
+  <header class="top-bar">
     <button onclick="showUserInfo(); window.history.pushState({popup: 'user'}, 'Perfil', '#user');"><img src="media/user-circle.svg" alt="Perfil"></button>
     <h1>Grade Calc</h1>
     <button onclick="editSubjects();"><img src="media/edit.svg" alt="Editar"></button>
-  </div>
+  </header>
 
-  <div class="screen">
+  <main class="screen">
     <div id="dashboard" class="dashboard"></div>
     <div id="tutorial">
       <h2>🙋🏼‍♂️ Bienvenido 🙋🏼‍♀️</h2>
@@ -59,7 +59,7 @@
     <button id="add-button" class="focus-animation-loop" onclick="popupShow('add-container'); window.history.pushState({popup: 'add'}, 'Añade una asignatura', '#add');">
       <img src="media/plus.svg" alt="Añadir Asignatura">
     </button>
-  </div>
+  </main>
 
   <div id="add-container" class="popup" style="display: none;">
     <div onclick="popupHide(this.parentNode); window.history.back();"></div>
@@ -91,17 +91,16 @@
     <div onclick="popupHide(this.parentNode); window.history.back();"></div>
     <div class="popup-content user-popup">
       <img class="popup-round-img-top" src="media/profile-pic.jpg" alt="Profile Picture">
-      <h2>Mi perfil</h2>
+      <h2>Anónimo</h2>
       <div>
         <h3>En desarrollo</h3>
-        <p>Próximamente podrás iniciar sesión con Google.</p>
-        <p>Éstos son algunos de los beneficios que tendrás:</p>
+        <p>Puedes <b>iniciar sesion con Google</b> y:</p>
         <ul>
-          <li>Accede a tus notas en cualquier sitio.</li>
-          <li>Ten una copia en la nube.</li>
+          <li>Guardar tus notas en la nube.</li>
+          <li>Compartir asignaturas que crees.</li>
         </ul>
       </div>
-      <button onclick="authGoogle(); popupHide(this.parentNode.parentNode); window.history.back();">Entrar</button>
+      <button id="loginButton" onclick="loginGoogle(); popupHide(this.parentNode.parentNode); window.history.back();">Iniciar sesión</button>
     </div>
   </div>
   <div id="toast" style="display: none;"><div>Has borrado <b>NADA</b><button onclick="undoRemoveSubject();">Deshacer</button></div></div>
@@ -118,6 +117,7 @@
     }
     </script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+  <script src="algebra-0.2.6.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
   <!-- <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-firestone.js"></script> -->
