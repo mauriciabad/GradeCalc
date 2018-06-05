@@ -462,6 +462,7 @@ firebase.auth().getRedirectResult().catch(function(error) {console.log(error);})
 firebase.auth().onAuthStateChanged(function(user) {
   let bntLogin = document.getElementById('loginButton');
   if (user) { // User is signed in.
+
     displayName = user.displayName;
     photoURL = user.photoURL;
     isAnonymous = user.isAnonymous;
@@ -566,6 +567,7 @@ function getAndDisplayUserSubjects() {
           });
         }
       } else{
+        userDB.set({});
         console.log('User dosen\'t exists');
       }
     }).catch(function(error) {
