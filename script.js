@@ -540,11 +540,14 @@ function getAndDisplayUserSubjects() {
               let subjectInfo = doc.data();
               if (subjects[id] == undefined){
                 subjects[id] = {};
-                subjects[id].color = subjectInfo.color;
                 subjects[id].evaluation = subjectInfo.evaluation;
                 subjects[id].selectedEvaluation = Object.keys(subjectInfo.evaluation)[0];
                 subjects[id].fullName = subjectInfo.fullName;
-                subjects[id].grades = subjectInfo.grades;
+
+                subjects[id].grades = Object.assign({}, subjectInfo.grades, subjects[id].grades, userInfo.subjects[id].grades);
+                subjects[id].color = userInfo.subjects[id].color || subjectInfo.color;
+                console.log(subjects[id].grades);
+                
                 subjects[id].shortName = subjectInfo.shortName;
                 subjects[id].id = id;
                 subjects[id].necesaryMark = {};
@@ -553,9 +556,6 @@ function getAndDisplayUserSubjects() {
         
                 updateFinalMark(id);
                 updateNecesaryMark(id);
-
-                subjects[id].grades = Object.assign({}, subjects[id].grades, userInfo.subjects[id].grades);
-                subjects[id].color = userInfo.subjects[id].color;
         
                 updateCardGrades(id);
               }
