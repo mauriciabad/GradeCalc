@@ -31,7 +31,7 @@
 
 </head>
 <body>
-  <header class="top-bar">
+  <header id="top-bar">
     <button onclick="showUserInfo(); window.history.pushState({popup: 'user'}, 'Perfil', '#user');" style="padding: 0.625em;"><img src="media/user-circle.svg" alt="Perfil" id="profile-topbar"></button>
     <h1>Grade Calc</h1>
     <button onclick="popupShow('add-container'); window.history.pushState({popup: 'add'}, 'Añade una asignatura', '#add');" class="focus-animation-loop" id="add-button-topbar"><img src="media/plus.svg" alt="Editar"></button>
@@ -88,13 +88,12 @@
     </div>
   </div>
 
-  <div id="user-container" class="popup" style="display: none;">
+  <div id="user-container" class="popup popup-small" style="display: none;">
     <div onclick="popupHide(this.parentNode); window.history.back();"></div>
     <div class="popup-content user-popup">
       <img class="popup-round-img-top" src="media/profile-pic.jpg" alt="Profile Picture">
       <h2>Anónimo</h2>
       <div>
-        <h3>En desarrollo</h3>
         <p>Puedes <b>iniciar sesion con Google</b> y:</p>
         <ul>
           <li>Guardar tus notas en la nube.</li>

@@ -148,7 +148,6 @@ function addSubjects() {
 
           createSubjectCardCollapsed(id);
           Cookies.set(id, subjects[id], { expires: 365 });
-          popupHide(document.getElementById('add-container'));
         } else{
           console.log('Subject dosen\'t exists');
         }
@@ -159,6 +158,7 @@ function addSubjects() {
       toast(`Ya tienes ${id.shortName}`);
     }
   }
+  popupHide(document.getElementById('add-container'));
 }
 
 /* ------------------------------ UI & DATA UPDATE ------------------------------ */
@@ -341,7 +341,7 @@ window.addEventListener('popstate', function(event) {
           showUserInfo();
           break;
         case 'add':
-          popupShow('add-container');
+          popupShow('add-container',false);
           break;
       }
     }
@@ -351,9 +351,9 @@ window.addEventListener('popstate', function(event) {
 //window.history.pushState({popup: 'name'}, 'Page name', 'name');
 
 //Shows the popup
-function popupShow(id) {
+function popupShow(id,isSmall) {
   document.getElementById(id).style.display = 'flex';
-  if (window.matchMedia("(max-width: 600px)").matches) {
+  if (!isSmall && window.matchMedia("(max-width: 600px)").matches) {
     currentScreen.style.display = 'none';
     topbar.style.display = 'none';
   }
@@ -403,7 +403,7 @@ function showToast(message,action,code) {
 /* ------------------------------ USER ------------------------------ */
 
 function showUserInfo() {
-  popupShow('user-container');
+  popupShow('user-container',true);
 }
 
 /* ------------------------------ EDITOR ------------------------------ */
@@ -416,9 +416,11 @@ function deleteSubject(id) {
   removedSubject = subjects[id]
   delete subjects[id];
   Cookies.remove(id);
-  let obj ={};
-  obj['subjects.'+id] = firebase.firestore.FieldValue.delete();
-  userDB.update(obj);
+  if(!isAnonymous){
+    let obj ={};
+    obj['subjects.'+id] = firebase.firestore.FieldValue.delete();
+    userDB.update(obj);
+  }
   document.getElementById('card-'+id).remove();
   showToast(`Has borrado <b>${removedSubject.shortName}</b>`,'Deshacer','undoRemoveSubject();');
 
@@ -430,9 +432,11 @@ function undoRemoveSubject() {
   subjects[id] = removedSubject;
   createSubjectCardCollapsed(id);
   Cookies.set(id, subjects[id], { expires: 365 });
+  if(!isAnonymous){
   let obj ={};
   obj['subjects.'+id+'.grades'] = subjects[id].grades;
   userDB.update(obj);
+  }
 
   clearTimeout(toastTimer);
   document.getElementById('toast').style.display = 'none';
@@ -524,13 +528,15 @@ firebase.auth().onAuthStateChanged(function(user) {
 //     });
 
 function uploadGrade(id,exam,mark) {
-  let obj = {};
-  if (mark != undefined) {
-    obj['subjects.'+id+'.grades.'+exam] = mark;
-    userDB.update(obj);
-  }else{
-    obj['subjects.'+id+'.grades.'+exam] = firebase.firestore.FieldValue.delete();
-    userDB.update(obj);
+  if (!isAnonymous) {
+    let obj = {};
+    if (mark != undefined) {
+      obj['subjects.'+id+'.grades.'+exam] = mark;
+      userDB.update(obj);
+    }else{
+      obj['subjects.'+id+'.grades.'+exam] = firebase.firestore.FieldValue.delete();
+      userDB.update(obj);
+    }
   }
 }
 
@@ -570,6 +576,7 @@ function getAndDisplayUserSubjects() {
                 updateNecesaryMark(id);
         
                 updateCardGrades(id);
+                Cookies.set(id, subjects[id], { expires: 365 });
               }
             } else{
               console.log('Subject dosen\'t exists');

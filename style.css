@@ -37,7 +37,7 @@ button:focus:not(:active){
   background-color: #F0FF7A;
 }
 
-.top-bar{
+#top-bar{
   position: fixed;
   top: 0;
   left: 0;
@@ -53,10 +53,10 @@ button:focus:not(:active){
   user-select: none;
   z-index: 5;
 }
-.top-bar img{
+#top-bar img{
   height: 1.5em;
 }
-.top-bar button{
+#top-bar button{
   height: 3em;
   padding: 0.75em;
 }
@@ -64,7 +64,7 @@ button:focus:not(:active){
   border-radius: 50%;
   height: 1.75em;
 }
-.top-bar > h1{
+#top-bar > h1{
   margin: 0;
   font-weight: normal;
   font-size: 1.75em;
@@ -356,7 +356,7 @@ button:focus:not(:active){
 .grades-input input:invalid{
   border: solid 0.2em#cf5155;
 }
-.grades-input input:focus{
+.grades-input input:focus:not(:invalid){
   border: solid 0.2em #444;
   outline: none;
 }
@@ -376,29 +376,168 @@ button:focus:not(:active){
 }
 
 .popup{
-  width: 100vw;
-  min-height: 100vh;
+  position: relative;
+  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10;
 }
 .popup-content{
-  background-color: #fefefe;
-  border-radius: 0.3em;
-  margin: 0.5em;
-  box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
   z-index: 2;
   position: relative;
   padding: 1.5em;
-  padding-bottom: 2.5em;
-  max-width: 25em;
+  background-color: #fff;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 .popup > div:first-child{
+  position: fixed;
+  z-index: 3;
+  top: 0.5em;
+  left: 0.5em;
+  width: 3em;
+  height: 3em;
+  box-sizing: border-box;
+  cursor: pointer;
+  background-color: #fff;
+  box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+}
+.popup > div:first-child::before{
+  content: "";
+  position: absolute;
+  left: 0.9em;
+  top: 1.16em;
+  height: 1.4142em;
+  width: 1.4142em;
+  box-sizing: border-box;
+  border-top: solid 0.3em #333;
+  border-left: solid 0.3em #333;
+  transform-origin: 25% 25%;
+  transform: rotate(-45deg);
+}
+.popup-tabs{
+  text-align: left;
+  z-index: 1;
+  padding-left: 3em;
+  display: none;
+}
+.popup-tabs > button{
+  margin: 0 1em;
+  padding: 1em 1.5em;
+  line-height: 1;
+  background-color: #6A7FDB;
+  color: white;
+  z-index: 0;
+  text-transform: uppercase;
+  box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.7);
+  text-shadow: 0 0.15em 0.5em rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.15em;
+  font-weight: bold;
+}
+.popup-tabs > button:hover{
+  transform: none;
+}
+.popup-content > button:last-child{
+  display: block;
+  padding: 1em 1.35em 1em 1.5em;
+  font-weight: bold;
+  background-color: #1B9F64;
+  box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.7);
+  text-shadow: 0 0.15em 0.5em rgba(0, 0, 0, 0.4);
+  color: white;
+  line-height: 1;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: 10em;
+  position: absolute;
+  z-index: 5;
+  right: 2em;
+  bottom: 1.5em;
+}
+@media(min-width: 600px){
+  .popup{
+    width: 100vw;
+    min-height: 100vh;
+    position: fixed !important;
+    top: 0;
+    left: 0;
+  }
+  .popup-content{
+    max-width: 25em;
+    padding-bottom: 2.5em;
+    margin: 0.5em;
+    border-radius: 0.3em;
+    background-color: #fefefe;
+    box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
+    min-height: auto;
+  }
+  .popup > div:first-child::before{
+    content: none;
+    display: none;
+    position: relative;
+    width: auto;
+    height: auto;
+    background-color: transparent;
+    box-shadow: none;
+    border-radius: none;
+  }
+  .popup > div:first-child{
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.3);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    box-shadow: none;
+    border-radius: 0;
+    z-index: 0;
+  }
+  .popup-tabs{
+    text-align: left;
+    margin-bottom: -2em;
+    z-index: 1;
+    padding-left: 0;
+    /* position: absolute;
+    top: -3em;
+    left: 0; */
+  }
+  .popup-tabs > button{
+    margin: 0 1em;
+    padding: 1em 1.5em 2.5em;
+    line-height: 1;
+    background-color: #6A7FDB;
+    color: white;
+    z-index: 0;
+    border-radius: 0.5em 0.5em 0 0;
+    text-transform: uppercase;
+    box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.7);
+    text-shadow: 0 0.15em 0.5em rgba(0, 0, 0, 0.4);
+    letter-spacing: 0.15em;
+    font-weight: bold;
+  }
+  .popup-tabs > button:hover{
+    transform: translateY(-1em);
+  }
+  .popup-content > button:last-child{
+    bottom: -1.5em;
+  }
+}
+.popup-small{
+  width: 100vw;
+  min-height: 100vh;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+}
+.popup-small > div:first-child::before{
+  content: none;
+  display: none;
+}
+.popup-small > div:first-child{
   position: absolute;
   background-color: rgba(0, 0, 0, 0.3);
   -webkit-backdrop-filter: blur(5px);
@@ -407,32 +546,9 @@ button:focus:not(:active){
   height: 100%;
   top: 0;
   left: 0;
-  cursor: pointer;
-}
-.popup-tabs{
-  text-align: left;
-  margin-bottom: -2em;
-  z-index: 1;
-  /* position: absolute;
-  top: -3em;
-  left: 0; */
-}
-.popup-tabs > button{
-  margin: 0 1em;
-  padding: 1em 1.5em 2.5em;
-  line-height: 1;
-  background-color: #6A7FDB;
-  color: white;
+  box-shadow: none;
+  border-radius: 0;
   z-index: 0;
-  border-radius: 0.5em 0.5em 0 0;
-  text-transform: uppercase;
-  box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.7);
-  text-shadow: 0 0.15em 0.5em rgba(0, 0, 0, 0.4);
-  letter-spacing: 0.15em;
-  font-weight: bold;
-}
-.popup-tabs > button:hover{
-  transform: translateY(-1em);
 }
 .add-popup{
   text-align: center;
@@ -480,23 +596,6 @@ button:focus:not(:active){
 .search-results input{
   margin: 0.75em 0.5em 0.75em 1em;
   display: none;
-}
-.popup-content > button:last-child{
-  display: block;
-  padding: 1em 1.35em 1em 1.5em;
-  font-weight: bold;
-  background-color: #1B9F64;
-  box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.7);
-  text-shadow: 0 0.15em 0.5em rgba(0, 0, 0, 0.4);
-  color: white;
-  line-height: 1;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  border-radius: 10em;
-  position: absolute;
-  z-index: 5;
-  right: 2em;
-  bottom: -1.5em;
 }
 .popup-content input[type=search] {
   border: none;
@@ -546,8 +645,15 @@ button:focus:not(:active){
   box-shadow: 0 0.15em 1.5em rgba(0, 0, 0, 0.5);
 }
 .user-popup{
-  max-width: 17.5em;
-  margin-top: 4em;
+  margin: 4em 0.5em 0.5em;
+  padding-bottom: 2.5em;
+  border-radius: 0.3em;
+  background-color: #fefefe;
+  box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
+  min-height: auto;
+}
+.user-popup > button{
+  bottom: -1.5em !important;
 }
 
 #tutorial{
