@@ -1,5 +1,7 @@
 /* ------------------------------ START UP ------------------------------ */
 var dashboard = document.getElementById('dashboard');
+var topbar = document.getElementById('top-bar');
+var currentScreen = document.getElementsByClassName('screen')[0];
 
 var userInfo;
 var subjects = {};
@@ -351,10 +353,16 @@ window.addEventListener('popstate', function(event) {
 //Shows the popup
 function popupShow(id) {
   document.getElementById(id).style.display = 'flex';
+  if (window.matchMedia("(max-width: 600px)").matches) {
+    currentScreen.style.display = 'none';
+    topbar.style.display = 'none';
+  }
 }
 
 //Hides the popup
 function popupHide(popup) {  
+  currentScreen.style.display = 'flex';
+  topbar.style.display = 'flex';
   popup.style.display = 'none';
 }
 
@@ -545,7 +553,11 @@ function getAndDisplayUserSubjects() {
                 subjects[id].fullName = subjectInfo.fullName;
 
                 subjects[id].grades = Object.assign({}, subjectInfo.grades, subjects[id].grades, userInfo.subjects[id].grades);
-                subjects[id].color = userInfo.subjects[id].color || subjectInfo.color;
+                if (userInfo.subjects[id].color) {
+                  subjects[id].color = userInfo.subjects[id].color;
+                }else{
+                  subjects[id].color = subjectInfo.color;
+                }
                 console.log(subjects[id].grades);
                 
                 subjects[id].shortName = subjectInfo.shortName;
