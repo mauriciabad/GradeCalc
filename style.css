@@ -736,3 +736,29 @@ button:focus:not(:active){
   from{opacity: 1;}
   to{opacity: 1;}
 }
+@keyframes rotateIn {
+  from {
+    transform-origin: center;
+    transform: rotate(60deg);
+    opacity: 0;
+  }
+
+  to {
+    transform-origin: center;
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+}
+
+#congratulations-img > img{
+  max-width: calc(100% - 2em);
+  max-height: 33.33vh;
+  border-radius: 2em;
+  margin: 1em;
+  box-shadow: 0 0.4em 2em rgba(0, 0, 0, 0.6), 0 0em 0.5em rgba(0, 0, 0, 0.7);
+  transition: transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: rotateIn 2s ease-out;
+}
+#congratulations-img > img:hover{
+  transform: scale(1.075);
+}

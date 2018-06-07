@@ -170,6 +170,7 @@ function updateAndDisplayMarks(id) {
 
   displayFinalMark(id);
   displayNecesaryMark(id);
+  congratulate();
 }
 
 function displayNecesaryMark(id) {
@@ -233,17 +234,14 @@ function updateMarkFromCardInput(id, exam, mark, input) {
     barElem.parentElement.className = 'scol' + subjects[id].color;
     barElem.textContent = input.value;
     input.className = 'scol' + subjects[id].color;
-
-    updateAndDisplayMarks(id);
   } else{
     delete subjects[id].grades[exam];
     uploadGrade(id,exam,undefined);
 
     barElem.parentElement.className = 'scolN';
     input.className = 'scolN2';
-
-    updateAndDisplayMarks(id);
   }
+  updateAndDisplayMarks(id);
   
   Cookies.set(id, subjects[id], { expires: 365 });
 }
@@ -304,6 +302,24 @@ function gradeCalcAllEqual(id,eval) {
 //returns n rounded to 2 decimals
 function round(n) {
   return (n==='' || n == undefined) ? undefined : Math.floor(Math.round(n*100))/100;
+}
+
+function congratulate() {
+  if (hasPassedEverything()) {
+    document.getElementById('congratulations-img').style.display = 'block';
+  }else{
+    document.getElementById('congratulations-img').style.display = 'none';
+  }
+}
+
+function hasPassedEverything() {
+  if (isEmpty(subjects)) return false;
+  for (const id in subjects) {
+    for (const eval in subjects[id].finalMark) {
+      if (subjects[id].finalMark[eval] < 5) return false;
+    }
+  }
+  return true;
 }
 
 /* ------------------------------ UI MANIPULATION ------------------------------ */
@@ -425,6 +441,7 @@ function deleteSubject(id) {
   showToast(`Has borrado <b>${removedSubject.shortName}</b>`,'Deshacer','undoRemoveSubject();');
 
   if (isEmpty(subjects)) showTutorial();
+  congratulate();
 }
 
 function undoRemoveSubject() {
