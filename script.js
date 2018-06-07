@@ -361,7 +361,7 @@ function popupShow(id,isSmall) {
 
 //Hides the popup
 function popupHide(popup) {  
-  currentScreen.style.display = 'flex';
+  currentScreen.style.display = 'block';
   topbar.style.display = 'flex';
   popup.style.display = 'none';
 }
