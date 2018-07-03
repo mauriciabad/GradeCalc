@@ -57,7 +57,7 @@
       <p>Una vez creada, tócala para editar tus notas</p>
     </div>
     <a href="https://youtu.be/1Bix44C1EzY" target="_blank" id="congratulations-img" style="display: none">
-      <img src="media/congratulations.gif" alt="¡Felicidades!">
+      <img data-src="media/congratulations.gif" alt="¡Felicidades!">
     </a>
   </main>
 
@@ -137,5 +137,13 @@
     firebase.initializeApp(config);
   </script>
   <script src="script.js"></script>
+  <script>
+    [].forEach.call(document.querySelectorAll('img[data-src]'),    function(img) {
+      img.setAttribute('src', img.getAttribute('data-src'));
+      img.onload = function() {
+        img.removeAttribute('data-src');
+      };
+    });
+  </script>
 </body>
 </html>
