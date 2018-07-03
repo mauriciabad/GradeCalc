@@ -523,8 +523,12 @@ function getAndDisplayUserSubjects() {
               subjects[id].evaluation = subjectInfo.evaluation;
               subjects[id].selectedEvaluation = Object.keys(subjectInfo.evaluation)[0];
               subjects[id].fullName = subjectInfo.fullName;
-
-              subjects[id].grades = Object.assign({}, subjectInfo.grades, subjects[id].grades, userInfo.subjects[id].grades);
+              
+              if (subjects[id] == undefined){
+                subjects[id].grades = subjectInfo.grades;
+              }else{
+                subjects[id].grades = Object.assign({}, subjects[id].grades, userInfo.subjects[id].grades);
+              }
               if (userInfo.subjects[id].color) {
                 subjects[id].color = userInfo.subjects[id].color;
               }else{
