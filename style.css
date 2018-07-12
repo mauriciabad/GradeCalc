@@ -387,6 +387,7 @@ button:focus:not(:active){
   z-index: 2;
   position: relative;
   padding: 1.5em;
+  padding-top: 4em;
   background-color: #fff;
   min-height: 100vh;
   box-sizing: border-box;
@@ -401,19 +402,20 @@ button:focus:not(:active){
   box-sizing: border-box;
   cursor: pointer;
   background-color: #fff;
-  box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.7);
+  box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.5);
+  background-color: #4b9ee2;
   border-radius: 50%;
 }
 .popup > div:first-child::before{
   content: "";
   position: absolute;
-  left: 0.9em;
-  top: 1.16em;
-  height: 1.4142em;
-  width: 1.4142em;
+  left: 1em;
+  top: 1.25em;
+  height: 1em;
+  width: 1em;
   box-sizing: border-box;
-  border-top: solid 0.3em #333;
-  border-left: solid 0.3em #333;
+  border-top: solid 0.3em #fff;
+  border-left: solid 0.3em #fff;
   transform-origin: 25% 25%;
   transform: rotate(-45deg);
 }
@@ -468,6 +470,7 @@ button:focus:not(:active){
     max-width: 25em;
     padding-bottom: 2.5em;
     margin: 0.5em;
+    padding-top: 1.5em;
     border-radius: 0.3em;
     background-color: #fefefe;
     box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
@@ -559,6 +562,13 @@ button:focus:not(:active){
   color: #777;
   font-size: 0.9em;
 }
+.add-popup > div > p{
+  margin: 0.5em 0;
+  display: block;
+  color: #777;
+  font-size: 0.9em;
+  text-align: center;
+}
 #subjects-search-results{
   list-style-type: none;
   padding-left: 0;
@@ -596,6 +606,18 @@ button:focus:not(:active){
 #subjects-search-results input{
   margin: 0.75em 0.5em 0.75em 1em;
   display: none;
+}
+#subject-start-creator{
+  background-color: #bf5ed4;
+  padding: 0.66em 1em;
+  line-height: 1;
+  border-radius: 0.4em;
+  box-shadow: 0 0.1em 0.667em rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: bold;
+  text-shadow: 0 0.15em 0.5em rgba(0, 0, 0, 0.4);
+  color: #fff;
 }
 .popup-content input[type=search] {
   border: none;

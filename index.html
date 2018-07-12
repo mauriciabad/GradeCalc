@@ -69,7 +69,7 @@
     <div onclick="popupHide(this.parentNode); window.history.back();"></div>
     <div class="popup-tabs"><button>Buscar</button><button>Crear</button></div>
     <div class="popup-content add-popup">
-      <div id="add-popup-content2">
+      <div id="add-popup-content">
         <h2>Buscar</h2>
         <input type="search" name="search-subject" id="search-subject-input" placeholder="Matemáticas UPC FIB">
         <label for="search-subject-input">Puedes buscar por: siglas, nombre, universidad y facultad.</label>
@@ -87,12 +87,18 @@
           <li><input type="checkbox" name="SO" id="checkbox-AdK85VBBzMm99sCXmBWK"><label for="checkbox-AdK85VBBzMm99sCXmBWK">SO</label></li>
         </ul>
       </div>
-      <div id="add-popup-content2" style="display: none;">
-        <h2>Crear</h2>
-        <p>Evita contenido duplicado, si ya está hecha la asignatura que buscas no la crees. <small>plis</small></p>
+      <div id="add-popup-content2">
+        <!-- <h2>Crear</h2> -->
+        <p>¿No la encuentras o ninguna está bien?</p>
+        <button id="subject-start-creator">Crear</button>
+        <p>Evita contenido duplicado; si ya existe la asignatura que buscas, no la crees. <small>plis</small></p>
       </div>
       <button onclick="addSubjects();">Añadir</button>
     </div>
+  </div>
+
+  <div id="creator-container" class="popup" style="display: none;">
+    <div onclick="popupHide(this.parentNode); window.history.back();"></div>
   </div>
 
   <div id="user-container" class="popup popup-small" style="display: none;">
