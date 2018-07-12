@@ -22,17 +22,20 @@ var subjectsDB = db.collection('subjects');
 
 loadData();
 
+//also load firebase (at the bottom)
 
 /* ------------------------------ UI CREATION ------------------------------ */
 
 //Generate the cards with the subjects from cookies
 function loadData(){
+  showLoader('Cargando tus asignaturas','dashboard');
   subjects = Cookies.getJSON();
   console.log('Subjects loaded from cookies');
   
   for (const id in subjects) {
     createSubjectCardCollapsed(id);
   }
+  hideLoader('dashboard');
 }
 
 //Creates the subject card and appends it to the dashboard
@@ -72,6 +75,7 @@ function createBarAndInputs(id,card) {
 
 //Adds the subjects selected in the popup
 function addSubjects() {
+  showLoader('Cargando tus asignaturas','dashboard');
   let checked = document.querySelectorAll("#add-container input:checked");
   
   for (let i = 0; i < checked.length; i++) {
@@ -98,6 +102,7 @@ function addSubjects() {
 
           createSubjectCardCollapsed(id);
           Cookies.set(id, subjects[id], { expires: 365 });
+          hideLoader('dashboard');
         } else{
           console.log('Subject dosen\'t exists');
         }
@@ -364,6 +369,16 @@ function showToast(message,action,code) {
   }, 8000);
 }
 
+function showLoader(message,position) {
+  let loader = document.getElementById(position+'-loader');
+  loader.children[1].textContent = message;
+  loader.style.display = 'block';
+}
+
+function hideLoader(position) {
+  document.getElementById(position+'-loader').style.display = 'none';
+}
+
 /* ------------------------------ USER ------------------------------ */
 
 function showUserInfo() {
@@ -426,13 +441,7 @@ provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
 
 firebase.auth().useDeviceLanguage();
 
-function loginGoogle() {
-  firebase.auth().signInWithRedirect(provider);
-}
-
-function logoutGoogle() {
-  firebase.auth().signOut();
-}
+showLoader('Cargando perfil','dashboard');
 
 firebase.auth().getRedirectResult().catch(function(error) {console.log(error);});
 
@@ -453,12 +462,12 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     //showToast(`Bienvenido de nuevo <b>${displayName}</b> 😊`);
 
+    showLoader('Buscando cambios','dashboard');
     userDB = db.collection('users').doc(uid);
 
     getAndDisplayUserSubjects();
-
-
   } else { // User is signed out.
+    hideLoader('dashboard');
     displayName = 'Anónimo';
     photoURL = 'media/profile-pic.jpg';
     isAnonymous = true;
@@ -491,6 +500,16 @@ firebase.auth().onAuthStateChanged(function(user) {
 //             }
 //         });
 //     });
+
+function loginGoogle() {
+  showLoader('Redireccionando','dashboard');
+  firebase.auth().signInWithRedirect(provider);
+  hideLoader('dashboard');
+}
+
+function logoutGoogle() {
+  firebase.auth().signOut();
+}
 
 function uploadGrade(id,exam,mark) {
   if (!isAnonymous) {
@@ -547,6 +566,7 @@ function getAndDisplayUserSubjects() {
       
               updateCardGrades(id);
               Cookies.set(id, subjects[id], { expires: 365 });
+              hideLoader('dashboard');
             } else{
               console.log('Subject dosen\'t exists');
             }
@@ -557,6 +577,7 @@ function getAndDisplayUserSubjects() {
       } else{
         userDB.set({});
         console.log('User dosen\'t exists');
+        hideLoader('dashboard');
       }
     }).catch(function(error) {
       console.log("Error getting user info:", error);
@@ -564,40 +585,6 @@ function getAndDisplayUserSubjects() {
   }
 }
 
-function test() { 
-  getAndDisplayUserSubjects();
-}
-
-
-//this adds a subject to a user
-function setSubject() {
-  console.log('Testing');
-
-  var docData = {
-    subjects: {
-      'Fj08okgYD1tZk3GNZsSl': {
-        color: 5,
-        grades: {}
-      }
-    },
-    uni: 'UPC',
-    faculty: 'FIB'
-  };
-  for (const exam in subjects['a4'].grades) {
-    docData.subjects['Fj08okgYD1tZk3GNZsSl'].grades[exam] = Number(subjects['a4'].grades[exam]);
-  }
-  
-  
-  var setWithMerge = userDB.update(docData);
-  console.log(setWithMerge);
-}
-
-function reformatGrades(grades) {
-  let newGrades={};
-  for (const examType in grades) {
-    for (const exam in grades[examType]) {
-      newGrades[exam] = Number(grades[examType][exam]);
-    }
-  }
-  return newGrades;
+function searchSubject(query) {
+  db.collection("subjects").get()
 }

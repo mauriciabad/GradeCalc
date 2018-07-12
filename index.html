@@ -39,6 +39,10 @@
 
   <main class="screen">
     <div id="dashboard" class="dashboard"></div>
+    <div id="dashboard-loader">
+      <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+      <p>Cargando tus asignaturas</p>
+    </div>
     <div id="tutorial">
       <h2>🙋🏼‍♂️ Bienvenido 🙋🏼‍♀️</h2>
       <p>Grade Calc es una aplicación web que te permite administrar tus notas de exámenes.</p>
@@ -70,7 +74,7 @@
         <input type="search" name="search-subject" id="search-subject-input" placeholder="Matemáticas UPC FIB">
         <label for="search-subject-input">Puedes buscar por: siglas, nombre, universidad y facultad.</label>
         <h3>Resultados</h3>
-        <ul class="search-results">
+        <ul id="subjects-search-results">
           <li><input type="checkbox" name="AC" id="checkbox-EfFfxjAZUyF8BjRTRXXm"><label for="checkbox-EfFfxjAZUyF8BjRTRXXm">AC</label></li>
           <li><input type="checkbox" name="IES" id="checkbox-Bfs5XE0A5WdzfnqL8x3r"><label for="checkbox-Bfs5XE0A5WdzfnqL8x3r">IES</label></li>
           <li><input type="checkbox" name="IDI" id="checkbox-g4BNzlqHUlMpRA5sRJfg"><label for="checkbox-g4BNzlqHUlMpRA5sRJfg">IDI</label></li>
