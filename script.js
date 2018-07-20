@@ -230,7 +230,7 @@ function updateCardGrades(id) {
 
 }
 
-function changeEvaluation(id,eval) { //TODO  
+function changeEvaluation(id,eval) {
   subjects[id].selectedEvaluation = eval;
   Cookies.set(id, subjects[id], { expires: 365 });
   let card = document.getElementById('card-'+id);
@@ -333,6 +333,7 @@ function popupHide(popup) {
   currentScreen.style.display = 'block';
   topbar.style.display = 'flex';
   popup.style.display = 'none';
+  popup.style.transform = 'auto';
 }
 
 //Hides all popups
@@ -585,6 +586,6 @@ function getAndDisplayUserSubjects() {
   }
 }
 
-function searchSubject(query) {
+function searchSubject(query) { //TODO-------------------------------
   db.collection("subjects").get()
 }

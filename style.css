@@ -386,13 +386,12 @@ button:focus:not(:active){
 .popup-content{
   z-index: 2;
   position: relative;
-  padding: 1.5em;
-  padding-top: 4em;
+  padding: 4em 1.5em 6em;
   background-color: #fff;
   min-height: 100vh;
   box-sizing: border-box;
 }
-.popup > div:first-child{
+/* .popup > div:first-child{
   position: fixed;
   z-index: 3;
   top: 0.5em;
@@ -405,8 +404,31 @@ button:focus:not(:active){
   box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.5);
   background-color: #4b9ee2;
   border-radius: 50%;
+} */
+.top-bar-popup{
+  position: fixed;
+  padding: 0.2em;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  background-color: #1b9f64;
+  color: #fff;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
+  height: 1.75em;
+  user-select: none;
+  z-index: 3;
+  font-weight: normal;
+  font-size: 1.75em;
 }
-.popup > div:first-child::before{
+.top-bar-popup img{
+  cursor: pointer;
+  height: 1.25em;
+  position: absolute;
+  left: 0.25em;
+}
+/* .popup > div:first-child::before{
   content: "";
   position: absolute;
   left: 1em;
@@ -418,29 +440,7 @@ button:focus:not(:active){
   border-left: solid 0.3em #fff;
   transform-origin: 25% 25%;
   transform: rotate(-45deg);
-}
-.popup-tabs{
-  text-align: left;
-  z-index: 1;
-  padding-left: 3em;
-  display: none;
-}
-.popup-tabs > button{
-  margin: 0 1em;
-  padding: 1em 1.5em;
-  line-height: 1;
-  background-color: #6A7FDB;
-  color: white;
-  z-index: 0;
-  text-transform: uppercase;
-  box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.7);
-  text-shadow: 0 0.15em 0.5em rgba(0, 0, 0, 0.4);
-  letter-spacing: 0.15em;
-  font-weight: bold;
-}
-.popup-tabs > button:hover{
-  transform: none;
-}
+} */
 .popup-content > button:last-child{
   display: block;
   padding: 1em 1.35em 1em 1.5em;
@@ -470,7 +470,7 @@ button:focus:not(:active){
     max-width: 25em;
     padding-bottom: 2.5em;
     margin: 0.5em;
-    padding-top: 1.5em;
+    padding: 1.5em;
     border-radius: 0.3em;
     background-color: #fefefe;
     box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
@@ -498,32 +498,6 @@ button:focus:not(:active){
     box-shadow: none;
     border-radius: 0;
     z-index: 0;
-  }
-  .popup-tabs{
-    text-align: left;
-    margin-bottom: -2em;
-    z-index: 1;
-    padding-left: 0;
-    /* position: absolute;
-    top: -3em;
-    left: 0; */
-  }
-  .popup-tabs > button{
-    margin: 0 1em;
-    padding: 1em 1.5em 2.5em;
-    line-height: 1;
-    background-color: #6A7FDB;
-    color: white;
-    z-index: 0;
-    border-radius: 0.5em 0.5em 0 0;
-    text-transform: uppercase;
-    box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.7);
-    text-shadow: 0 0.15em 0.5em rgba(0, 0, 0, 0.4);
-    letter-spacing: 0.15em;
-    font-weight: bold;
-  }
-  .popup-tabs > button:hover{
-    transform: translateY(-1em);
   }
   .popup-content > button:last-child{
     bottom: -1.5em;
