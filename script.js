@@ -487,6 +487,14 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 });
 
+function uploadSubject(obj) { //not tested
+  if (obj != undefined) {
+    subjectDB = db.collection('subjects');
+    subjectDB.add(obj);
+  }
+}
+
+// EXAMPLE
 // userDB.where("state", "==", "CA")
 //     .onSnapshot(function(snapshot) {
 //         snapshot.docChanges.forEach(function(change) {

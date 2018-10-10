@@ -91,6 +91,7 @@
         <p>¿No la encuentras o ninguna está bien?</p>
         <button id="subject-start-creator">Crear</button>
         <p>Evita contenido duplicado; si ya existe la asignatura que buscas, no la crees. <small>plis</small></p>
+        <textarea hidden name="" id="create-subject-text" placeholder="JSON of new subject. (this is for testing)"></textarea>
       </div>
       <button onclick="addSubjects();">Añadir</button>
     </div>
@@ -127,7 +128,7 @@
         console.log('Service worker registration failed, error:', error);
       });
     }
-    </script>
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
   <script src="algebra-0.2.6.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-app.js"></script>
