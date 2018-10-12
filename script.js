@@ -372,7 +372,7 @@ function showToast(message,action,code) {
 
 function showLoader(message,position) {
   let loader = document.getElementById(position+'-loader');
-  loader.children[1].textContent = message;
+  loader.lastElementChild.textContent = message;
   loader.style.display = 'block';
 }
 
@@ -511,9 +511,9 @@ function uploadSubject(obj) { //not tested
 //     });
 
 function loginGoogle() {
-  showLoader('Redireccionando','dashboard');
+  showLoader('Redireccionando','login');
   firebase.auth().signInWithRedirect(provider);
-  hideLoader('dashboard');
+  hideLoader('login');
 }
 
 function logoutGoogle() {

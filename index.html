@@ -39,8 +39,8 @@
 
   <main class="screen">
     <div id="dashboard" class="dashboard"></div>
-    <div id="dashboard-loader">
-      <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+    <div id="dashboard-loader" class="loader">
+      <div class="loader-dots"><div></div><div></div><div></div><div></div></div>
       <p>Cargando tus asignaturas</p>
     </div>
     <div id="tutorial">
@@ -112,6 +112,11 @@
           <li>Guardar tus notas en la nube.</li>
           <li>Compartir asignaturas que crees.</li>
         </ul>
+      </div>
+      <div id="login-loader" class="loader">
+        <div class="divider"></div>
+        <div class="loader-dots"><div></div><div></div><div></div><div></div></div>
+        <p>Cargando tus asignaturas</p>
       </div>
       <button id="loginButton" onclick="loginGoogle(); popupHide(this.parentNode.parentNode); window.history.back();">Iniciar sesión</button>
     </div>

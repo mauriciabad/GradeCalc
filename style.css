@@ -768,13 +768,26 @@ button:focus:not(:active){
   margin: 0;
 }
 
-.lds-ellipsis {
+.divider{
+  height: 1px;
+  background-color: currentColor;
+  border-radius: 1px;
+  margin: 1em 0;
+}
+
+.loader{
+  display: none;
+}
+.loader-dots {
   display: inline-block;
   position: relative;
   width: 64px;
   height: 16px;
 }
-.lds-ellipsis div {
+.loader p {
+  text-align: center;
+}
+.loader-dots div {
   position: absolute;
   top: 3px;
   width: 11px;
@@ -783,23 +796,23 @@ button:focus:not(:active){
   background: #666;
   animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
-.lds-ellipsis div:nth-child(1) {
+.loader-dots div:nth-child(1) {
   left: 6px;
-  animation: lds-ellipsis1 0.6s infinite;
+  animation: loader-dot1 0.6s infinite;
 }
-.lds-ellipsis div:nth-child(2) {
+.loader-dots div:nth-child(2) {
   left: 6px;
-  animation: lds-ellipsis2 0.6s infinite;
+  animation: loader-dot2 0.6s infinite;
 }
-.lds-ellipsis div:nth-child(3) {
+.loader-dots div:nth-child(3) {
   left: 26px;
-  animation: lds-ellipsis2 0.6s infinite;
+  animation: loader-dot2 0.6s infinite;
 }
-.lds-ellipsis div:nth-child(4) {
+.loader-dots div:nth-child(4) {
   left: 45px;
-  animation: lds-ellipsis3 0.6s infinite;
+  animation: loader-dot3 0.6s infinite;
 }
-@keyframes lds-ellipsis1 {
+@keyframes loader-dot1 {
   0% {
     transform: scale(0);
   }
@@ -807,7 +820,7 @@ button:focus:not(:active){
     transform: scale(1);
   }
 }
-@keyframes lds-ellipsis3 {
+@keyframes loader-dot3 {
   0% {
     transform: scale(1);
   }
@@ -815,7 +828,7 @@ button:focus:not(:active){
     transform: scale(0);
   }
 }
-@keyframes lds-ellipsis2 {
+@keyframes loader-dot2 {
   0% {
     transform: translate(0, 0);
   }
