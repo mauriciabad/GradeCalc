@@ -101,7 +101,7 @@ function addSubjects() {
           updateNecesaryMark(id);
 
           createSubjectCardCollapsed(id);
-          Cookies.set(id, subjects[id], { expires: 365 });
+          saveSubjectsCookies();
           hideLoader('dashboard');
         } else{
           console.error('Subject dosen\'t exists');
@@ -197,8 +197,7 @@ function updateMarkFromCardInput(id, exam, mark, input) {
     input.className = 'scolN2';
   }
   updateAndDisplayMarks(id);
-  
-  Cookies.set(id, subjects[id], { expires: 365 });
+  saveSubjectsCookies();
 }
 
 function updateCardGrades(id) {
@@ -232,7 +231,7 @@ function updateCardGrades(id) {
 
 function changeEvaluation(id,eval) {
   subjects[id].selectedEvaluation = eval;
-  Cookies.set(id, subjects[id], { expires: 365 });
+  saveSubjectsCookies();
   let card = document.getElementById('card-'+id);
   card.children[3].innerHTML = '';
   card.children[4].innerHTML = '';
