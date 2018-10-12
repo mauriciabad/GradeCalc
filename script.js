@@ -29,8 +29,8 @@ loadData();
 //Generate the cards with the subjects from cookies
 function loadData(){
   showLoader('Cargando tus asignaturas','dashboard');
-  subjects = Cookies.getJSON();
-  console.log('Subjects loaded from cookies');
+  subjects = getSubjectsCookies();
+  console.info('Subjects loaded from cookies');
   
   for (const id in subjects) {
     createSubjectCardCollapsed(id);
@@ -104,10 +104,10 @@ function addSubjects() {
           Cookies.set(id, subjects[id], { expires: 365 });
           hideLoader('dashboard');
         } else{
-          console.log('Subject dosen\'t exists');
+          console.error('Subject dosen\'t exists');
         }
       }).catch(function(error) {
-        console.log("Error getting subject info:", error);
+        console.error("Error getting subject info:", error);
       }); 
     } else{
       toast(`Ya tienes ${id.shortName}`);
@@ -380,6 +380,15 @@ function hideLoader(position) {
   document.getElementById(position+'-loader').style.display = 'none';
 }
 
+function getSubjectsCookies() {
+  return Cookies.getJSON('GradeCalcSubjects') || {};
+}
+
+function saveSubjectsCookies() {
+  Cookies.set('GradeCalcSubjects', subjects, { expires: 365 });
+  return subjects;
+}
+
 /* ------------------------------ USER ------------------------------ */
 
 function showUserInfo() {
@@ -395,7 +404,7 @@ function editSubjects() {
 function deleteSubject(id) {
   removedSubject = subjects[id]
   delete subjects[id];
-  Cookies.remove(id);
+  saveSubjectsCookies()
   if(!isAnonymous){
     let obj ={};
     obj['subjects.'+id] = firebase.firestore.FieldValue.delete();
@@ -412,7 +421,7 @@ function undoRemoveSubject() {
   let id = removedSubject.id;
   subjects[id] = removedSubject;
   createSubjectCardCollapsed(id);
-  Cookies.set(id, subjects[id], { expires: 365 });
+  saveSubjectsCookies()
   if(!isAnonymous){
   let obj ={};
   obj['subjects.'+id+'.grades'] = subjects[id].grades;
@@ -442,20 +451,18 @@ provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
 
 firebase.auth().useDeviceLanguage();
 
-showLoader('Cargando perfil','dashboard');
-
-firebase.auth().getRedirectResult().catch(function(error) {console.log(error);});
+firebase.auth().getRedirectResult().catch(function(error) {console.error(error);});
 
 firebase.auth().onAuthStateChanged(function(user) {
   let bntLogin = document.getElementById('loginButton');
   if (user) { // User is signed in.
 
     displayName = user.displayName;
-    photoURL = user.photoURL;
+    photoURL    = user.photoURL;
     isAnonymous = user.isAnonymous;
-    uid = user.uid;
+    uid         = user.uid;
         
-    console.log(`Signed in as ${displayName} whith ID: ${uid}`);
+    console.info(`Signed in as ${displayName} whith ID: ${uid}`);
 
     bntLogin.textContent = 'Cerrar sesión';
     bntLogin.className = 'btn-red';
@@ -470,12 +477,12 @@ firebase.auth().onAuthStateChanged(function(user) {
   } else { // User is signed out.
     hideLoader('dashboard');
     displayName = 'Anónimo';
-    photoURL = 'media/profile-pic.jpg';
+    photoURL    = 'media/profile-pic.jpg';
     isAnonymous = true;
-    uid = 0;
-    userDB = null;
+    uid         = 0;
+    userDB      = null;
 
-    console.log('Signed out')
+    console.info('Signed out')
     bntLogin.textContent = 'Iniciar sesión';
     bntLogin.className = 'btn-green';
     bntLogin.onclick = function(){loginGoogle(); popupHide(this.parentNode.parentNode); window.history.back();};
@@ -535,12 +542,15 @@ function uploadGrade(id,exam,mark) {
 
 function getAndDisplayUserSubjects() {
   if (isAnonymous) {
-    console.log('To get user info you need to sign in');
+    console.info('To get user info you need to sign in');
     showToast('No has iniciado sesión', 'Iniciar sesión','loginGoogle();');
+    hideLoader('dashboard');
   }else{
     userDB.get().then(function(doc) {
       if (doc.exists) {
         userInfo = doc.data();
+        showLoader('Descargando asignaturas','dashboard');
+        let count = 0;
         for (const id in userInfo.subjects) {
           subjectsDB.doc(id).get().then(function(doc) {
             if (doc.exists) {
@@ -561,9 +571,7 @@ function getAndDisplayUserSubjects() {
                 subjects[id].color = userInfo.subjects[id].color;
               }else{
                 subjects[id].color = subjectInfo.color;
-              }
-              console.log(subjects[id].grades);
-              
+              }              
               subjects[id].shortName = subjectInfo.shortName;
               subjects[id].id = id;
               subjects[id].necesaryMark = {};
@@ -574,22 +582,25 @@ function getAndDisplayUserSubjects() {
               updateNecesaryMark(id);
       
               updateCardGrades(id);
-              Cookies.set(id, subjects[id], { expires: 365 });
-              hideLoader('dashboard');
+              saveSubjectsCookies()    
+              console.info(`Loaded subject: ${subjects[id].shortName} - ${id}`);
             } else{
-              console.log('Subject dosen\'t exists');
+              console.error(`Subject ${id} dosen\'t exists`);
             }
           }).catch(function(error) {
-            console.log("Error getting subject info:", error);
+            console.error("Error getting subject info:", error);
           });
+          count++;
         }
+        console.info(`User has ${count} saved subjects`);
       } else{
         userDB.set({});
-        console.log('User dosen\'t exists');
-        hideLoader('dashboard');
+        console.error(`User ${uid} dosen\'t exists`);
       }
+      hideLoader('dashboard');
     }).catch(function(error) {
-      console.log("Error getting user info:", error);
+      console.error("Error getting user info:", error);
+      hideLoader('dashboard');
     });
   }
 }
