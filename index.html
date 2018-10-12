@@ -84,14 +84,20 @@
           <li><input type="checkbox" name="EDA" id="checkbox-14O7zocpbCBa943DZEeQ"><label for="checkbox-14O7zocpbCBa943DZEeQ">EDA</label></li>
           <li><input type="checkbox" name="PE" id="checkbox-3ES9n8Qhtoe3mAdYnWMO"><label for="checkbox-3ES9n8Qhtoe3mAdYnWMO">PE</label></li>
           <li><input type="checkbox" name="SO" id="checkbox-AdK85VBBzMm99sCXmBWK"><label for="checkbox-AdK85VBBzMm99sCXmBWK">SO</label></li>
+          <li><input type="checkbox" name="PROP" id="checkbox-ps0wyZ9D5DJD4UUhPaL8"><label for="checkbox-ps0wyZ9D5DJD4UUhPaL8">PROP</label></li>
+          <li><input type="checkbox" name="PAR" id="checkbox-v7MJDwJXlmmqlwwcmdZ3"><label for="checkbox-v7MJDwJXlmmqlwwcmdZ3">PAR</label></li>
+          <li><input type="checkbox" name="AS" id="checkbox-uf2WoMV5bbzvqyeJLlnK"><label for="checkbox-uf2WoMV5bbzvqyeJLlnK">AS</label></li>
+          <li><input type="checkbox" name="DBD" id="checkbox-3beCxEXHGIhPMouUkFCs"><label for="checkbox-3beCxEXHGIhPMouUkFCs">DBD</label></li>
+          <li><input type="checkbox" name="ER" id="checkbox-d1jvNndnoF0IRampyhtk"><label for="checkbox-d1jvNndnoF0IRampyhtk">ER</label></li>
+          <li><input type="checkbox" name="GPS" id="checkbox-I39Jf4BllXu5Ii8NuyJk"><label for="checkbox-I39Jf4BllXu5Ii8NuyJk">GPS</label></li>
         </ul>
       </div>
       <div id="add-popup-content2">
         <!-- <h2>Crear</h2> -->
         <p>¿No la encuentras o ninguna está bien?</p>
-        <button id="subject-start-creator">Crear</button>
+        <button id="subject-start-creator" onclick="createSubjectTesting()">Crear</button>
         <p>Evita contenido duplicado; si ya existe la asignatura que buscas, no la crees. <small>plis</small></p>
-        <textarea hidden name="" id="create-subject-text" placeholder="JSON of new subject. (this is for testing)"></textarea>
+        <textarea name="" id="create-subject-text" placeholder="JSON of new subject. (this is for testing)"></textarea>
       </div>
       <button onclick="addSubjects();">Añadir</button>
     </div>

@@ -110,7 +110,7 @@ function addSubjects() {
         console.error("Error getting subject info:", error);
       }); 
     } else{
-      toast(`Ya tienes ${id.shortName}`);
+      showToast(`Ya tienes ${id.shortName}`);
     }
   }
   popupHide(document.getElementById('add-container'));
@@ -493,10 +493,27 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 });
 
+//for testing
+function createSubjectTesting() {
+  let data = document.getElementById('create-subject-text').value;
+  if (data != undefined || data != '') {
+    console.log('Uploading subject');
+    uploadSubject(JSON.parse(data));
+  }else{
+    console.error('No subject to upload');
+  }
+}
+
 function uploadSubject(obj) { //not tested
   if (obj != undefined) {
     subjectDB = db.collection('subjects');
-    subjectDB.add(obj);
+    subjectDB.add(obj)
+    .then(function(docRef) {
+      console.log("Document written with ID: ", docRef.id);
+    })
+    .catch(function(error) {
+      console.error("Error adding document: ", error);
+    });
   }
 }
 
