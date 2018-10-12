@@ -381,11 +381,11 @@ function hideLoader(position) {
 }
 
 function getSubjectsCookies() {
-  return Cookies.getJSON('GradeCalcSubjects') || {};
+  return JSON.parse(localStorage.getItem("subjects")) || {};
 }
 
 function saveSubjectsCookies() {
-  Cookies.set('GradeCalcSubjects', subjects, { expires: 365 });
+  localStorage.setItem("subjects", JSON.stringify(subjects));
   return subjects;
 }
 
