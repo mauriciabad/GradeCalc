@@ -582,6 +582,7 @@ function getAndDisplayUserSubjects() {
       
               updateCardGrades(id);
               saveSubjectsCookies()    
+             
               console.info(`Loaded subject: ${subjects[id].shortName} - ${id}`);
             } else{
               console.error(`Subject ${id} dosen\'t exists`);

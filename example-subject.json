@@ -1,0 +1,24 @@
+{
+  "fullName":"Long Subject Name",
+  "shortName":"name",
+  "color":8,
+  "evaluation":{
+    "Continua":{
+      "Lab":{
+        "C1":0.1,
+        "C2":0.15,
+        "P":0.1
+      },
+      "Teoria":{
+        "E1":0.25,
+        "E2":0.15,
+        "E3":0.25
+      }
+    }
+  },
+  "grades":{
+    "E1":7.5
+  },
+  "faculty":"FIB",
+  "uni":"UPC"
+}
