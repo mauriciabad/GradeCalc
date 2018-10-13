@@ -568,7 +568,6 @@ button:focus:not(:active){
   text-shadow: 0 0.15em 0.5em rgba(0, 0, 0, 0.4);
   border-radius: 2em;
   line-height: 1;
-  margin: 0.5em;
   cursor: pointer;
   background-color: #eee;
   box-shadow: inset 0 0.1em 0.75em rgba(0, 0, 0, 0.3), 0 0 transparent;
