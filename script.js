@@ -54,9 +54,10 @@ function createSubjectCardCollapsed(id) {
 }
 
 function createBarAndInputs(id,card) { 
+  let weight = 0;
   for (const examType in subjects[id].evaluation[subjects[id].selectedEvaluation]) {
-    card.children[4].innerHTML += `<h3>${examType}</h3><div></div>`;   
-    
+    card.children[4].innerHTML += `<h3>${examType}</h3><span></span><div></div>`;   
+    weight = 0;
     for (const exam in subjects[id].evaluation[subjects[id].selectedEvaluation][examType]) {      
       if (isUndone(id,exam)) {
         card.children[3].innerHTML += `<div onclick="selectInput('in-${id+exam}')" class="scolN" style="flex-grow: ${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100}" title="${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100}%">${exam}<div id="bar-${id+exam}">${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}</div></div>`;
@@ -65,7 +66,10 @@ function createBarAndInputs(id,card) {
         card.children[3].innerHTML += `<div onclick="selectInput('in-${id+exam}')" class="scol${subjects[id].color}" style="flex-grow: ${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100}" title="${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100}%">${exam}<div id="bar-${id+exam}">${subjects[id].grades[exam]}</div></div>`;
         card.children[4].lastChild.innerHTML += `<div><span>${exam}:</span><input type="number" id="in-${id+exam}" placeholder="${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}" value="${subjects[id].grades[exam]}" class="scol${subjects[id].color}" oninput="updateMarkFromCardInput('${id}', '${exam}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
       }
+      weight += subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100;
+      
     }
+    card.children[4].lastChild.previousSibling.textContent = round(weight, 0) + '%';
   }
   card.children[4].innerHTML += `<div class="eval-select"${Object.keys(subjects[id].evaluation).length <= 1 ? ' style="display: none;"':'' }><span>Evaluación:</span><select onchange="changeEvaluation('${id}',this.value);"></select><img src="media/dislike.svg" style="display: none;" title="Hay otra evaluación mejor"></div>`;
   for (const eval2 in subjects[id].evaluation) {    
@@ -254,8 +258,8 @@ function gradeCalcAllEqual(id,eval) {
 }
 
 //returns n rounded to 2 decimals
-function round(n) {
-  return (n==='' || n == undefined) ? undefined : Math.floor(Math.round(n*100))/100;
+function round(n,d = 2) {
+  return (n==='' || n == undefined) ? undefined : Math.floor(Math.round(n*Math.pow(10,d)))/Math.pow(10,d);
 }
 
 function congratulate() {
