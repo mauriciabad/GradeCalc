@@ -241,6 +241,7 @@ button:focus:not(:active){
   text-align: center;
   padding: 0.5em 0;
   cursor: pointer;
+  transition: background-color 200ms ease-out, color 200ms ease-out;
 }
 .subject-bar :last-child{
   border-right: none;

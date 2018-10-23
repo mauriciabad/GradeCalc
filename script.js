@@ -276,7 +276,7 @@ function hasPassedEverything() {
 
 /* ------------------------------ UI MANIPULATION ------------------------------ */
 
-//Expansd or collapes the card
+//Expands or collapses the card
 function toggleExpandCard(event, card) {  
   if (event.target.tagName != 'INPUT' && event.target.tagName != 'SELECT' && event.target.tagName != 'OPTION') {
     if (card.children[3].contains(event.target)) {
