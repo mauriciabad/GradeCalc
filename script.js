@@ -2,6 +2,7 @@
 var dashboard = document.getElementById('dashboard');
 var topbar = document.getElementById('top-bar');
 var currentScreen = document.getElementsByClassName('screen')[0];
+var searchResultContainer = document.getElementById('subjects-search-results');
 
 var userInfo;
 var subjects = {};
@@ -242,6 +243,12 @@ function changeEvaluation(id,eval) {
   createBarAndInputs(id,card);
   card.lastChild.style.height = (card.lastChild.classList.contains('hidden') ? 0 : card.lastChild.scrollHeight) +'px';
   updateAndDisplayMarks(id);
+}
+
+function showSearchResult(result) {
+  searchResultContainer.textContent = '';
+  console.log(result);
+  
 }
 /* ------------------------------ MATH ------------------------------ */
 
@@ -624,6 +631,14 @@ function getAndDisplayUserSubjects() {
       hideLoader('dashboard');
     });
   }
+}
+
+function searchAll() {
+  db.collection("subjects").get().then((doc) => {
+      showSearchResult(doc);
+    }
+  )
+
 }
 
 function searchSubject(query) { //TODO-------------------------------
