@@ -246,7 +246,7 @@ function changeEvaluation(id,eval) {
 }
 
 function showSearchResult(result) {
-  searchResultContainer.textContent = '';
+  //searchResultContainer.textContent = '';
   console.log(result);
   
 }
