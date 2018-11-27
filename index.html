@@ -59,6 +59,8 @@
       <br>
       <p><i>Venga, añade tu primera asignatura con el botón "+" de arriba a la derecha.</i></p>
       <p>Una vez creada, tócala para editar tus notas</p>
+      <br>
+      <p><a href="https://github.com/mauriciabad/GradeCalc">Colabora en el proyecto</a></p>
     </div>
     <a href="https://youtu.be/1Bix44C1EzY" target="_blank" id="congratulations-img" style="display: none">
       <img data-src="media/congratulations.gif" alt="¡Felicidades!">
@@ -136,12 +138,8 @@
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
-      .then(function(registration) {
-        console.log('Registration successful, scope is:', registration.scope);
-      })
-      .catch(function(error) {
-        console.log('Service worker registration failed, error:', error);
-      });
+      .then((registration) => {console.log('Registration successful, scope is:', registration.scope);})
+      .catch((error) => {console.log('Service worker registration failed, error:', error);});
     }
   </script>
   <script src="algebra-0.2.6.min.js"></script>

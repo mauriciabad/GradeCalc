@@ -674,6 +674,31 @@ button:focus:not(:active){
 #tutorial h3{
   margin: 0.5em 0 0;
 }
+#tutorial a{
+  color: coral;
+  text-shadow: 0 0.1em 0 #dce0e0,
+               -0.0707em 0.0707em 0 #dce0e0,
+               0.0707em 0.0707em 0 #dce0e0,
+               0.1em 0 0 #dce0e0,
+               -0.1em 0 0 #dce0e0,
+               -0.0382em 0.0924em 0 #dce0e0,
+               0.0382em 0.0924em 0 #dce0e0,
+               -0.0923em 0.0383em 0 #dce0e0,
+               0.0923em 0.0383em 0 #dce0e0; 
+  text-decoration: none;
+  position: relative;
+}
+#tutorial a::before{
+  content: "";
+  bottom: 0.15em;
+  left: -0.1em;
+  right: -0.1em;
+  height: 0.2em;
+  background-color: currentColor;
+  position: absolute;
+  border-radius: 10px;
+  z-index: -1;
+}
 
 #toast{
   text-align: center;

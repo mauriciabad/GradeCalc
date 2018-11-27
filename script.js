@@ -634,7 +634,7 @@ function getAndDisplayUserSubjects() {
 }
 
 function searchAll() {
-  db.collection("subjects").get().then((doc) => {
+  subjectsDB.get().then((doc) => {
       showSearchResult(doc);
     }
   )
@@ -642,5 +642,5 @@ function searchAll() {
 }
 
 function searchSubject(query) { //TODO-------------------------------
-  db.collection("subjects").get()
+  subjectsDB.get()
 }
