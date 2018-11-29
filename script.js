@@ -1,25 +1,25 @@
 /* ------------------------------ START UP ------------------------------ */
-var dashboard = document.getElementById('dashboard');
-var topbar = document.getElementById('top-bar');
+var dashboard     = document.getElementById('dashboard');
+var topbar        = document.getElementById('top-bar');
 var currentScreen = document.getElementsByClassName('screen')[0];
 var searchResultContainer = document.getElementById('subjects-search-results');
 
 var userInfo;
-var subjects = {};
+var subjects       = {};
 var removedSubject = {};
 
-var toastTimer = 0;
-var toast = document.getElementById('toast');
+var toastTimer  = 0;
+var toast       = document.getElementById('toast');
 
 var displayName = 'Anónimo';
-var photoURL = 'media/profile-pic.jpg';
+var photoURL    = 'media/profile-pic.jpg';
 var isAnonymous = true;
-var uid = 0;
+var uid         = 0;
 
-var db = firebase.firestore();
-db.settings({timestampsInSnapshots: true}); //remove when timestamps are updated
-var userDB = null;
-var subjectsDB = db.collection('subjects');
+var db          = firebase.firestore();
+    db.settings({timestampsInSnapshots: true}); //remove when timestamps are updated
+var userDB      = null;
+var subjectsDB  = db.collection('subjects');
 
 loadData();
 

@@ -29,6 +29,16 @@
   <meta name="msapplication-config" content="icons/browserconfig.xml">
   <meta name="theme-color" content="#1b9f64">
 
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-100348659-2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-100348659-2');
+  </script>
+
 </head>
 <body>
   <header id="top-bar">
@@ -71,9 +81,9 @@
     <div onclick="popupHide(this.parentNode); window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Go back">Nueva asignatura</div>
     <div class="popup-content add-popup">
       <div id="add-popup-content">
-        <h2>Buscar</h2>
+        <!-- <h2>Buscar</h2>
         <input type="search" name="search-subject" id="search-subject-input" placeholder="Matemáticas UPC FIB">
-        <label for="search-subject-input">Puedes buscar por: siglas, nombre, universidad y facultad.</label>
+        <label for="search-subject-input">Puedes buscar por: siglas, nombre, universidad y facultad.</label> -->
         <h3>Resultados</h3>
         <ul id="subjects-search-results">
           <li><input type="checkbox" name="AC" id="checkbox-EfFfxjAZUyF8BjRTRXXm"><label for="checkbox-EfFfxjAZUyF8BjRTRXXm">AC</label></li>
@@ -167,5 +177,6 @@
       };
     });
   </script>
+
 </body>
 </html>
