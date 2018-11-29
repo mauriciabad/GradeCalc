@@ -146,13 +146,31 @@
   <div id="toast" style="display: none;"><div><p>Has borrado <b>NADA</b></p><button onclick="undoRemoveSubject();">Deshacer</button></div></div>
 
   <script>
+    var sw;
+    var isSubscribed;
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
-      .then((registration) => {console.log('Registration successful, scope is:', registration.scope);})
+      .then((registration) => {
+        console.log('Registration successful, scope is:', registration.scope);
+        sw = registration;
+        if ('PushManager' in window) {
+          console.log('Service Worker and Push is supported');
+          sw.pushManager.getSubscription()
+          .then(function(subscription) {
+            isSubscribed = !(subscription === null);
+            if (isSubscribed) {
+              console.log('User IS subscribed.');
+            } else {
+              console.log('User is NOT subscribed.');
+            }
+          });
+        } else {
+          console.warn('Push messaging is not supported');
+        }
+        })
       .catch((error) => {console.log('Service worker registration failed, error:', error);});
     }
   </script>
-  <script src="algebra-0.2.6.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-firestore.js"></script>

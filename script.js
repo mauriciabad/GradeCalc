@@ -23,6 +23,12 @@ var subjectsDB  = db.collection('subjects');
 
 loadData();
 
+// if (!isSubscribed) {
+//   setTimeout(() => {
+//     showToast('Quieres que te avisemos cuando salgan notas?', 'Avísame', 'subscribe();', 20000);
+//   }, 8000);
+// }
+
 //also load firebase (at the bottom)
 
 /* ------------------------------ UI CREATION ------------------------------ */
@@ -367,8 +373,10 @@ function isEmpty(obj) {
   return true;
 }
 
-function showToast(message,action,code) {
+function showToast(message,action,code,time=8000) {
   toast.style.display = 'none';
+  // setCSSvar('toastTime', Math.max(0, (time-3000) +'ms'));
+  toast.style.animation = `goUp 500ms cubic-bezier(0.215, 0.61, 0.355, 1), fadeOut ${Math.max(0, (time-3000))}ms 2.5s cubic-bezier(1, 0, 1, 1), opaque 2.5s`;
   toast.offsetHeight;
   toast.style.display = 'flex';
   toast.firstChild.innerHTML = `<p>${message}</p>`;
@@ -377,8 +385,13 @@ function showToast(message,action,code) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
     toast.style.display = 'none';
-  }, 8000);
+  }, time);
 }
+
+// function setCSSvar(variable, value) {
+//   let root = document.documentElement;
+//   root.style.setProperty('--'+variable, value);
+// }
 
 function showLoader(message,position) {
   let loader = document.getElementById(position+'-loader');

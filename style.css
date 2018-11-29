@@ -1,3 +1,6 @@
+/* :root {
+  --toastTime: 5000ms;
+} */
 *{
   font-family: 'Nunito', 'Quicksand', 'Roboto', -apple-system, system, system-ui, sans-serif;
 }
