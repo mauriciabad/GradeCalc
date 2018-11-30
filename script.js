@@ -56,7 +56,7 @@ function createSubjectCardCollapsed(id) {
   createBarAndInputs(id,card)
 
   dashboard.appendChild(card);
-  updateAndDisplayMarks(id);
+  updateAndDisplayMarks(id,false);
   hideTutorial();
 }
 
@@ -130,8 +130,8 @@ function addSubjects() {
 /* ------------------------------ UI & DATA UPDATE ------------------------------ */
 
 //Updates, saves and shows the finalMark and necesaryMark
-function updateAndDisplayMarks(id) {
-  updateFinalMark(id);
+function updateAndDisplayMarks(id, confetti=true) {
+  updateFinalMark(id,confetti);
   updateNecesaryMark(id);
 
   displayFinalMark(id);
@@ -176,7 +176,8 @@ function updateNecesaryMark(id) {
 }
 
 //Saves and updates the value of the finalMark
-function updateFinalMark(id) {
+function updateFinalMark(id,confetti=true) {
+  var oldMark = subjects[id].finalMark[subjects[id].selectedEvaluation];
   for (const eval in subjects[id].evaluation) {
     subjects[id].finalMark[eval] = 0;
     for (const examType in subjects[id].evaluation[eval]) {
@@ -186,6 +187,8 @@ function updateFinalMark(id) {
     }
     subjects[id].finalMark[eval] = round(subjects[id].finalMark[eval]);
   }
+  var newMark = subjects[id].finalMark[subjects[id].selectedEvaluation];
+  if (confetti && oldMark < 5 && newMark >= 5) showConfetti(document.getElementById('card-'+id).children[1]);
   return subjects[id].finalMark[subjects[id].selectedEvaluation];
 }
 
@@ -254,8 +257,22 @@ function changeEvaluation(id,eval) {
 function showSearchResult(result) {
   //searchResultContainer.textContent = '';
   console.log(result);
-  
 }
+
+function showConfetti(elem, conf) {
+  if (conf == undefined) {
+    conf = {
+      angle: 0,
+      spread: 360,
+      startVelocity: 45,
+      elementCount: 150,
+      decay: 0.8,
+      colors: ['#E68F17', '#FAB005', '#FA5252', '#E64980', '#BE4BDB', '#0B7285', '#15AABF', '#EE1233', '#40C057']
+    };
+  }
+  window.confetti(elem, conf);
+}
+
 /* ------------------------------ MATH ------------------------------ */
 
 //Returns the mark you need to get in the remaining exams to pass
@@ -286,9 +303,14 @@ function congratulate() {
 function hasPassedEverything() {
   if (isEmpty(subjects)) return false;
   for (const id in subjects) {
-    if (subjects[id].finalMark[subjects[id].selectedEvaluation] < 5) return false;
+    if (!isPassed(id)) return false;
   }
   return true;
+}
+
+function isPassed(id, mark=5) {
+  return subjects[id].finalMark[subjects[id].selectedEvaluation] >= mark;
+
 }
 
 /* ------------------------------ UI MANIPULATION ------------------------------ */
