@@ -188,7 +188,7 @@ function updateFinalMark(id,confetti=true) {
     subjects[id].finalMark[eval] = round(subjects[id].finalMark[eval]);
   }
   var newMark = subjects[id].finalMark[subjects[id].selectedEvaluation];
-  if (confetti && oldMark < 5 && newMark >= 5) showConfetti(document.getElementById('card-'+id).children[1]);
+  if (confetti && oldMark < 5 && newMark >= 5) showConfetti(document.getElementById('card-'+id));
   return subjects[id].finalMark[subjects[id].selectedEvaluation];
 }
 
@@ -262,10 +262,10 @@ function showSearchResult(result) {
 function showConfetti(elem, conf) {
   if (conf == undefined) {
     conf = {
-      angle: 0,
-      spread: 360,
-      startVelocity: 45,
-      elementCount: 150,
+      angle: random(60, 70),
+      spread: random(40, 50),
+      startVelocity: random(60, 90),
+      elementCount: random(30,60),
       decay: 0.8,
       colors: ['#E68F17', '#FAB005', '#FA5252', '#E64980', '#BE4BDB', '#0B7285', '#15AABF', '#EE1233', '#40C057']
     };
@@ -290,6 +290,10 @@ function gradeCalcAllEqual(id,eval) {
 //returns n rounded to 2 decimals
 function round(n,d = 2) {
   return (n==='' || n == undefined) ? undefined : Math.floor(Math.round(n*Math.pow(10,d)))/Math.pow(10,d);
+}
+
+function random(smallest, biggest) {
+  return Math.floor(Math.random()*(biggest-smallest))+smallest;
 }
 
 function congratulate() {
