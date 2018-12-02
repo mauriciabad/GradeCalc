@@ -33,11 +33,11 @@ loadData();
 
 /* ------------------------------ UI CREATION ------------------------------ */
 
-//Generate the cards with the subjects from cookies
+//Generate the cards with the subjects from localStorage
 function loadData(){
   showLoader('Cargando tus asignaturas','dashboard');
-  subjects = getSubjectsCookies();
-  console.info('Subjects loaded from cookies');
+  subjects = getSubjectsLocalStorage();
+  console.info('Subjects loaded from localStorage');
   
   for (const id in subjects) {
     createSubjectCardCollapsed(id);
@@ -112,7 +112,7 @@ function addSubjects() {
           updateNecesaryMark(id);
 
           createSubjectCardCollapsed(id);
-          saveSubjectsCookies();
+          saveSubjectsLocalStorage();
           hideLoader('dashboard');
         } else{
           console.error('Subject dosen\'t exists');
@@ -211,7 +211,7 @@ function updateMarkFromCardInput(id, exam, mark, input) {
     input.className = 'scolN2';
   }
   updateAndDisplayMarks(id);
-  saveSubjectsCookies();
+  saveSubjectsLocalStorage();
 }
 
 function updateCardGrades(id) {
@@ -245,7 +245,7 @@ function updateCardGrades(id) {
 
 function changeEvaluation(id,eval) {
   subjects[id].selectedEvaluation = eval;
-  saveSubjectsCookies();
+  saveSubjectsLocalStorage();
   let card = document.getElementById('card-'+id);
   card.children[3].innerHTML = '';
   card.children[4].innerHTML = '';
@@ -425,11 +425,11 @@ function hideLoader(position) {
   document.getElementById(position+'-loader').style.display = 'none';
 }
 
-function getSubjectsCookies() {
+function getSubjectsLocalStorage() {
   return JSON.parse(localStorage.getItem("subjects")) || {};
 }
 
-function saveSubjectsCookies() {
+function saveSubjectsLocalStorage() {
   localStorage.setItem("subjects", JSON.stringify(subjects));
   return subjects;
 }
@@ -449,7 +449,7 @@ function editSubjects() {
 function deleteSubject(id) {
   removedSubject = subjects[id]
   delete subjects[id];
-  saveSubjectsCookies()
+  saveSubjectsLocalStorage()
   if(!isAnonymous){
     let obj ={};
     obj['subjects.'+id] = firebase.firestore.FieldValue.delete();
@@ -466,7 +466,7 @@ function undoRemoveSubject() {
   let id = removedSubject.id;
   subjects[id] = removedSubject;
   createSubjectCardCollapsed(id);
-  saveSubjectsCookies()
+  saveSubjectsLocalStorage()
   if(!isAnonymous){
   let obj ={};
   obj['subjects.'+id+'.grades'] = subjects[id].grades;
@@ -644,7 +644,7 @@ function getAndDisplayUserSubjects() {
               updateNecesaryMark(id);
       
               updateCardGrades(id);
-              saveSubjectsCookies()    
+              saveSubjectsLocalStorage()    
              
               console.info(`Loaded subject: ${subjects[id].shortName} - ${id}`);
             } else{
@@ -678,4 +678,31 @@ function searchAll() {
 
 function searchSubject(query) { //TODO-------------------------------
   subjectsDB.get()
+}
+
+/* ------------------------------ PWA install ------------------------------ */
+
+var deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  console.log('App can be installed');
+  // e.preventDefault();
+  deferredPrompt = e;
+  showToast('Usa GradeCalc offline', 'Instalar', 'install();');
+  return false;
+});
+
+function install() {
+  if(deferredPrompt !== undefined) {
+    deferredPrompt.prompt();
+
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if(choiceResult.outcome == 'dismissed') {
+        // console.log('User cancelled home screen install');
+      }else {
+        // console.log('User added to home screen');
+      }
+      deferredPrompt = null;
+    });
+  }
 }
