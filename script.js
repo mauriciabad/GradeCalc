@@ -250,7 +250,7 @@ function changeEvaluation(id,eval) {
   card.children[3].innerHTML = '';
   card.children[4].innerHTML = '';
   createBarAndInputs(id,card);
-  card.lastChild.style.height = (card.lastChild.classList.contains('hidden') ? 0 : card.lastChild.scrollHeight) +'px';
+  updateHeigth(card.lastChild);
   updateAndDisplayMarks(id);
 }
 
@@ -327,8 +327,12 @@ function toggleExpandCard(event, card) {
     } else{
       card.lastChild.classList.toggle('hidden');
     }
-    card.lastChild.style.height = (card.lastChild.classList.contains('hidden') ? 0 : card.lastChild.scrollHeight) +'px';
+    updateHeigth(card.lastChild);
   }
+}
+
+function updateHeigth(elem) {
+  elem.style.height = (elem.classList.contains('hidden') ? 0 : elem.scrollHeight) +'px';
 }
 
 //Puts the cursor and selects the content of the input
