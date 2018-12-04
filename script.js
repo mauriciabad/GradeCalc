@@ -340,6 +340,53 @@ function selectInput(idInput) {
   document.getElementById(idInput).select();
 }
 
+/* ------------------------------ Cards Remove animation ------------------------------ */
+var cards; updateCards();
+var cardsOldInfo = {};
+var cardsNewInfo = cardsOldInfo;
+
+function removeCard(card){
+  cardsOldInfo = getCardsInfo();
+  card.parentNode.removeChild(card);
+  cardsNewInfo = getCardsInfo();
+  moveCards();
+}
+
+function getCardsInfo(){
+  updateCards();
+  let cardsInfo = {};
+  cards.forEach((card) => {
+    var rect = card.getBoundingClientRect();
+    cardsInfo[card.id] = {
+      "x": rect.left,
+      "y": rect.top,
+      "width": (rect.right - rect.left)
+    };
+  });
+  return cardsInfo;
+}
+
+function moveCards(){
+  updateCards();
+    cards.forEach((card) => {
+      card.animate([ 
+        {
+          transform: `translate(${cardsOldInfo[card.id].x - cardsNewInfo[card.id].x}px, ${cardsOldInfo[card.id].y -cardsNewInfo[card.id].y}px) scaleX(${cardsOldInfo[card.id].width/cardsNewInfo[card.id].width})`
+        }, 
+        {
+          transform: 'none'
+        }
+      ], { 
+        duration: 250,
+        easing: 'ease-out'
+      });
+  });
+}
+
+function updateCards(){
+  cards = document.querySelectorAll('.subject-card');
+}
+
 /* ------------------------------ POPUP ------------------------------ */
 
 //What to do when page changed
@@ -463,7 +510,7 @@ function deleteSubject(id) {
     obj['subjects.'+id] = firebase.firestore.FieldValue.delete();
     userDB.update(obj);
   }
-  document.getElementById('card-'+id).remove();
+  removeCard(document.getElementById('card-'+id));
   showToast(`Has borrado <b>${removedSubject.shortName}</b>`,'Deshacer','undoRemoveSubject();');
 
   if (isEmpty(subjects)) showTutorial();
