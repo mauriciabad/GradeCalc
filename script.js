@@ -140,7 +140,7 @@ function updateAndDisplayMarks(id, confetti=true) {
 }
 
 function displayNecesaryMark(id) {
-  let card = document.getElementById('card-' + id);
+  let card = getCard(id);
   let barUndone = card.getElementsByClassName('scolN');
   let inUndone = card.getElementsByClassName('scolN2');
   
@@ -153,7 +153,7 @@ function displayNecesaryMark(id) {
 }
 
 function displayFinalMark(id) {
-  let card = document.getElementById('card-' + id);
+  let card = getCard(id);
   card.children[2].textContent = subjects[id].finalMark[subjects[id].selectedEvaluation];
   card.children[2].style.color = (subjects[id].finalMark[subjects[id].selectedEvaluation]>=5 ? '#5a9764' : '#b9574c');
 }
@@ -166,7 +166,7 @@ function updateNecesaryMark(id) {
     subjects[id].necesaryMark[eval] = Math.max(0, round(gradeCalcAllEqual(id,eval)));
     if (bestOption && eval != subjects[id].selectedEvaluation && subjects[id].necesaryMark[eval] < mark) bestOption = false;
   }
-  let card = document.getElementById('card-'+id);
+  let card = getCard(id);
   if (card) {
     if (bestOption) card.children[4].lastChild.children[2].style.display = 'none';
     else card.children[4].lastChild.children[2].style.display = 'flex';
@@ -188,13 +188,13 @@ function updateFinalMark(id,confetti=true) {
     subjects[id].finalMark[eval] = round(subjects[id].finalMark[eval]);
   }
   var newMark = subjects[id].finalMark[subjects[id].selectedEvaluation];
-  if (confetti && oldMark < 5 && newMark >= 5) showConfetti(document.getElementById('card-'+id));
+  if (confetti && oldMark < 5 && newMark >= 5) showConfetti(getCard(id));
   return subjects[id].finalMark[subjects[id].selectedEvaluation];
 }
 
 //Saves the changed mark, updates finalMark and necessaryMark, and shows the info in the UI
 function updateMarkFromCardInput(id, exam, mark, input) {
-  let barElem = document.getElementById('bar-'+id+exam);
+  let barElem = getBarElem(id,exam);
 
   if (!isNaN(mark) && mark != '') {
     subjects[id].grades[exam] = Number(mark);
@@ -215,38 +215,41 @@ function updateMarkFromCardInput(id, exam, mark, input) {
 }
 
 function updateCardGrades(id) {
-  let card = document.getElementById('card-'+id);
+  let card = getCard(id);
   if (card) {
     for (let div in card.children[3] ) {
       div.className = 'scolN';
     }
     for (const examType in subjects[id].evaluation[subjects[id].selectedEvaluation] ) {
       for (const exam in subjects[id].evaluation[subjects[id].selectedEvaluation][examType] ) {
-        let input = document.getElementById('in-'+id+exam);
+        let input = getInput(id,exam);
         input.className = 'scolN2';
         input.value = '';
       }
     }
     for (const exam in subjects[id].grades) {
-      let barElem = document.getElementById('bar-'+id+exam);
-      barElem.textContent = subjects[id].grades[exam];
-      barElem.parentElement.className = 'scol'+subjects[id].color;
-      let input = document.getElementById('in-'+id+exam);
-      input.value = subjects[id].grades[exam];
-      input.className = 'scol'+subjects[id].color;
+      let barElem = getBarElem(id,exam);
+      let input   = getInput(id,exam);
+      if (barElem && input) {
+        barElem.textContent = subjects[id].grades[exam];
+        barElem.parentElement.className = 'scol'+subjects[id].color;
+        input.value = subjects[id].grades[exam];
+        input.className = 'scol'+subjects[id].color;
+      }else{
+        console.log(`Exam ${exam} of ${subjects[id].shortName} (${id}) is not in the card`);
+      }
     }
     updateAndDisplayMarks(id);
   }else{
     createSubjectCardCollapsed(id);
     updateCardGrades(id);
   }
-
 }
 
 function changeEvaluation(id,eval) {
   subjects[id].selectedEvaluation = eval;
   saveSubjectsLocalStorage();
-  let card = document.getElementById('card-'+id);
+  let card = getCard(id);
   card.children[3].innerHTML = '';
   card.children[4].innerHTML = '';
   createBarAndInputs(id,card);
@@ -271,6 +274,17 @@ function showConfetti(elem, conf) {
     };
   }
   window.confetti(elem, conf);
+}
+
+
+function getCard(id) {
+  return document.getElementById('card-'+id);
+}
+function getInput(id, exam) {
+  return document.getElementById('in-'+id+exam);
+}
+function getBarElem(id, exam) {
+  return document.getElementById('bar-'+id+exam);
 }
 
 /* ------------------------------ MATH ------------------------------ */
@@ -510,7 +524,7 @@ function deleteSubject(id) {
     obj['subjects.'+id] = firebase.firestore.FieldValue.delete();
     userDB.update(obj);
   }
-  removeCard(document.getElementById('card-'+id));
+  removeCard(getCard(id));
   showToast(`Has borrado <b>${removedSubject.shortName}</b>`,'Deshacer','undoRemoveSubject();');
 
   if (isEmpty(subjects)) showTutorial();
@@ -663,13 +677,13 @@ function getAndDisplayUserSubjects() {
     showToast('No has iniciado sesión', 'Iniciar sesión','loginGoogle();');
     hideLoader('dashboard');
   }else{
-    userDB.get().then(function(doc) {
+    userDB.get().then((doc) => {
       if (doc.exists) {
         userInfo = doc.data();
         showLoader('Descargando asignaturas','dashboard');
         let count = 0;
         for (const id in userInfo.subjects) {
-          subjectsDB.doc(id).get().then(function(doc) {
+          subjectsDB.doc(id).get().then((doc) => {
             if (doc.exists) {
               let subjectInfo = doc.data();
               if (subjects[id] == undefined){
@@ -705,7 +719,7 @@ function getAndDisplayUserSubjects() {
             } else{
               console.error(`Subject ${id} dosen\'t exists`);
             }
-          }).catch(function(error) {
+          }).catch((error) => {
             console.error("Error getting subject info:", error);
           });
           count++;
@@ -716,7 +730,7 @@ function getAndDisplayUserSubjects() {
         console.error(`User ${uid} dosen\'t exists`);
       }
       hideLoader('dashboard');
-    }).catch(function(error) {
+    }).catch((error) => {
       console.error("Error getting user info:", error);
       hideLoader('dashboard');
     });
