@@ -52,37 +52,69 @@ function createSubjectCardCollapsed(id) {
   card.id = 'card-' + id;
   card.className = 'subject-card';
   card.onclick = function(event){toggleExpandCard(event, this);};
-  card.innerHTML = `<button onclick="deleteSubject('${id}')" class="subject-card-remove"><img src="media/trash.svg" alt="x" aria-label="Delete subject"></button><h2>${subjects[id].shortName}</h2><p style="color: ${subjects[id].finalMark[subjects[id].selectedEvaluation]>=5 ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p><div class="subject-bar"></div><div class="grades-input hidden" style="height: 0px;"></div>`;
-
-  createBarAndInputs(id,card)
+  card.innerHTML = 
+`<button onclick="deleteSubject('${id}')" class="subject-card-remove">
+  <img src="media/trash.svg" alt="x" aria-label="Delete subject">
+</button>
+<!-- <button onclick="showSubjectInfo('${id}')" class="subject-card-remove">
+  <img src="media/tag.svg" alt="%" aria-label="Show subject information">
+</button> -->
+<h2>${subjects[id].shortName}</h2>
+<p class="subject-finalMark" style="color: ${subjects[id].finalMark[subjects[id].selectedEvaluation]>=5 ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
+<div class="subject-bar">${generateBar(id)}</div>
+<div class="grades-input hidden" style="height: 0px;">${generateInputs(id)+generateEvaluations(id)}</div>`;
 
   dashboard.appendChild(card);
   updateAndDisplayMarks(id,false);
   hideTutorial();
 }
 
-function createBarAndInputs(id,card) { 
+function generateBar(id) {
   let weight = 0;
+  let barHTML = "";
   for (const examType in subjects[id].evaluation[subjects[id].selectedEvaluation]) {
-    card.children[4].innerHTML += `<h3>${examType}</h3><span></span><div></div>`;   
+    for (const exam in subjects[id].evaluation[subjects[id].selectedEvaluation][examType]) {      
+      if (isUndone(id,exam)) {
+        barHTML += `<div onclick="selectInput('in-${id+exam}')" class="scolN" style="flex-grow: ${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100}" title="${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100}%">${exam}<div id="bar-${id+exam}">${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}</div></div>`;
+      }else{
+        barHTML += `<div onclick="selectInput('in-${id+exam}')" class="scol${subjects[id].color}" style="flex-grow: ${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100}" title="${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100}%">${exam}<div id="bar-${id+exam}">${subjects[id].grades[exam]}</div></div>`;
+      }
+    }
+  }
+  return barHTML;
+}
+function generateInputs(id) { 
+  let weight = 0;
+  let inputsHTML = "";
+  for (const examType in subjects[id].evaluation[subjects[id].selectedEvaluation]) {
+    let aux = '';
     weight = 0;
     for (const exam in subjects[id].evaluation[subjects[id].selectedEvaluation][examType]) {      
       if (isUndone(id,exam)) {
-        card.children[3].innerHTML += `<div onclick="selectInput('in-${id+exam}')" class="scolN" style="flex-grow: ${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100}" title="${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100}%">${exam}<div id="bar-${id+exam}">${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}</div></div>`;
-        card.children[4].lastChild.innerHTML += `<div><span>${exam}:</span><input type="number" id="in-${id+exam}" placeholder="${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}" value="" class="scolN2" oninput="updateMarkFromCardInput('${id}', '${exam}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
+        aux += `<div><span>${exam}:</span><input type="number" id="in-${id+exam}" placeholder="${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}" value="" class="scolN2" oninput="updateMarkFromCardInput('${id}', '${exam}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
       }else{
-        card.children[3].innerHTML += `<div onclick="selectInput('in-${id+exam}')" class="scol${subjects[id].color}" style="flex-grow: ${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100}" title="${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100}%">${exam}<div id="bar-${id+exam}">${subjects[id].grades[exam]}</div></div>`;
-        card.children[4].lastChild.innerHTML += `<div><span>${exam}:</span><input type="number" id="in-${id+exam}" placeholder="${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}" value="${subjects[id].grades[exam]}" class="scol${subjects[id].color}" oninput="updateMarkFromCardInput('${id}', '${exam}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
+        aux += `<div><span>${exam}:</span><input type="number" id="in-${id+exam}" placeholder="${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}" value="${subjects[id].grades[exam]}" class="scol${subjects[id].color}" oninput="updateMarkFromCardInput('${id}', '${exam}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
       }
       weight += subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam]*100;
-      
     }
-    card.children[4].lastChild.previousSibling.textContent = round(weight, 0) + '%';
+    inputsHTML += `<h3>${examType}</h3><span>${round(weight, 0)}%</span><div>${aux}</div>`;
   }
-  card.children[4].innerHTML += `<div class="eval-select"${Object.keys(subjects[id].evaluation).length <= 1 ? ' style="display: none;"':'' }><span>Evaluación:</span><select onchange="changeEvaluation('${id}',this.value);"></select><img src="media/dislike.svg" style="display: none;" title="Hay otra evaluación mejor"></div>`;
-  for (const eval2 in subjects[id].evaluation) {    
-    card.children[4].lastChild.children[1].innerHTML += `<option value="${eval2}"${eval2 == subjects[id].selectedEvaluation ? 'selected="selected"':''}>${eval2}</option>`;
+  return inputsHTML;
+}
+
+function generateEvaluations(id) {
+  let evaluationsHTML = 
+`<div class="eval-select"${Object.keys(subjects[id].evaluation).length <= 1 ? ' style="display: none;"':'' }>
+  <span>Evaluación:</span>
+  <select onchange="changeEvaluation('${id}',this.value);">`;
+  for (const eval in subjects[id].evaluation) {    
+    evaluationsHTML += `<option value="${eval}"${eval == subjects[id].selectedEvaluation ? 'selected="selected"':''}>${eval}</option>`;
   }
+  evaluationsHTML += 
+`</select>
+  <img src="media/dislike.svg" style="display: none;" title="Hay otra evaluación mejor">
+</div>`;
+return evaluationsHTML;
 }
 
 //Adds the subjects selected in the popup
@@ -154,9 +186,9 @@ function displayNecesaryMark(id) {
 }
 
 function displayFinalMark(id) {
-  let card = getCard(id);
-  card.children[2].textContent = subjects[id].finalMark[subjects[id].selectedEvaluation];
-  card.children[2].style.color = (subjects[id].finalMark[subjects[id].selectedEvaluation]>=5 ? '#5a9764' : '#b9574c');
+  let cardFinalMark = getCard(id).getElementsByClassName('subject-finalMark')[0];
+  cardFinalMark.textContent = subjects[id].finalMark[subjects[id].selectedEvaluation];
+  cardFinalMark.style.color = (subjects[id].finalMark[subjects[id].selectedEvaluation]>=5 ? '#5a9764' : '#b9574c');
 }
 
 //Saves and updates the value of the necesaryMark to pass
@@ -165,13 +197,9 @@ function updateNecesaryMark(id) {
   var bestOption = true;
   for (const eval in subjects[id].evaluation) {
     subjects[id].necesaryMark[eval] = Math.max(0, round(gradeCalcAllEqual(id,eval)));
-    if (bestOption && eval != subjects[id].selectedEvaluation && subjects[id].necesaryMark[eval] < mark) bestOption = false;
+    if (bestOption && subjects[id].necesaryMark[eval] < mark) bestOption = false;
   }
-  let card = getCard(id);
-  if (card) {
-    if (bestOption) card.children[4].lastChild.children[2].style.display = 'none';
-    else card.children[4].lastChild.children[2].style.display = 'flex';
-  }
+  getCard(id).querySelector('.eval-select > img').style.display = bestOption ? 'none' : 'block';
 
   return subjects[id].necesaryMark[subjects[id].selectedEvaluation];
 }
@@ -218,7 +246,7 @@ function updateMarkFromCardInput(id, exam, mark, input) {
 function updateCardGrades(id) {
   let card = getCard(id);
   if (card) {
-    for (let div in card.children[3] ) {
+    for (let div in card.getElementsByClassName('subject-bar')[0] ) {
       div.className = 'scolN';
     }
     for (const examType in subjects[id].evaluation[subjects[id].selectedEvaluation] ) {
@@ -251,10 +279,9 @@ function changeEvaluation(id,eval) {
   subjects[id].selectedEvaluation = eval;
   saveSubjectsLocalStorage();
   let card = getCard(id);
-  card.children[3].innerHTML = '';
-  card.children[4].innerHTML = '';
-  createBarAndInputs(id,card);
-  updateHeigth(card.lastChild);
+  card.getElementsByClassName('subject-bar')[0].innerHTML = generateBar(id);
+  card.getElementsByClassName('grades-input')[0].innerHTML = generateInputs(id) + generateEvaluations(id,eval);
+  updateHeigth(card.getElementsByClassName('grades-input')[0]);
   updateAndDisplayMarks(id);
 }
 
@@ -335,14 +362,15 @@ function isPassed(id, mark=5) {
 /* ------------------------------ UI MANIPULATION ------------------------------ */
 
 //Expands or collapses the card
-function toggleExpandCard(event, card) {  
+function toggleExpandCard(event, card) { 
+  let elem = card.getElementsByClassName('grades-input')[0]; 
   if (event.target.tagName != 'INPUT' && event.target.tagName != 'SELECT' && event.target.tagName != 'OPTION') {
-    if (card.children[3].contains(event.target)) {
-      card.lastChild.classList.remove('hidden');
+    if (card.getElementsByClassName('subject-bar')[0].contains(event.target)) {
+      elem.classList.remove('hidden');
     } else{
-      card.lastChild.classList.toggle('hidden');
+      elem.classList.toggle('hidden');
     }
-    updateHeigth(card.lastChild);
+    updateHeigth(elem);
   }
 }
 
@@ -385,12 +413,8 @@ function moveCards(){
   updateCards();
     cards.forEach((card) => {
       card.animate([ 
-        {
-          transform: `translate(${cardsOldInfo[card.id].x - cardsNewInfo[card.id].x}px, ${cardsOldInfo[card.id].y -cardsNewInfo[card.id].y}px) scaleX(${cardsOldInfo[card.id].width/cardsNewInfo[card.id].width})`
-        }, 
-        {
-          transform: 'none'
-        }
+        {transform: `translate(${cardsOldInfo[card.id].x - cardsNewInfo[card.id].x}px, ${cardsOldInfo[card.id].y -cardsNewInfo[card.id].y}px) scaleX(${cardsOldInfo[card.id].width/cardsNewInfo[card.id].width})`}, 
+        {transform: 'none'}
       ], { 
         duration: 250,
         easing: 'ease-out'
