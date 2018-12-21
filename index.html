@@ -51,9 +51,9 @@
 </head>
 <body>
   <header id="top-bar">
-    <button onclick="showUserInfo(); window.history.pushState({popup: 'user'}, 'Perfil', '#user');" style="padding: 0.625em;"><img src="media/user-circle.svg" alt="Perfil" id="profile-topbar"></button>
+    <button onclick="showUserInfo();" style="padding: 0.625em;"><img src="media/user-circle.svg" alt="Perfil" id="profile-topbar"></button>
     <h1>Grade Calc</h1>
-    <button onclick="popupShow('add-container'); window.history.pushState({popup: 'add'}, 'Añade una asignatura', '#add'); searchAll();" class="focus-animation-loop" id="add-button-topbar"><img src="media/plus.svg" alt="Editar"></button>
+    <button onclick="showAddSubject();" class="focus-animation-loop" id="add-button-topbar"><img src="media/plus.svg" alt="Editar"></button>
   </header>
 
   <main class="screen">

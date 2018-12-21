@@ -22,6 +22,7 @@ var userDB      = null;
 var subjectsDB  = db.collection('subjects');
 
 loadData();
+applyState(window.history.state);
 
 // if (!isSubscribed) {
 //   setTimeout(() => {
@@ -124,7 +125,7 @@ function addSubjects() {
       showToast(`Ya tienes ${id.shortName}`);
     }
   }
-  popupHide(document.getElementById('add-container'));
+  window.history.back();
 }
 
 /* ------------------------------ UI & DATA UPDATE ------------------------------ */
@@ -404,26 +405,34 @@ function updateCards(){
 /* ------------------------------ POPUP ------------------------------ */
 
 //What to do when page changed
-window.addEventListener('popstate', function(event) {
-  if (event.state == null) {
-    popupHideAll();
-    return;
-  }
+window.addEventListener('popstate', ()=>{ applyState(event.state); });
 
-  for (const pageType in event.state) {
-    if (pageType == 'popup') {
-      switch (event.state.popup) {
-        case 'user':
-          showUserInfo();
-          break;
-        case 'add':
-          popupShow('add-container',false);
-          break;
-      }
+function applyState(state) {
+  if (!state) { popupHideAll(); return; }
+
+  for (const pageType in state) {
+    switch (pageType) {
+      case 'popup':
+        switch (state.popup) {
+          case 'user':
+            popupShow('user-container', true);
+            break;
+          case 'add':
+            popupShow('add-container', false);
+            break;
+            case 'none':
+            popupHideAll();
+            break;
+          case 'none':
+          default:
+            popupHideAll();
+            break;
+        }
+        return;
+        break;
     }
   }
-  
-})
+}
 //window.history.pushState({popup: 'name'}, 'Page name', 'name');
 
 //Shows the popup
@@ -459,6 +468,16 @@ function popupHideAll() {
   popupHide(document.getElementById('add-container'));
 }
 
+function showUserInfo() {
+  popupShow('user-container', true);
+  window.history.pushState({popup: 'user'}, 'Perfil', '#user');
+}
+
+function showAddSubject() {
+  popupShow('add-container', false); 
+  window.history.pushState({popup: 'add'}, 'Añade una asignatura', '#add'); 
+  //searchAll();
+}
 /* ------------------------------ USEFUL STUF ------------------------------ */
 
 //Returns if the exam is undone
@@ -511,12 +530,6 @@ function getSubjectsLocalStorage() {
 function saveSubjectsLocalStorage() {
   localStorage.setItem("subjects", JSON.stringify(subjects));
   return subjects;
-}
-
-/* ------------------------------ USER ------------------------------ */
-
-function showUserInfo() {
-  popupShow('user-container',true);
 }
 
 /* ------------------------------ EDITOR ------------------------------ */
