@@ -420,9 +420,6 @@ function applyState(state) {
           case 'add':
             popupShow('add-container', false);
             break;
-            case 'none':
-            popupHideAll();
-            break;
           case 'none':
           default:
             popupHideAll();
@@ -603,7 +600,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     bntLogin.textContent = 'Cerrar sesión';
     bntLogin.className = 'btn-red';
-    bntLogin.onclick = function(){logoutGoogle(); popupHide(this.parentNode.parentNode); window.history.back();};
+    bntLogin.onclick = function(){logoutGoogle(); window.history.back();};
 
     //showToast(`Bienvenido de nuevo <b>${displayName}</b> 😊`);
 
@@ -622,7 +619,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     console.info('Signed out')
     bntLogin.textContent = 'Iniciar sesión';
     bntLogin.className = 'btn-green';
-    bntLogin.onclick = function(){loginGoogle(); popupHide(this.parentNode.parentNode); window.history.back();};
+    bntLogin.onclick = function(){loginGoogle(); window.history.back();};
     showToast('Guarda tus notas en la nube', 'Iniciar sesión','loginGoogle();');
   }
   document.getElementById('user-container').children[1].children[0].src = photoURL;
