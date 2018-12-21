@@ -428,10 +428,16 @@ window.addEventListener('popstate', function(event) {
 
 //Shows the popup
 function popupShow(id,isSmall) {
-  document.getElementById(id).style.display = 'flex';
-  if (!isSmall && window.matchMedia("(max-width: 600px)").matches) {
-    currentScreen.style.display = 'none';
-    topbar.style.display = 'none';
+  let elem = document.getElementById(id);
+  elem.style.display = 'flex';
+  elem.animate({
+    opacity: [0, 1],
+    easing: ["ease-in"]
+  }, 125).onfinish = function() {
+    if (!isSmall && window.matchMedia("(max-width: 600px)").matches) {
+      currentScreen.style.display = 'none';
+      topbar.style.display = 'none';
+    }
   }
 }
 
@@ -439,8 +445,12 @@ function popupShow(id,isSmall) {
 function popupHide(popup) {  
   currentScreen.style.display = 'block';
   topbar.style.display = 'flex';
-  popup.style.display = 'none';
-  popup.style.transform = 'auto';
+  popup.animate({
+    opacity: [1, 0],
+    easing: ["ease-in"] 
+  }, 125).onfinish = function() {
+    popup.style.display = 'none';
+  };
 }
 
 //Hides all popups
@@ -600,7 +610,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     bntLogin.textContent = 'Iniciar sesión';
     bntLogin.className = 'btn-green';
     bntLogin.onclick = function(){loginGoogle(); popupHide(this.parentNode.parentNode); window.history.back();};
-    showToast('No has iniciado sesión', 'Iniciar sesión','loginGoogle();');
+    showToast('Guarda tus notas en la nube', 'Iniciar sesión','loginGoogle();');
   }
   document.getElementById('user-container').children[1].children[0].src = photoURL;
   document.getElementById('profile-topbar').src = isAnonymous ? 'media/user-circle.svg' : photoURL;
@@ -674,7 +684,7 @@ function uploadGrade(id,exam,mark) {
 function getAndDisplayUserSubjects() {
   if (isAnonymous) {
     console.info('To get user info you need to sign in');
-    showToast('No has iniciado sesión', 'Iniciar sesión','loginGoogle();');
+    showToast('Guarda tus notas en la nube', 'Iniciar sesión','loginGoogle();');
     hideLoader('dashboard');
   }else{
     userDB.get().then((doc) => {
@@ -685,29 +695,20 @@ function getAndDisplayUserSubjects() {
         for (const id in userInfo.subjects) {
           subjectsDB.doc(id).get().then((doc) => {
             if (doc.exists) {
-              let subjectInfo = doc.data();
-              if (subjects[id] == undefined){
-                subjects[id] = {};
-              }
-              subjects[id].evaluation = subjectInfo.evaluation;
-              subjects[id].selectedEvaluation = Object.keys(subjectInfo.evaluation)[0];
-              subjects[id].fullName = subjectInfo.fullName;
-              
-              if (subjects[id] == undefined){
-                subjects[id].grades = subjectInfo.grades;
-              }else{
-                subjects[id].grades = Object.assign({}, subjects[id].grades, userInfo.subjects[id].grades);
-              }
-              if (userInfo.subjects[id].color) {
-                subjects[id].color = userInfo.subjects[id].color;
-              }else{
-                subjects[id].color = subjectInfo.color;
-              }              
-              subjects[id].shortName = subjectInfo.shortName;
-              subjects[id].id = id;
-              subjects[id].necesaryMark = {};
-              subjects[id].finalMark = {};
-              subjects[id].version = 1;
+              var subjectInfo = doc.data();
+
+              subjects[id] = {
+                ...subjects[id],
+                "evaluation" : subjectInfo.evaluation,
+                "selectedEvaluation" : Object.keys(subjectInfo.evaluation)[0],
+                "fullName" : subjectInfo.fullName,
+                "shortName" : subjectInfo.shortName,
+                "id" : id,
+                "necesaryMark" : {},
+                "finalMark" : {},
+                "grades" : (!subjects[id].grades && !userInfo.subjects[id].grades) ? subjectInfo.grades : {...subjects[id].grades, ...userInfo.subjects[id].grades},
+                "color" : (userInfo.subjects[id].color) ? userInfo.subjects[id].color : subjectInfo.color
+              };     
       
               updateFinalMark(id);
               updateNecesaryMark(id);
@@ -757,7 +758,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
   console.log('App can be installed');
   // e.preventDefault();
   deferredPrompt = e;
-  showToast('Usa GradeCalc offline', 'Instalar', 'install();');
+  setTimeout(() => { showToast('Usa GradeCalc offline', 'Instalar', 'install();'); }, 10000);
   return false;
 });
 

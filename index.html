@@ -87,7 +87,7 @@
   </main>
 
   <div id="add-container" class="popup" style="display: none;">
-    <div onclick="popupHide(this.parentNode); window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Go back">Nueva asignatura</div>
+    <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Go back">Nueva asignatura</div>
     <div class="popup-content add-popup">
       <div id="add-popup-content">
         <!-- <h2>Buscar</h2>
@@ -129,11 +129,11 @@
   </div>
 
   <div id="creator-container" class="popup" style="display: none;">
-    <div onclick="popupHide(this.parentNode); window.history.back();"></div>
+    <div onclick="window.history.back();"></div>
   </div>
 
   <div id="user-container" class="popup popup-small" style="display: none;">
-    <div onclick="popupHide(this.parentNode); window.history.back();"></div>
+    <div onclick="window.history.back();"></div>
     <div class="popup-content user-popup">
       <img class="popup-round-img-top" src="media/profile-pic.jpg" alt="Profile Picture">
       <h2>Anónimo</h2>
@@ -149,7 +149,7 @@
         <div class="loader-dots"><div></div><div></div><div></div><div></div></div>
         <p>Cargando tus asignaturas</p>
       </div>
-      <button id="loginButton" onclick="loginGoogle(); popupHide(this.parentNode.parentNode); window.history.back();">Iniciar sesión</button>
+      <button id="loginButton" onclick="loginGoogle(); window.history.back();">Iniciar sesión</button>
     </div>
   </div>
   <div id="toast" style="display: none;"><div><p>Has borrado <b>NADA</b></p><button onclick="undoRemoveSubject();">Deshacer</button></div></div>
