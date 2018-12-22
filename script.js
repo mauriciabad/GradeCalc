@@ -276,7 +276,7 @@ function updateCardGrades(id) {
   }
 }
 
-function changeEvaluation(id,eval) {
+function changeEvaluation(id,eval=subjects[id].selectedEvaluation) {
   subjects[id].selectedEvaluation = eval;
   saveSubjectsLocalStorage();
   let card = getCard(id);
@@ -364,14 +364,15 @@ function isPassed(id, mark=5) {
 
 //Expands or collapses the card
 function toggleExpandCard(event, card) { 
-  let elem = card.getElementsByClassName('grades-input')[0]; 
-  if (event.target.tagName != 'INPUT' && event.target.tagName != 'SELECT' && event.target.tagName != 'OPTION') {
-    if (card.getElementsByClassName('subject-bar')[0].contains(event.target)) {
-      elem.classList.remove('hidden');
+  let inputs = card.getElementsByClassName('grades-input')[0]; 
+  let bar = card.getElementsByClassName('subject-bar')[0]; 
+  if (!['INPUT','SELECT','OPTION','BUTTON','IMG'].includes(event.target.tagName)) {
+    if (bar.contains(event.target)) {
+      inputs.classList.remove('hidden');
     } else{
-      elem.classList.toggle('hidden');
+      inputs.classList.toggle('hidden');
     }
-    updateHeigth(elem);
+    updateHeigth(inputs);
   }
 }
 
@@ -554,10 +555,25 @@ function saveSubjectsLocalStorage() {
   return subjects;
 }
 
+function isValidJSON(str) {
+  let json = null;
+  try { json = JSON.parse(str); } catch (e) {console.error(e);
+  }
+  return json;
+}
+
 /* ------------------------------ EDITOR ------------------------------ */
 
-function showSubjectInfo(id) {
-  alert('"'+subjects[id].shortName+'": '+JSON.stringify(subjects[id].evaluation,null, '    '));
+function showSubjectInfo(id,placeholder=JSON.stringify(subjects[id].evaluation)) {
+  let json = prompt(`Editar evaluación de ${subjects[id].shortName}: \n${JSON.stringify(subjects[id].evaluation,null, '    ')}`,placeholder);
+  let newEval = isValidJSON(json);
+  if (newEval) {
+    subjects[id].evaluation = newEval;
+  }else{
+    if(json) showToast('JSON Incorrecto','Reintentar',`showSubjectInfo('${id}','${json}');`)
+  }
+  changeEvaluation(id);
+  updateCardGrades(id);
 }
 
 function deleteSubject(id) {
