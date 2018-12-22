@@ -747,6 +747,7 @@ function getAndDisplayUserSubjects() {
           subjectsDB.doc(id).get().then((doc) => {
             if (doc.exists) {
               var subjectInfo = doc.data();
+              if(!subjects[id]) subjects[id] = {};
 
               subjects[id] = Object.assign(
                 {},
