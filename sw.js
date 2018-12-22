@@ -1,4 +1,4 @@
-var CACHE_NAME = 'v0.05';
+var CACHE_NAME = 'v0.06';
 
 var urlsToCache = [
   '.',
@@ -11,6 +11,7 @@ var urlsToCache = [
   '/media/plus.svg',
   '/media/edit.svg',
   '/media/trash.svg',
+  '/media/discount.svg',
   '/media/back.svg',
   '/media/dislike.svg',
   '/media/user-circle.svg',
@@ -29,21 +30,21 @@ var urlsToCache = [
   'https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'
 ];
 
-self.addEventListener('install', function(event) {
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(function(cache) {
+    caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(urlsToCache);
     })
   );
 });
 
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(function(cacheNames) {
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.filter(function(cacheName) {
+        cacheNames.filter((cacheName) => {
           return cacheName != CACHE_NAME;
-        }).map(function(cacheName) {
+        }).map((cacheName) => {
           return caches.delete(cacheName);
         })
       );
@@ -51,9 +52,9 @@ self.addEventListener('activate', function(event) {
   );
 });
 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', (event) => {
   event.respondWith(
-    fetch(event.request).catch(function() {
+    fetch(event.request).catch(() => {
       return caches.match(event.request);
     })
   );

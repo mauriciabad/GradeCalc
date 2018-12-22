@@ -148,6 +148,7 @@ svg{
   animation: fadeIn 500ms ease-out;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
+  line-height: 1;
 }
 
 .subject-card:hover{
@@ -190,6 +191,26 @@ svg{
   transform: scale(1);
 }
 
+.subject-card-info{
+  position: absolute;
+  top: 1.5em;
+  right: 1em;
+  height: 1.75em;
+  width: 1.75em;
+  box-sizing: border-box;
+  border-radius: 50%;
+  color: #fff;
+  background-color: #fff;
+  box-shadow: 0 0 0.5em 0.25em rgba(255, 255, 255, 1);
+  transition: all 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.subject-card-info > img{
+  height: 100%;
+}
+.subject-card-info:hover{
+  transform: scale(1.2) rotate(22.5deg);
+}
+
 @keyframes tada {
   from {
     transform: scale3d(1, 1, 1);
@@ -209,18 +230,20 @@ svg{
 }
 
 .subject-card > h2{
-  margin: 0;
+  margin: 0 0.25em;
   font-size: 2.5em;
   font-weight: normal;
   line-height: 1;
   display: inline-block;
+  vertical-align: middle;
 }
 
 .subject-card > p{
   font-weight: bold;
   font-size: 3em;
-  margin: 0 0 0 0.25em;
+  margin: 0;
   display: inline-block;
+  vertical-align: middle;
 }
 
 .collapsed-sc{

@@ -56,9 +56,9 @@ function createSubjectCardCollapsed(id) {
 `<button onclick="deleteSubject('${id}')" class="subject-card-remove">
   <img src="media/trash.svg" alt="x" aria-label="Delete subject">
 </button>
-<!-- <button onclick="showSubjectInfo('${id}')" class="subject-card-remove">
-  <img src="media/tag.svg" alt="%" aria-label="Show subject information">
-</button> -->
+<button onclick="showSubjectInfo('${id}')" class="subject-card-info">
+  <img src="media/discount.svg" alt="%" aria-label="Show subject information">
+</button>
 <h2>${subjects[id].shortName}</h2>
 <p class="subject-finalMark" style="color: ${subjects[id].finalMark[subjects[id].selectedEvaluation]>=5 ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
 <div class="subject-bar">${generateBar(id)}</div>
@@ -199,7 +199,8 @@ function updateNecesaryMark(id) {
     subjects[id].necesaryMark[eval] = Math.max(0, round(gradeCalcAllEqual(id,eval)));
     if (bestOption && subjects[id].necesaryMark[eval] < mark) bestOption = false;
   }
-  getCard(id).querySelector('.eval-select > img').style.display = bestOption ? 'none' : 'block';
+  let card = getCard(id);
+  if(card) card.querySelector('.eval-select > img').style.display = bestOption ? 'none' : 'block';
 
   return subjects[id].necesaryMark[subjects[id].selectedEvaluation];
 }
@@ -555,8 +556,8 @@ function saveSubjectsLocalStorage() {
 
 /* ------------------------------ EDITOR ------------------------------ */
 
-function editSubjects() {
-  
+function showSubjectInfo(id) {
+  alert('"'+subjects[id].shortName+'": '+JSON.stringify(subjects[id].evaluation,null, '    '));
 }
 
 function deleteSubject(id) {
