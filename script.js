@@ -748,18 +748,21 @@ function getAndDisplayUserSubjects() {
             if (doc.exists) {
               var subjectInfo = doc.data();
 
-              subjects[id] = {
-                ...subjects[id],
-                "evaluation" : subjectInfo.evaluation,
-                "selectedEvaluation" : Object.keys(subjectInfo.evaluation)[0],
-                "fullName" : subjectInfo.fullName,
-                "shortName" : subjectInfo.shortName,
-                "id" : id,
-                "necesaryMark" : {},
-                "finalMark" : {},
-                "grades" : (!subjects[id].grades && !userInfo.subjects[id].grades) ? subjectInfo.grades : {...subjects[id].grades, ...userInfo.subjects[id].grades},
-                "color" : (userInfo.subjects[id].color) ? userInfo.subjects[id].color : subjectInfo.color
-              };     
+              subjects[id] = Object.assign(
+                {},
+                subjects[id], 
+                {
+                  "evaluation" : subjectInfo.evaluation,
+                  "selectedEvaluation" : Object.keys(subjectInfo.evaluation)[0],
+                  "fullName" : subjectInfo.fullName,
+                  "shortName" : subjectInfo.shortName,
+                  "id" : id,
+                  "necesaryMark" : {},
+                  "finalMark" : {},
+                  "grades" : (!subjects[id].grades && !userInfo.subjects[id].grades) ? subjectInfo.grades : Object.assign({}, subjects[id].grades, userInfo.subjects[id].grades),
+                  "color" : (userInfo.subjects[id].color) ? userInfo.subjects[id].color : subjectInfo.color
+                }
+              );     
       
               updateFinalMark(id);
               updateNecesaryMark(id);
