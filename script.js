@@ -556,9 +556,8 @@ function saveSubjectsLocalStorage() {
 }
 
 function isValidJSON(str) {
-  let json = null;
-  try { json = JSON.parse(str); } catch (e) {console.error(e);
-  }
+  let  json = undefined;
+  try {json = JSON.parse(str);} catch (e){console.error(e);}
   return json;
 }
 
@@ -573,6 +572,7 @@ function showSubjectInfo(id,placeholder=JSON.stringify(subjects[id].evaluation))
     if(json) showToast('JSON Incorrecto','Reintentar',`showSubjectInfo('${id}','${json}');`)
   }
   changeEvaluation(id);
+  uploadEvaluation(id,newEval);
   updateCardGrades(id);
 }
 
@@ -720,26 +720,37 @@ function logoutGoogle() {
 }
 
 function uploadGrade(id,exam,mark) {
-  if (!isAnonymous) {
+  uploadToUserDB(`subjects.${id}.grades.${exam}`, mark);
+}
+
+function uploadEvaluation(id,evaluation) {
+  uploadToUserDB(`subjects.${id}.evaluation`, evaluation);
+}
+
+function uploadColor(id,color) {
+  uploadToUserDB(`subjects.${id}.color`, color);
+}
+
+function uploadToUserDB(ref,value) {
+  if (!isAnonymous && ref) {
     let obj = {};
-    if (mark != undefined) {
-      obj['subjects.'+id+'.grades.'+exam] = mark;
-      userDB.update(obj);
+    if (value != undefined || value != null) {
+      obj[ref] = value;
     }else{
-      obj['subjects.'+id+'.grades.'+exam] = firebase.firestore.FieldValue.delete();
-      userDB.update(obj);
+      obj[ref] = firebase.firestore.FieldValue.delete();
     }
+    userDB.update(obj);
   }
 }
 
 function getAndDisplayUserSubjects() {
   if (isAnonymous) {
-    console.info('To get user info you need to sign in');
+    console.warn('To get user info you need to sign in');
     showToast('Guarda tus notas en la nube', 'Iniciar sesión','loginGoogle();');
     hideLoader('dashboard');
   }else{
     userDB.get().then((doc) => {
-      if (doc.exists) {
+      if (doc.exists) {21
         userInfo = doc.data();
         showLoader('Descargando asignaturas','dashboard');
         let count = 0;
@@ -750,12 +761,13 @@ function getAndDisplayUserSubjects() {
               if(!subjects[id]) subjects[id] = {};
               if(!userInfo.subjects[id]) userInfo.subjects[id] = {};
 
+              let customEval = (userInfo.subjects[id].evaluation) ? userInfo.subjects[id].evaluation : subjectInfo.evaluation;
               subjects[id] = Object.assign(
                 {},
                 subjects[id], 
                 {
-                  "evaluation" : subjectInfo.evaluation,
-                  "selectedEvaluation" : Object.keys(subjectInfo.evaluation)[0],
+                  "evaluation" : customEval,
+                  "selectedEvaluation" : Object.keys(customEval)[0],
                   "fullName" : subjectInfo.fullName,
                   "shortName" : subjectInfo.shortName,
                   "id" : id,
