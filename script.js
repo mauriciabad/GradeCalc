@@ -126,7 +126,7 @@ function addSubjects() {
     let id = checked[i].id.slice(9);
 
     if (subjects[id] == undefined) {      
-      subjectsDB.doc(id).get().then(function(doc) {
+      subjectsDB.doc(id).get().then((doc) => {
         if (doc.exists) {
           let subjectInfo = doc.data();
           subjects[id] = {};
@@ -286,11 +286,6 @@ function changeEvaluation(id,eval=subjects[id].selectedEvaluation) {
   updateAndDisplayMarks(id);
 }
 
-function showSearchResult(result) {
-  //searchResultContainer.textContent = '';
-  console.log(result);
-}
-
 function showConfetti(elem, conf) {
   if (conf == undefined) {
     conf = {
@@ -428,7 +423,7 @@ function updateCards(){
   cards = document.querySelectorAll('.subject-card');
 }
 
-/* ------------------------------ POPUP ------------------------------ */
+/* -------------------- HISTORY && POPUPs ------------------------------ */
 
 //What to do when page changed
 window.addEventListener('popstate', ()=>{ applyState(event.state); });
@@ -436,24 +431,26 @@ window.addEventListener('popstate', ()=>{ applyState(event.state); });
 function applyState(state) {
   if (!state) { popupHideAll(); return; }
 
-  for (const pageType in state) {
-    switch (pageType) {
-      case 'popup':
-        switch (state.popup) {
-          case 'user':
-            popupShow('user-container', true);
-            break;
-          case 'add':
-            popupShow('add-container', false);
-            break;
-          case 'none':
-          default:
-            popupHideAll();
-            break;
-        }
-        return;
-        break;
-    }
+  switch (state.pageType) {
+    case 'popup':
+      switch (state.popup) {
+        case 'user':
+          popupShow('user-container', true);
+          break;
+        case 'add':
+          popupShow('add-container', false);
+          break;
+        case 'edit':
+          popupShow('edit-container', false);
+          editSubject(subjects[state.info.id] ? subjects[state.info.id] : getSubjectFromDB(state.info.id));
+          break;
+        case 'none':
+        default:
+          popupHideAll();
+          break;
+      }
+      return;
+      break;
   }
 }
 //window.history.pushState({popup: 'name'}, 'Page name', 'name');
@@ -489,17 +486,22 @@ function popupHide(popup) {
 function popupHideAll() {  
   popupHide(document.getElementById('user-container'));
   popupHide(document.getElementById('add-container'));
+  popupHide(document.getElementById('edit-container'));
 }
 
 function showUserInfo() {
   popupShow('user-container', true);
-  window.history.pushState({popup: 'user'}, 'Perfil', '#user');
+  window.history.pushState({'popup': 'user'}, 'Perfil', 'user');
 }
 
 function showAddSubject() {
   popupShow('add-container', false); 
-  window.history.pushState({popup: 'add'}, 'Añade una asignatura', '#add'); 
-  //searchAll();
+  window.history.pushState({'popup': 'add'}, 'Añade una asignatura', 'add'); 
+}
+
+function showEditSubject(id) {
+  popupShow('edit-container', false); 
+  window.history.pushState({'popup': 'edit', 'info': {'id': id}}, `Editar asignatura - ${id}`, `edit/${id}`); 
 }
 /* ------------------------------ USEFUL STUF ------------------------------ */
 
@@ -743,6 +745,12 @@ function uploadToUserDB(ref,value) {
   }
 }
 
+async function getSubjectFromDB(id) {
+  return await subjectsDB.doc(id).get().then((doc) => {
+    if (doc.exists) return doc.data();
+  });
+}
+
 function getAndDisplayUserSubjects() {
   if (isAnonymous) {
     console.warn('To get user info you need to sign in');
@@ -750,7 +758,7 @@ function getAndDisplayUserSubjects() {
     hideLoader('dashboard');
   }else{
     userDB.get().then((doc) => {
-      if (doc.exists) {21
+      if (doc.exists) {
         userInfo = doc.data();
         showLoader('Descargando asignaturas','dashboard');
         let count = 0;
@@ -806,12 +814,8 @@ function getAndDisplayUserSubjects() {
   }
 }
 
-function searchAll() {
-  subjectsDB.get().then((doc) => {
-      showSearchResult(doc);
-    }
-  )
-
+function getSubjectsAllDB() {
+  return subjectsDB.get();
 }
 
 function searchSubject(query) { //TODO-------------------------------
