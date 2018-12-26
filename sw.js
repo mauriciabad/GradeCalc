@@ -1,4 +1,4 @@
-var CACHE_NAME = 'v0.07';
+var CACHE_NAME = 'v0.08';
 
 var urlsToCache = [
   '.',
@@ -8,6 +8,7 @@ var urlsToCache = [
 
   '/lib/confetti.js',
   '/lib/web-animations.min.js',
+  '/lib/navigo.min.js',
 
   '/media/plus.svg',
   '/media/edit.svg',

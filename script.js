@@ -22,7 +22,6 @@ var userDB      = null;
 var subjectsDB  = db.collection('subjects');
 
 loadData();
-applyState(window.history.state);
 
 // if (!isSubscribed) {
 //   setTimeout(() => {
@@ -30,7 +29,109 @@ applyState(window.history.state);
 //   }, 8000);
 // }
 
-//also load firebase (at the bottom)
+// also load firebase (at the bottom)
+// also load navigo (at the next section)
+
+
+/* -------------------- HISTORY && POPUPs ------------------------------ */
+
+var setPageDashboard = (params) => {
+  popupHideAll();
+}
+
+var setPageUser = (params) => {
+
+}
+
+var setPageMe = (params) => {
+  popupShow('user-container', true);
+}
+
+var setPageMeEdit = (params) => {
+
+}
+
+var setPageMeSubjectEdit = (params) => {
+  // popupShow('edit-container', false);
+  // editSubject(subjects[params.id] ? subjects[params.id] : getSubjectFromDB(params.id));
+  showSubjectInfo(params.id);
+  window.history.back();
+}
+
+var setPageMeSubjectAdd = (params) => {
+  popupShow('add-container', false);
+}
+
+var setPageSubjectNew = (params) => {
+
+}
+
+var setPageSubjectView = (params) => {
+
+}
+
+var setPageSubjectEdit = (params) => {
+
+}
+
+var router = new Navigo(null, true);
+router.on({
+  '/user/:id':            {as: 'user.view',       uses: setPageUser},
+  '/me':                  {as: 'me',              uses: setPageMe},
+  '/me/edit':             {as: 'me.edit',         uses: setPageMeEdit},
+  '/me/subject/:id/edit': {as: 'me.subject.edit', uses: setPageMeSubjectEdit},
+  '/me/subject/add':      {as: 'me.subject.add',  uses: setPageMeSubjectAdd},
+  '/subject/new':         {as: 'subject.new',     uses: setPageSubjectNew}, //asks basic info and finds duplicates, then goes to subject.edit
+  '/subject/:id':         {as: 'subject.view',    uses: setPageSubjectView},
+  '/subject/:id/edit':    {as: 'subject.edit',    uses: setPageSubjectEdit},
+  '*':                    {as: 'dashboard',       uses: setPageDashboard}
+}).resolve();
+
+function showUserInfo() {
+  router.navigate(`/me`);
+}
+
+function showAddSubject() {
+  router.navigate(`/me/subject/add`);
+}
+
+function showEditSubject(id) {
+  router.navigate(`/me/subject/${id}/edit`);
+}
+
+//Shows the popup
+function popupShow(id,isSmall) {
+  let elem = document.getElementById(id);
+  elem.style.display = 'flex';
+  elem.animate({
+    opacity: [0, 1],
+    easing: ["ease-in"]
+  }, 125).onfinish = function() {
+    if (!isSmall && window.matchMedia("(max-width: 600px)").matches) {
+      currentScreen.style.display = 'none';
+      topbar.style.display = 'none';
+    }
+  }
+}
+
+//Hides the popup
+function popupHide(popup) {  
+  currentScreen.style.display = 'block';
+  topbar.style.display = 'flex';
+  popup.animate({
+    opacity: [1, 0],
+    easing: ["ease-in"] 
+  }, 125).onfinish = function() {
+    popup.style.display = 'none';
+  };
+}
+
+//Hides all popups
+function popupHideAll() {  
+  popupHide(document.getElementById('user-container'));
+  popupHide(document.getElementById('add-container'));
+  popupHide(document.getElementById('edit-container'));
+}
 
 /* ------------------------------ UI CREATION ------------------------------ */
 
@@ -56,7 +157,7 @@ function createSubjectCardCollapsed(id) {
 `<button onclick="deleteSubject('${id}')" class="subject-card-remove">
   <img src="media/trash.svg" alt="x" aria-label="Delete subject">
 </button>
-<button onclick="showSubjectInfo('${id}')" class="subject-card-info">
+<button onclick="showEditSubject('${id}')" class="subject-card-info">
   <img src="media/discount.svg" alt="%" aria-label="Show subject information">
 </button>
 <h2>${subjects[id].shortName}</h2>
@@ -423,86 +524,6 @@ function updateCards(){
   cards = document.querySelectorAll('.subject-card');
 }
 
-/* -------------------- HISTORY && POPUPs ------------------------------ */
-
-//What to do when page changed
-window.addEventListener('popstate', ()=>{ applyState(event.state); });
-
-function applyState(state) {
-  if (!state) { popupHideAll(); return; }
-
-  switch (state.pageType) {
-    case 'popup':
-      switch (state.popup) {
-        case 'user':
-          popupShow('user-container', true);
-          break;
-        case 'add':
-          popupShow('add-container', false);
-          break;
-        case 'edit':
-          popupShow('edit-container', false);
-          editSubject(subjects[state.info.id] ? subjects[state.info.id] : getSubjectFromDB(state.info.id));
-          break;
-        case 'none':
-        default:
-          popupHideAll();
-          break;
-      }
-      return;
-      break;
-  }
-}
-//window.history.pushState({popup: 'name'}, 'Page name', 'name');
-
-//Shows the popup
-function popupShow(id,isSmall) {
-  let elem = document.getElementById(id);
-  elem.style.display = 'flex';
-  elem.animate({
-    opacity: [0, 1],
-    easing: ["ease-in"]
-  }, 125).onfinish = function() {
-    if (!isSmall && window.matchMedia("(max-width: 600px)").matches) {
-      currentScreen.style.display = 'none';
-      topbar.style.display = 'none';
-    }
-  }
-}
-
-//Hides the popup
-function popupHide(popup) {  
-  currentScreen.style.display = 'block';
-  topbar.style.display = 'flex';
-  popup.animate({
-    opacity: [1, 0],
-    easing: ["ease-in"] 
-  }, 125).onfinish = function() {
-    popup.style.display = 'none';
-  };
-}
-
-//Hides all popups
-function popupHideAll() {  
-  popupHide(document.getElementById('user-container'));
-  popupHide(document.getElementById('add-container'));
-  popupHide(document.getElementById('edit-container'));
-}
-
-function showUserInfo() {
-  popupShow('user-container', true);
-  window.history.pushState({'popup': 'user'}, 'Perfil', 'user');
-}
-
-function showAddSubject() {
-  popupShow('add-container', false); 
-  window.history.pushState({'popup': 'add'}, 'Añade una asignatura', 'add'); 
-}
-
-function showEditSubject(id) {
-  popupShow('edit-container', false); 
-  window.history.pushState({'popup': 'edit', 'info': {'id': id}}, `Editar asignatura - ${id}`, `edit/${id}`); 
-}
 /* ------------------------------ USEFUL STUF ------------------------------ */
 
 //Returns if the exam is undone
@@ -567,15 +588,17 @@ function isValidJSON(str) {
 
 function showSubjectInfo(id,placeholder=JSON.stringify(subjects[id].evaluation)) {
   let json = prompt(`Editar evaluación de ${subjects[id].shortName}: \n${JSON.stringify(subjects[id].evaluation,null, '    ')}`,placeholder);
-  let newEval = isValidJSON(json);
-  if (newEval) {
-    subjects[id].evaluation = newEval;
-  }else{
-    if(json) showToast('JSON Incorrecto','Reintentar',`showSubjectInfo('${id}','${json}');`)
+  if (json != placeholder) {
+    let newEval = isValidJSON(json);
+    if (newEval) {
+      subjects[id].evaluation = newEval;
+      changeEvaluation(id);
+      uploadEvaluation(id,newEval);
+      updateCardGrades(id);
+    }else{
+      if(json) showToast('JSON Incorrecto','Reintentar',`showSubjectInfo('${id}','${json}');`)
+    }
   }
-  changeEvaluation(id);
-  uploadEvaluation(id,newEval);
-  updateCardGrades(id);
 }
 
 function deleteSubject(id) {
