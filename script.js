@@ -52,10 +52,10 @@ var setPageMeEdit = (params) => {
 }
 
 var setPageMeSubjectEdit = (params) => {
-  // popupShow('edit-container', false);
-  // editSubject(subjects[params.id] ? subjects[params.id] : getSubjectFromDB(params.id));
-  showSubjectInfo(params.id);
-  window.history.back();
+  popupShow('edit-container', false);
+  generateEditSubjectUI(subjects[params.id]);
+  // showSubjectInfo(params.id);
+  // window.history.back();
 }
 
 var setPageMeSubjectAdd = (params) => {
@@ -157,9 +157,9 @@ function createSubjectCardCollapsed(id) {
 `<button onclick="deleteSubject('${id}')" class="subject-card-remove">
   <img src="media/trash.svg" alt="x" aria-label="Delete subject">
 </button>
-<button onclick="showEditSubject('${id}')" class="subject-card-info">
+<!-- <button onclick="showEditSubject('${id}')" class="subject-card-info">
   <img src="media/discount.svg" alt="%" aria-label="Show subject information">
-</button>
+</button> -->
 <h2>${subjects[id].shortName}</h2>
 <p class="subject-finalMark" style="color: ${subjects[id].finalMark[subjects[id].selectedEvaluation]>=5 ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
 <div class="subject-bar">${generateBar(id)}</div>
@@ -259,6 +259,10 @@ function addSubjects() {
     }
   }
   window.history.back();
+}
+
+function generateEditSubjectUI(subject) {
+  
 }
 
 /* ------------------------------ UI & DATA UPDATE ------------------------------ */
@@ -578,28 +582,28 @@ function saveSubjectsLocalStorage() {
   return subjects;
 }
 
-function isValidJSON(str) {
-  let  json = undefined;
-  try {json = JSON.parse(str);} catch (e){console.error(e);}
-  return json;
-}
+// function isValidJSON(str) {
+//   let  json = undefined;
+//   try {json = JSON.parse(str);} catch (e){console.error(e);}
+//   return json;
+// }
 
 /* ------------------------------ EDITOR ------------------------------ */
 
-function showSubjectInfo(id,placeholder=JSON.stringify(subjects[id].evaluation)) {
-  let json = prompt(`Editar evaluación de ${subjects[id].shortName}: \n${JSON.stringify(subjects[id].evaluation,null, '    ')}`,placeholder);
-  if (json != placeholder) {
-    let newEval = isValidJSON(json);
-    if (newEval) {
-      subjects[id].evaluation = newEval;
-      changeEvaluation(id);
-      uploadEvaluation(id,newEval);
-      updateCardGrades(id);
-    }else{
-      if(json) showToast('JSON Incorrecto','Reintentar',`showSubjectInfo('${id}','${json}');`)
-    }
-  }
-}
+// function showSubjectInfo(id,placeholder=JSON.stringify(subjects[id].evaluation)) {
+//   let json = prompt(`Editar evaluación de ${subjects[id].shortName}: \n${JSON.stringify(subjects[id].evaluation,null, '    ')}`,placeholder);
+//   if (json != placeholder) {
+//     let newEval = isValidJSON(json);
+//     if (newEval) {
+//       subjects[id].evaluation = newEval;
+//       changeEvaluation(id);
+//       uploadEvaluation(id,newEval);
+//       updateCardGrades(id);
+//     }else{
+//       if(json) showToast('JSON Incorrecto','Reintentar',`showSubjectInfo('${id}','${json}');`)
+//     }
+//   }
+// }
 
 function deleteSubject(id) {
   removedSubject = subjects[id]
@@ -768,11 +772,11 @@ function uploadToUserDB(ref,value) {
   }
 }
 
-async function getSubjectFromDB(id) {
-  return await subjectsDB.doc(id).get().then((doc) => {
-    if (doc.exists) return doc.data();
-  });
-}
+// async function getSubjectFromDB(id) {
+//   return await subjectsDB.doc(id).get().then((doc) => {
+//     if (doc.exists) return doc.data();
+//   });
+// }
 
 function getAndDisplayUserSubjects() {
   if (isAnonymous) {
