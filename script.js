@@ -1,5 +1,6 @@
 /* ------------------------------ START UP ------------------------------ */
 var dashboard     = document.getElementById('dashboard');
+var editSubject   = document.getElementById('edit-popup-content');
 var topbar        = document.getElementById('top-bar');
 var currentScreen = document.getElementsByClassName('screen')[0];
 var searchResultContainer = document.getElementById('subjects-search-results');
@@ -147,6 +148,23 @@ function loadData(){
   hideLoader('dashboard');
 }
 
+//updates the subject card information (bar, inputs and names)
+function updateSubjectCardInfo(id){
+  getCard(id).innerHTML = 
+`<button onclick="deleteSubject('${id}')" class="subject-card-remove">
+  <img src="media/trash.svg" alt="x" aria-label="Delete subject">
+</button>
+<button onclick="showEditSubject('${id}')" class="subject-card-info">
+  <img src="media/discount.svg" alt="%" aria-label="Show subject information">
+</button>
+<h2>${subjects[id].shortName}</h2>
+<p class="subject-finalMark" style="color: ${subjects[id].finalMark[subjects[id].selectedEvaluation]>=5 ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
+<div class="subject-bar">${generateBar(id)}</div>
+<div class="grades-input hidden" style="height: 0px;">${generateInputs(id)+generateEvaluations(id)}</div>`;
+
+  updateAndDisplayMarks(id,false);
+}
+
 //Creates the subject card and appends it to the dashboard
 function createSubjectCardCollapsed(id) {
   var card = document.createElement('div');
@@ -157,9 +175,9 @@ function createSubjectCardCollapsed(id) {
 `<button onclick="deleteSubject('${id}')" class="subject-card-remove">
   <img src="media/trash.svg" alt="x" aria-label="Delete subject">
 </button>
-<!-- <button onclick="showEditSubject('${id}')" class="subject-card-info">
+<button onclick="showEditSubject('${id}')" class="subject-card-info">
   <img src="media/discount.svg" alt="%" aria-label="Show subject information">
-</button> -->
+</button>
 <h2>${subjects[id].shortName}</h2>
 <p class="subject-finalMark" style="color: ${subjects[id].finalMark[subjects[id].selectedEvaluation]>=5 ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
 <div class="subject-bar">${generateBar(id)}</div>
@@ -226,43 +244,168 @@ function addSubjects() {
   for (let i = 0; i < checked.length; i++) {
     let id = checked[i].id.slice(9);
 
-    if (subjects[id] == undefined) {      
-      subjectsDB.doc(id).get().then((doc) => {
-        if (doc.exists) {
-          let subjectInfo = doc.data();
-          subjects[id] = {};
-          subjects[id].color = subjectInfo.color;
-          subjects[id].evaluation = subjectInfo.evaluation;
-          subjects[id].selectedEvaluation = Object.keys(subjectInfo.evaluation)[0];
-          subjects[id].fullName = subjectInfo.fullName;
-          subjects[id].grades = subjectInfo.grades;
-          subjects[id].shortName = subjectInfo.shortName;
-          subjects[id].id = id;
-          subjects[id].necesaryMark = {};
-          subjects[id].finalMark = {};
-          subjects[id].version = 1;
-  
-          updateFinalMark(id);
-          updateNecesaryMark(id);
-
-          createSubjectCardCollapsed(id);
-          saveSubjectsLocalStorage();
-          hideLoader('dashboard');
-        } else{
-          console.error('Subject dosen\'t exists');
-        }
-      }).catch(function(error) {
-        console.error("Error getting subject info:", error);
-      }); 
+    if (subjects[id] == undefined) {  
+      addSubjectFromDB(id);    
     } else{
-      showToast(`Ya tienes ${id.shortName}`);
+      showToast(`Ya tienes ${subjects[id].shortName}`);
     }
   }
   window.history.back();
 }
 
-function generateEditSubjectUI(subject) {
+function addSubjectFromDB(id) {
+  subjectsDB.doc(id).get().then((doc) => {
+    if (doc.exists) {
+      subjects[id] = completeSubject(doc.data());
+
+      updateFinalMark(id);
+      updateNecesaryMark(id);
+
+      createSubjectCardCollapsed(id);
+      saveSubjectsLocalStorage();
+      hideLoader('dashboard');
+    } else{
+      console.error('Subject dosen\'t exists');
+    }
+  }).catch(function(error) {
+    console.error("Error getting subject info:", error);
+  }); 
+}
+
+function completeSubject(...subjects) {  
+  let subject = Object.assign(
+    {
+      evaluation        : [],
+      grades            : {},
+      fullName          : '',
+      shortName         : '',
+      faculty           : '',
+      uni               : '',
+      course            : '',
+      color             : 1,
   
+      necesaryMark      : {},
+      finalMark         : {},
+      version           : 1
+    },
+    ...subjects
+  );
+  if (!subject.selectedEvaluation || !Object.keys(subject.evaluation).includes(subject.selectedEvaluation)) subject.selectedEvaluation = Object.keys(subject.evaluation)[0] || '';
+  return subject;
+}
+
+function generateEditSubjectUI(subject) {
+  let evaluation = toNewEval(subject.evaluation);
+  let evals      = Object.keys(subject.evaluation);
+  let grid       = '';
+  let newEvals   = '';
+  let newExams   = '';
+  let footer     = '';
+  let colors     = '';
+  
+  newEvals += `<input style="grid-row: 1; grid-column: ${(5+evals.length*1)};" class=" edit-new-eval" data-eval="${evals.length}" type="text" name="nameEval" value="" placeholder="NEW" autocomplete="off" required>`;
+  
+  let examCount = 0;
+  for (const exam in evaluation) {
+    grid += `
+    <input style="grid-row: ${(2+examCount*1)}; grid-column: 1;" class="" type="text"   name="exam"       value="${exam}"                      data-exam="${examCount}" placeholder="NEW"       autocomplete="off" maxlength="5" required>
+    <input style="grid-row: ${(2+examCount*1)}; grid-column: 2;" class="" type="text"   name="examType"   value="${evaluation[exam].examType}" data-exam="${examCount}" placeholder="Parciales" required>
+    <input style="grid-row: ${(2+examCount*1)}; grid-column: 3;" class="" type="number" name="mark"       value=""                             data-exam="${examCount}" placeholder="-"         autocomplete="off" min="0" max="10" step="0.01">`;
+    newEvals += `<div style="grid-row: ${(2+examCount*1)}; grid-column: ${(5+evals.length*1)};" class="edit-weight edit-new-eval" data-exam="${examCount}" data-eval="${evals.length}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;  
+    for (const evalCount in evals) {      
+      grid += `<div style="grid-row: ${(2+examCount*1)}; grid-column: ${(5+evalCount*1)};" class="edit-weight" data-exam="${examCount}" data-eval="${evalCount}"><input type="number" name="weight" value="${evaluation[exam].weight[evals[evalCount]] && evaluation[exam].weight[evals[evalCount]] != 0 ? round(evaluation[exam].weight[evals[evalCount]]*100, 4) : ''}" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
+    }
+    ++examCount;
+  }  
+  for (const evalCount in evals) {
+    grid += `<input style="grid-row: 1; grid-column: ${(5+evalCount*1)};" class="edit-nameEval" type="text" name="nameEval" value="${evals[evalCount]}" data-eval="${evalCount}"placeholder="NEW" autocomplete="off" required>`;
+    newExams += `<div style="grid-row: ${(2+examCount*1)}; grid-column: ${(5+evalCount*1)};" class="edit-weight edit-new-exam" data-exam="${examCount}" data-eval="${evalCount}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
+    footer += `<span  style="grid-row: ${(3+examCount*1)}; grid-column: ${(5+evalCount*1)};" class="edit-total" data-eval="${evalCount}">0%</span>`;
+  }
+  newExams += `
+  <input style="grid-row: ${(2+examCount*1)}; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="${examCount}" placeholder="NEW" autocomplete="off" maxlength="5" required>
+  <input style="grid-row: ${(2+examCount*1)}; grid-column: 2;" class="edit-new-exam" type="text"   name="examType"   value="" data-exam="${examCount}" placeholder="Parciales" required>
+  <input style="grid-row: ${(2+examCount*1)}; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="${examCount}" placeholder="-" autocomplete="off" min="0" max="10" step="0.01">
+  `;
+
+  for (const color of [1,8,3,4,6,5,2,7]) {
+    colors += `
+    <label class="scol${color}"  for="color-bar-elem${color}">
+      <input type="radio" name="color-bar" value="${color}" id="color-bar-elem${color}" ${(color == subject.color) ? 'checked': ''}>
+      <span class="edit-color-checkmark"></span>
+    </label>`;
+  }
+
+  let html = `
+  <input type="hidden" name="id" id="edit-id" value="${subject.id}" style="display: none;" hidden>
+  <h2>Información</h2>
+  <div class="edit-popup-info">
+    <div>
+      <label for="subjectName">Nombre</label>
+      <input type="text" name="subjectName" id="edit-shortName" value="${subject.shortName}">
+    </div>
+    <div class="edit-fullName" >
+      <label for="subjectfullName">Nombre Largo</label>
+      <input type="text" name="subjectfullName" id="edit-fullName" value="${subject.fullName ? subject.fullName : ''}">
+    </div>
+  </div>
+  <div class="edit-popup-info">
+    <div>
+      <label for="faculty">Curso</label>
+      <input type="text" name="course" id="edit-course" value="${subject.course ? subject.course : ''}">
+    </div>
+    <div>
+      <label for="faculty">Facultad</label>
+      <input type="text" name="faculty" id="edit-faculty" value="${subject.faculty ? subject.faculty : ''}">
+    </div>
+    <div>
+      <label for="uni">Universidad</label>
+      <input type="text" name="uni" id="edit-uni" value="${subject.uni ? subject.uni : ''}">
+    </div>
+  </div>
+  <div class="edit-popup-info">
+    <div>
+      <span>Fecha de creación: <span>${subject.creationDate ? subject.creationDate : '--/--/----'}</span></span>
+    </div>
+    <div>
+      <span>Creador: <span>${subject.creator ? subject.creator : 'Anónimo'}</span></span>
+    </div>
+  </div>
+
+  <h2>Color</h2>
+  <div class="color-bar">
+    ${colors}
+    <!-- <label class="scol0"  for="color-bar-elem0">
+      <input type="radio" name="color-bar" value="0" id="color-bar-elem0">
+      <span class="edit-color-checkmark edit-color-checkmark-random"></span>
+    </label> -->
+  </div>
+  <h2>Evaluación</h2>
+  <div class="scroll">
+    <div class="edit-popup-grid" onkeyup="editUIUpdateGrid(this, event);" data-evals="${evals.length}" data-exams="${examCount}">
+      <!-- Header -->
+      <span  style="grid-row: 1; grid-column: 1;" >Nombre</span>
+      <span  style="grid-row: 1; grid-column: 2;" >Categoría</span>
+      <span  style="grid-row: 1; grid-column: 3;" >Nota</span>
+
+      <!-- Body -->
+      ${grid}
+      <!-- Divider -->
+      <div   style="grid-row: 2 / ${2+examCount};" class="grid-separator-eval"></div>
+
+      <!-- new -->
+      ${newEvals}
+      ${newExams}
+
+      <!-- Footer -->
+      ${footer}
+    </div>
+  </div>`;
+  editSubject.innerHTML = html;
+
+  for (const evalCount in evals) {
+    updateSumWeight(editSubject, evalCount);
+  }
 }
 
 /* ------------------------------ UI & DATA UPDATE ------------------------------ */
@@ -485,6 +628,14 @@ function selectInput(idInput) {
   document.getElementById(idInput).select();
 }
 
+function appendElement(parent,type,str) {
+  let element = document.createElement(type);
+  parent.appendChild(element);
+  element.outerHTML = str; 
+  return element;
+}
+
+
 /* ------------------------------ Cards Remove animation ------------------------------ */
 var cards; updateCards();
 var cardsOldInfo = {};
@@ -513,7 +664,11 @@ function getCardsInfo(){
 
 function moveCards(){
   updateCards();
-    cards.forEach((card) => {
+  
+  cards.forEach((card) => {
+    console.log(card.id);
+    console.log(cardsOldInfo[card.id]);
+    console.log(cardsNewInfo[card.id]);
       card.animate([ 
         {transform: `translate(${cardsOldInfo[card.id].x - cardsNewInfo[card.id].x}px, ${cardsOldInfo[card.id].y -cardsNewInfo[card.id].y}px) scaleX(${cardsOldInfo[card.id].width/cardsNewInfo[card.id].width})`}, 
         {transform: 'none'}
@@ -604,6 +759,147 @@ function saveSubjectsLocalStorage() {
 //     }
 //   }
 // }
+
+
+function toNewEval(evaluation) {
+  let newEval = {};
+  for (const eval in evaluation) {
+    for (const examType in evaluation[eval]) {
+      for (const exam in evaluation[eval][examType]) {
+        if(!newEval[exam]) newEval[exam] = {};
+        if(!newEval[exam].weight) newEval[exam].weight = {};
+        newEval[exam].weight[eval] = evaluation[eval][examType][exam];
+        newEval[exam].mark = undefined;
+        newEval[exam].examType = examType;
+      }
+    }
+  }
+  return newEval;
+}
+
+function updateSumWeight(grid, n) {
+  let total = 0;
+  for (let element of grid.querySelectorAll(`.edit-weight[data-eval='${n}'] > input`)) {        
+    total += element.value*1;
+  }
+  grid.querySelector(`.edit-total[data-eval='${n}']`).textContent = round(total,4) + '%';
+  return total;
+}
+
+// Adds or removes exams or evaluation input elements
+function editUIUpdateGrid(grid, e) {
+  const input = e.target;
+  const elem = input.parentNode == grid ? input : input.parentNode;
+  input.value = input.value;
+  
+  if (input.value) {
+    if (elem.dataset.eval == grid.dataset.evals) {
+      ++grid.dataset.evals;
+      
+      appendElement(grid, 'input', `<input style="grid-row: 1; grid-column: ${(5+grid.dataset.evals*1)};" class="edit-new-eval" data-eval="${grid.dataset.evals}" type="text" name="nameEval" value="" placeholder="NEW" autocomplete="off" required>`);
+      for (let i = 0; i < grid.dataset.exams; i++) {
+        editGridFadeOrUnfade(grid, appendElement(grid, 'div', `<div style="grid-row: ${(2+i*1)}; grid-column: ${(5+grid.dataset.evals*1)};" class="edit-weight edit-new-eval" data-exam="${i}" data-eval="${grid.dataset.evals}" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`));
+      }
+      appendElement(grid, 'div', `<div style="grid-row: ${(2+grid.dataset.exams*1)}; grid-column: ${(4+grid.dataset.evals*1)};" class="edit-weight edit-new-exam" data-exam="${grid.dataset.exams}" data-eval="${grid.dataset.evals-1}" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`);
+      appendElement(grid, 'span', `<span style="grid-row: ${(3+grid.dataset.exams*1)}; grid-column: ${(4+grid.dataset.evals*1)};" class="edit-total" data-eval="${-1+grid.dataset.evals*1}">0%</span>`);
+    } else if (elem.dataset.exam == grid.dataset.exams) {
+      ++grid.dataset.exams;
+          
+      appendElement(grid, 'input', `<input style="grid-row: ${(2+grid.dataset.exams*1)}; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="${grid.dataset.exams}" placeholder="NEW" autocomplete="off" maxlength="5" required>`);
+      appendElement(grid, 'input', `<input style="grid-row: ${(2+grid.dataset.exams*1)}; grid-column: 2;" class="edit-new-exam" type="text"   name="examType"   value="" data-exam="${grid.dataset.exams}" placeholder="Parciales" required>`);
+      appendElement(grid, 'input', `<input style="grid-row: ${(2+grid.dataset.exams*1)}; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="${grid.dataset.exams}" placeholder="-" autocomplete="off" min="0" max="10" step="0.01">`);
+      for (let i = 0; i < grid.dataset.evals; i++) {
+        editGridFadeOrUnfade(grid, appendElement(grid, 'div', `<div style="grid-row: ${(2+grid.dataset.exams*1)}; grid-column: ${(5+i*1)};" class="edit-weight edit-new-exam" data-exam="${grid.dataset.exams}" data-eval="${i}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`));
+      }
+      appendElement(grid, 'div', `<div style="grid-row: ${(1+grid.dataset.exams*1)}; grid-column: ${(5+grid.dataset.evals*1)};" class="edit-weight edit-new-eval" data-exam="${-1+grid.dataset.exams*1}" data-eval="${grid.dataset.evals}" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`);
+
+      grid.querySelector('.grid-separator-eval').style.gridRow = `2 / ${2+grid.dataset.exams*1}`;
+      for (let element of grid.querySelectorAll('.edit-total')) {        
+        element.style.gridRow = 3+grid.dataset.exams*1;
+      }
+    }
+  }else{
+    // add on blur event to delete
+  }
+  editGridFadeOrUnfade(grid, elem);
+  
+  if (elem.classList.contains('edit-weight') && !elem.classList.contains('edit-new-eval') && !elem.classList.contains('edit-new-exam')) {
+    updateSumWeight(grid,elem.dataset.eval);
+  }
+  
+}
+
+function editGridFadeOrUnfade(grid, element) {      
+  if (editGridIsEmpty(grid, 'exam', element.dataset.exam)) {
+    editGridFade(grid, 'exam', element.dataset.exam);
+  }else{
+    editGridUnfade(grid, 'exam', element.dataset.exam);
+  }
+  if (editGridIsEmpty(grid, 'eval', element.dataset.eval)) {
+    editGridFade(grid, 'eval', element.dataset.eval);
+  }else{
+    editGridUnfade(grid, 'eval', element.dataset.eval);
+  }
+}
+
+function editGridUnfade(grid, type, n) {
+  for (let element of grid.querySelectorAll(`*[data-${type}='${n}'`)) {        
+    element.classList.remove(`edit-new-${type}`);
+  }
+}
+function editGridFade(grid, type, n) {
+  for (let element of grid.querySelectorAll(`*[data-${type}='${n}']`)) {        
+    element.classList.add(`edit-new-${type}`);
+  }
+}
+
+function editGridIsEmpty(grid, type, n) {  
+  for (let element of grid.querySelectorAll(`input[data-${type}='${n}'], div[data-${type}='${n}'] > input`)) {        
+    if(element.value) return false;
+  }
+  return true;
+}
+
+function saveEditSubject() {
+  let id = document.getElementById('edit-id').value;
+
+  let newEval = {};
+  let grid = editSubject.querySelector('.edit-popup-grid');
+
+  for (let evalN = 0; evalN < grid.dataset['evals']; evalN++) {
+    let eval = grid.querySelector(`input[name='nameEval'][data-eval='${evalN}']`).value;    
+    if (eval) {
+      for (let examN = 0; examN < grid.dataset['exams']; examN++) {
+        let exam = grid.querySelector(`input[name='exam'][data-exam='${examN}']`).value;
+        let examType = grid.querySelector(`input[name='examType'][data-exam='${examN}']`).value;
+        let weight = grid.querySelector(`div[data-exam='${examN}'][data-eval='${evalN}'] > input[name='weight']`).value/100;
+        if (exam && examType && weight) {
+          if (!newEval[eval]) newEval[eval] = {};
+          if (!newEval[eval][examType]) newEval[eval][examType] = {};
+          newEval[eval][examType][exam] = weight;
+        }
+      }
+    }
+  }  
+
+  subjects[id] = completeSubject(
+    subjects[id],
+    {
+      id: id,
+      shortName: editSubject.querySelector('#edit-shortName').value,
+      fullName:  editSubject.querySelector('#edit-fullName').value,
+      course:    editSubject.querySelector('#edit-course').value,
+      faculty:   editSubject.querySelector('#edit-faculty').value,
+      uni:       editSubject.querySelector('#edit-uni').value,
+      color:     editSubject.querySelector('input[name="color-bar"]:checked').value,
+      evaluation: newEval
+  });
+
+  updateSubjectCardInfo(id);
+
+  saveSubjectsLocalStorage();
+  hideLoader('dashboard');
+}
 
 function deleteSubject(id) {
   removedSubject = subjects[id]
@@ -698,16 +994,16 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 });
 
-//for testing
-function createSubjectTesting() {
-  let data = document.getElementById('create-subject-text').value;
-  if (data != undefined || data != '') {
-    console.log('Uploading subject');
-    uploadSubject(JSON.parse(data));
-  }else{
-    console.error('No subject to upload');
-  }
-}
+// //for testing
+// function createSubjectTesting() {
+//   let data = document.getElementById('create-subject-text').value;
+//   if (data != undefined || data != '') {
+//     console.log('Uploading subject');
+//     uploadSubject(JSON.parse(data));
+//   }else{
+//     console.error('No subject to upload');
+//   }
+// }
 
 function uploadSubject(obj) { //not tested
   if (obj != undefined) {
@@ -796,28 +1092,18 @@ function getAndDisplayUserSubjects() {
               if(!subjects[id]) subjects[id] = {};
               if(!userInfo.subjects[id]) userInfo.subjects[id] = {};
 
-              let customEval = (userInfo.subjects[id].evaluation) ? userInfo.subjects[id].evaluation : subjectInfo.evaluation;
-              subjects[id] = Object.assign(
-                {},
-                subjects[id], 
-                {
-                  "evaluation" : customEval,
-                  "selectedEvaluation" : Object.keys(customEval)[0],
-                  "fullName" : subjectInfo.fullName,
-                  "shortName" : subjectInfo.shortName,
-                  "id" : id,
-                  "necesaryMark" : {},
-                  "finalMark" : {},
-                  "grades" : (!subjects[id].grades && !userInfo.subjects[id].grades) ? subjectInfo.grades : Object.assign({}, subjects[id].grades, userInfo.subjects[id].grades),
-                  "color" : (userInfo.subjects[id].color) ? userInfo.subjects[id].color : subjectInfo.color
-                }
-              );     
+              subjects[id] = completeSubject(
+                subjectInfo,
+                subjects[id],
+                userInfo.subjects[id],
+                { grades : (!subjects[id].grades && !userInfo.subjects[id].grades) ? subjectInfo.grades : Object.assign({}, subjects[id].grades, userInfo.subjects[id].grades) }
+              ); 
       
               updateFinalMark(id);
               updateNecesaryMark(id);
       
               updateCardGrades(id);
-              saveSubjectsLocalStorage()    
+              saveSubjectsLocalStorage(); 
              
               console.info(`Loaded subject: ${subjects[id].shortName} - ${id}`);
             } else{

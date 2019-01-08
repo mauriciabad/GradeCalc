@@ -2,8 +2,9 @@
   /* --toastTime: 5000ms; */
   --easing-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-*{
+*, *::before, *::after{
   font-family: 'Nunito', 'Quicksand', 'Roboto', -apple-system, system, system-ui, sans-serif;
+  box-sizing: border-box;
 }
 body{
   font-family: 'Nunito', 'Quicksand', 'Roboto', -apple-system, system, system-ui, sans-serif;
@@ -24,7 +25,7 @@ button{
   padding: 0;
   cursor: pointer;
   user-select: none;
-  transition: all 150ms var(--easing-bounce);
+  transition: transform 150ms var(--easing-bounce);
 }
 button:hover{
   transform: scale(1.15);
@@ -48,7 +49,6 @@ svg{
   position: fixed;
   top: 0;
   left: 0;
-  box-sizing: border-box;
   background-color: #1b9f64;
   color: #fff;
   width: 100%;
@@ -163,12 +163,11 @@ svg{
   left: -1.25em;
   height: 2.5em;
   width: 2.5em;
-  box-sizing: border-box;
   border-radius: 50%;
   background-color: #6A7FDB;
   box-shadow: 0 0.25em 1em rgba(0, 0, 0, 0.4);
   color: #fff;
-  transition: all 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: transform 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .subject-card-remove > img{
   height: 1.25em;
@@ -197,12 +196,11 @@ svg{
   right: 1em;
   height: 1.75em;
   width: 1.75em;
-  box-sizing: border-box;
   border-radius: 50%;
   color: #fff;
   background-color: #fff;
   box-shadow: 0 0 0.5em 0.25em rgba(255, 255, 255, 1);
-  transition: all 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: transform 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .subject-card-info > img{
   height: 100%;
@@ -322,6 +320,10 @@ svg{
   background-color: #33aab9;
   color: white;
 }
+.scol0{
+  background: conic-gradient(#14ffe9, #ffeb3d, #ff00e0, #14ffe9);
+  color: white;
+}
 
 
 .subject-action-bar{
@@ -371,12 +373,11 @@ svg{
 .grades-input span{
   margin: 0 0.5em;
 }
-.grades-input input::placeholder{
+input[type=text]::placeholder, input[type=number]::placeholder{
   color: #666;
   opacity: 1;
 }
-.grades-input input{
-  flex-grow: 1;
+input[type=text], input[type=number]{
   font-size: 1em;
   border: none;
   border-radius: 0.5em;
@@ -384,17 +385,21 @@ svg{
   height: 2em;
   line-height: 1;
   width: 3em;
-  box-sizing: border-box;
   text-align: center;
   vertical-align: middle;
+  border: solid;
+  border-width: 0;
+  outline: none;
   transition: border 300ms ease-out, background-color 200ms ease-out, color 200ms ease-out;
 }
-.grades-input input:invalid{
+input[type=text]:invalid, input[type=number]:invalid{
   border: solid 0.2em#cf5155;
 }
-.grades-input input:focus:not(:invalid){
+input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   border: solid 0.2em #444;
-  outline: none;
+}
+.grades-input input{
+  flex-grow: 1;
 }
 .eval-select{
   border-top: solid thin #bbb;
@@ -429,7 +434,9 @@ svg{
   padding: 4em 1.5em 6em;
   background-color: #fff;
   min-height: 100vh;
-  box-sizing: border-box;
+  width: 100%;
+  overflow: scroll;
+  scroll-behavior: smooth;
 }
 /* .popup > div:first-child{
   position: fixed;
@@ -438,7 +445,6 @@ svg{
   left: 0.5em;
   width: 3em;
   height: 3em;
-  box-sizing: border-box;
   cursor: pointer;
   background-color: #fff;
   box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.5);
@@ -450,7 +456,6 @@ svg{
   padding: 0.2em;
   top: 0;
   left: 0;
-  box-sizing: border-box;
   background-color: #1b9f64;
   color: #fff;
   width: 100%;
@@ -475,13 +480,12 @@ svg{
   top: 1.25em;
   height: 1em;
   width: 1em;
-  box-sizing: border-box;
   border-top: solid 0.3em #fff;
   border-left: solid 0.3em #fff;
   transform-origin: 25% 25%;
   transform: rotate(-45deg);
 } */
-.popup-content > button:last-child{
+.popup-main-button{
   display: block;
   padding: 1em 1.35em 1em 1.5em;
   font-weight: bold;
@@ -493,7 +497,7 @@ svg{
   letter-spacing: 0.15em;
   text-transform: uppercase;
   border-radius: 10em;
-  position: absolute;
+  position: fixed;
   z-index: 5;
   right: 2em;
   bottom: 1.5em;
@@ -508,13 +512,15 @@ svg{
   }
   .popup-content{
     max-width: 25em;
-    padding-bottom: 2.5em;
     margin: 0.5em;
+    margin-top: 2.5em;
     padding: 1.5em;
+    padding-bottom: 2.5em;
     border-radius: 0.3em;
     background-color: #fefefe;
     box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
     min-height: auto;
+    overflow: visible;
   }
   .popup > div:first-child::before{
     content: '';
@@ -542,8 +548,21 @@ svg{
     border-radius: 0;
     z-index: 0;
   }
-  .popup-content > button:last-child{
+  .popup-main-button{
+    position: absolute;
     bottom: -1.5em;
+  }
+  .edit-popup > div{
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: calc(100vh - 6em);
+    margin: -1.5em;
+    padding: inherit;
+  }
+  .edit-popup{
+    max-width: 40em;
+    max-height: calc(100vh - 6em);
   }
 }
 .popup-small{
@@ -654,7 +673,7 @@ svg{
   background-color: #cf5155 !important;
 }
 .popup h2{
-  margin: 0 0 0.5em;
+  margin: 0.75em 0 0.25em;
   line-height: 1;
 }
 .popup h3{
@@ -750,7 +769,6 @@ svg{
   border: solid 0.3em #222222;
   border-bottom: none;
   margin: 0 0.5em;
-  box-sizing: border-box;
   border-radius: 0.5em 0.5em 0 0;
   padding: 0.75em 1em;
   z-index: 5;
@@ -835,13 +853,6 @@ svg{
   margin: 0;
 }
 
-.divider{
-  height: 1px;
-  background-color: currentColor;
-  border-radius: 1px;
-  margin: 1em 0;
-}
-
 .loader{
   display: none;
 }
@@ -903,3 +914,170 @@ svg{
     transform: translate(19px, 0);
   }
 }
+
+
+
+/* -------------------- Edit Subject Popup ------------------ */
+.edit-popup input{
+  width: 100%;
+  display: block;
+  background-color: #ddd;
+}
+/* ------ Basic information ------- */
+.edit-popup > div > h2:first-child{
+  margin-top: 0;
+}
+.edit-popup-info{
+  line-height: 1;
+  display: flex;
+  flex-wrap: wrap;
+  margin: -0.5em;
+}
+.edit-popup-info span > span{
+  white-space: nowrap;
+  margin: 0 0.5em;
+}
+.edit-popup-info > *{
+  margin: 1em 0.5em;
+  flex: 1;
+}
+.edit-popup-info > div > label{
+  padding: 0 0 0.5em;
+  display: block;
+  white-space: nowrap;
+}
+.edit-fullName{
+  flex: 5 !important;
+}
+
+/* ------ Color ------- */
+.color-bar{
+  display: flex;
+  justify-content: space-between;
+}
+.color-bar > *{
+  height: 2.5em;
+  max-width: 2.5em;
+  flex: 1;
+  border-radius: 0.5em;
+  cursor: pointer;
+  color: white;
+  flex-wrap: wrap;
+}
+.color-bar > *:hover .edit-color-checkmark::after{
+  opacity: 0.5 !important;
+}
+.color-bar input:checked + .edit-color-checkmark::after{
+  opacity: 1 !important;
+}
+.color-bar input:not(:checked) + .edit-color-checkmark::after{
+  opacity: 0;
+}
+.edit-color-checkmark{
+  position: relative;
+}
+.edit-color-checkmark::after{
+  content: "";
+  position: absolute;
+  top: 0.15em;
+  left: 0em;
+  height: 1.75em;
+  width: 1.25em;
+  transform: translateX(-50%) rotate(45deg) scale(0.75);
+  border: solid white;
+  border-width: 0 0.5em 0.5em 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+.edit-color-checkmark-random::after{
+  content: "?";
+  font-family: "Arial Black", Gadget, sans-serif;
+  transform: none;
+  border: none;
+  font-size: 2em;
+  font-weight: bolder;
+  top: 0.1em;
+  left: -0.65em;
+  line-height: 1;
+}
+.color-bar input{
+  display: none;
+}
+/* --------- Evaluation ---------- */
+.scroll{
+  overflow: scroll;
+  scroll-behavior: smooth;
+}
+.edit-popup-grid{
+  display: grid;
+  grid-template: min-content
+  / 1fr 3fr min-content 2px;
+  grid-gap: 0.5em;
+  grid-auto-columns: 2fr;
+  grid-auto-rows: min-content;
+  align-items: end;
+}
+.edit-popup-grid input { width: 100%; }
+.edit-popup-grid > * { transition: opacity 200ms ease-out; }
+.edit-weight { position: relative; }
+.edit-weight::after{
+  content: "%";
+  position: absolute;
+  top: calc(50% - 0.5em);
+  bottom: calc(50% - 0.5em);
+  right: 0.25em;
+  line-height: 1;
+  font-size: 1em;
+  pointer-events: none;
+}
+.edit-weight input { padding-right: 1em;   min-width: 3em; }
+.grid-separator-eval{
+  background-color: #bbb;
+  grid-column: 4;
+  grid-row: 2 / -1;
+  border-radius: 10px;
+  height: 100%;
+}
+.edit-new-exam, .edit-new-eval{
+  opacity: 0.3333;
+  border: none !important;
+}
+.divider{
+  height: 1px;
+  background-color: #aaa;
+  border-radius: 1px;
+  margin: 0.5em 0;
+}
+/* .edit-add{
+  border-radius: 0.5em;
+  line-height: 1;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: #dedede;
+  white-space: nowrap;
+}
+.edit-add-exam{
+  grid-row: -1;
+  grid-column: 1/4;
+  height: 2em;
+  padding: 0.5em 0;
+  padding-left: 0.15em;
+}
+.edit-add-eval{
+  grid-row: 2/-1;
+  grid-column: -2;
+  padding: 0 0.5em 0 0.45em;
+  padding-top: 0.15em;
+} */
+
+.edit-popup input[type='number'] {
+  -moz-appearance:textfield;
+}
+
+.edit-popup input::-webkit-outer-spin-button,
+.edit-popup input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+/* ----------------- Next section -------------------*/

@@ -124,16 +124,15 @@
         <p>Evita contenido duplicado; si ya existe la asignatura que buscas, no la crees. <small>plis</small></p>
         <textarea name="" id="create-subject-text" placeholder="JSON of new subject. (this is for testing)"></textarea>
       </div> -->
-      <button onclick="addSubjects();">Añadir</button>
+      <button class="popup-main-button" onclick="addSubjects();">Añadir</button>
     </div>
   </div>
 
   <div id="edit-container" class="popup" style="display: none;">
     <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Go back">Editar asignatura</div>
     <div class="popup-content edit-popup">
-      <div id="edit-popup-content">
-      </div>
-      <button onclick="">Guardar</button>
+      <div id="edit-popup-content"></div>
+      <button class="popup-main-button" onclick="saveEditSubject(); window.history.back();"">Guardar</button>
     </div>
   </div>
 
@@ -150,11 +149,10 @@
         </ul>
       </div>
       <div id="login-loader" class="loader">
-        <div class="divider"></div>
         <div class="loader-dots"><div></div><div></div><div></div><div></div></div>
         <p>Cargando tus asignaturas</p>
       </div>
-      <button id="loginButton" onclick="loginGoogle(); window.history.back();">Iniciar sesión</button>
+      <button class="popup-main-button" id="loginButton" onclick="loginGoogle(); window.history.back();">Iniciar sesión</button>
     </div>
   </div>
   <div id="toast" style="display: none;"><div><p>Has borrado <b>NADA</b></p><button onclick="undoRemoveSubject();">Deshacer</button></div></div>
