@@ -965,7 +965,8 @@ firebase.auth().onAuthStateChanged(function(user) {
     console.info(`Signed in as ${displayName} whith ID: ${uid}`);
 
     bntLogin.textContent = 'Cerrar sesión';
-    bntLogin.className = 'btn-red';
+    bntLogin.classList.add('btn-red');
+    bntLogin.classList.remove('btn-green');
     bntLogin.onclick = function(){logoutGoogle(); window.history.back();};
 
     //showToast(`Bienvenido de nuevo <b>${displayName}</b> 😊`);
@@ -984,7 +985,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     console.info('Signed out')
     bntLogin.textContent = 'Iniciar sesión';
-    bntLogin.className = 'btn-green';
+    bntLogin.classList.remove('btn-red');
+    bntLogin.classList.add('btn-green');
     bntLogin.onclick = function(){loginGoogle(); window.history.back();};
     showToast('Guarda tus notas en la nube', 'Iniciar sesión','loginGoogle();');
   }
