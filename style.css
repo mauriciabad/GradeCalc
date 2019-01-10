@@ -701,6 +701,9 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   border-radius: 100%;
   box-shadow: 0 0.15em 1.5em rgba(0, 0, 0, 0.5);
 }
+.user-popup .popup-main-button{
+  position: absolute;
+}
 .user-popup{
   margin: 4em 0.5em 0.5em;
   padding-bottom: 2.5em;
@@ -708,6 +711,8 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   background-color: #fefefe;
   box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
   min-height: auto;
+  overflow: visible;
+  width: auto;
 }
 .user-popup > button{
   bottom: -1.5em !important;
