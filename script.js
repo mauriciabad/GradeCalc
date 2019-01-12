@@ -148,21 +148,21 @@ function loadData(){
   console.info('Subjects loaded from localStorage');
   
   for (const id in subjects) {
-    // autoUpdate(id); // TODO: remove, this is only a fix for DBD
+    autoUpdate(id); // TODO: remove, this is only a fix for DBD
     createSubjectCardCollapsed(id);
   }
   hideLoader('dashboard');
 }
 
-// function autoUpdate(id) {
-//   if (id = '3beCxEXHGIhPMouUkFCs' && (!subjects[id].version || subjects[id].version < 1)) {
-//     subjects[id].evaluation = JSON.parse('{"Continua":{"Compañerismo":{"C":0.1},"Final":{"F":0.2},"Teoria":{"noSQL":0.041176000000000004},"Lab":{"S1":0.08235300000000001,"S2":0.16470500000000002,"S3":0.08235300000000001,"S4":0.08235300000000001,"S5":0.08235300000000001,"S6":0.16470500000000002},"Auto estudio":{"Gen":0.020588000000000002,"Opt":0.020588000000000002,"OLAP":0.020588000000000002,"Group":0.020588000000000002}}}');
-//     // console.log( JSON.parse('{"Continua":{"Compañerismo":{"C":0.1},"Final":{"F":0.2},"Teoria":{"noSQL":0.041176000000000004},"Lab":{"S1":0.08235300000000001,"S2":0.16470500000000002,"S3":0.08235300000000001,"S4":0.08235300000000001,"S5":0.08235300000000001,"S6":0.16470500000000002},"Auto estudio":{"Gen":0.020588000000000002,"Opt":0.020588000000000002,"OLAP":0.020588000000000002,"Group":0.020588000000000002}}}'));
-//     subjects[id].version = 1;
-//     uploadEvaluation(id,subjects[id].evaluation);
-//     saveSubjectsLocalStorage();
-//   }
-// }
+function autoUpdate(id) {  
+  if (id == '3beCxEXHGIhPMouUkFCs' && (subjects[id].version == undefined || subjects[id].version < 2)) {    
+    subjects[id].evaluation = JSON.parse('{"Continua":{"Compañerismo":{"C":0.1},"Final":{"F":0.2},"Teoria":{"noSQL":0.041176000000000004},"Lab":{"S1":0.08235300000000001,"S2":0.16470500000000002,"S3":0.08235300000000001,"S4":0.08235300000000001,"S5":0.08235300000000001,"S6":0.16470500000000002},"Auto estudio":{"Gen":0.020588000000000002,"Opt":0.020588000000000002,"OLAP":0.020588000000000002,"Group":0.020588000000000002}}}');
+    subjects[id].version = 2;
+    uploadEvaluation(id,subjects[id].evaluation);
+    uploadVersion(id,subjects[id].version);
+    saveSubjectsLocalStorage();
+  }
+}
 
 //updates the subject card information (bar, inputs and names)
 function updateSubjectCardInfo(id){
@@ -301,8 +301,7 @@ function completeSubject(...subjects) {
       color             : 1,
   
       necesaryMark      : {},
-      finalMark         : {},
-      version           : 1
+      finalMark         : {}
     },
     ...subjects
   );
@@ -1020,6 +1019,16 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 });
 
+function loginGoogle() {
+  showLoader('Redireccionando','login');
+  firebase.auth().signInWithRedirect(provider);
+  hideLoader('login');
+}
+
+function logoutGoogle() {
+  firebase.auth().signOut();
+}
+
 // //for testing
 // function createSubjectTesting() {
 //   let data = document.getElementById('create-subject-text').value;
@@ -1031,15 +1040,14 @@ firebase.auth().onAuthStateChanged(function(user) {
 //   }
 // }
 
-function uploadSubject(obj) { //not tested
-  if (obj != undefined) {
-    subjectDB = db.collection('subjects');
-    subjectDB.add(obj)
-    .then(function(docRef) {
-      console.log("Document written with ID: ", docRef.id);
+function uploadSubject(subject) { // TODO: add sanitise as cloud function
+  if (subject != undefined && subject != null && subject != '' && subject != {} && subject != []) {
+    subjectsDB.add(subject)
+    .then((doc) => {
+      console.log(`Created ${subject.shortName} with id ${doc.id}`);
     })
-    .catch(function(error) {
-      console.error("Error adding document: ", error);
+    .catch((error) => {
+      console.error("Error creating subject ", error);
     });
   }
 }
@@ -1060,16 +1068,6 @@ function uploadSubject(obj) { //not tested
 //         });
 //     });
 
-function loginGoogle() {
-  showLoader('Redireccionando','login');
-  firebase.auth().signInWithRedirect(provider);
-  hideLoader('login');
-}
-
-function logoutGoogle() {
-  firebase.auth().signOut();
-}
-
 function uploadGrade(id,exam,mark) {
   uploadToUserDB(`subjects.${id}.grades.${exam}`, mark);
 }
@@ -1082,15 +1080,31 @@ function uploadColor(id,color) {
   uploadToUserDB(`subjects.${id}.color`, color);
 }
 
+function uploadVersion(id,version) {
+  uploadToUserDB(`subjects.${id}.version`, version);
+}
+
 function uploadToUserDB(ref,value) {
-  if (!isAnonymous && ref) {
+  uploadToDB(userDB,ref,value);
+}
+
+function uploadToSubjectsDB(id,ref,value) {
+  uploadToDB(subjectsDB.doc(id),ref,value);
+}
+
+function uploadToDB(db,ref,value) {
+  if (!isAnonymous) {
     let obj = {};
-    if (value != undefined && value != null && value != '' && value != {} && value != []) {
-      obj[ref] = value;
+    if (ref) {
+      if (value != undefined && value != null && value != '' && value != {} && value != []) {
+        obj[ref] = value;
+      }else{
+        obj[ref] = firebase.firestore.FieldValue.delete();
+      }
     }else{
-      obj[ref] = firebase.firestore.FieldValue.delete();
+      obj = value;
     }
-    userDB.update(obj);
+    db.update(obj);
   }
 }
 
