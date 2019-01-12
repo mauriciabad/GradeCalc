@@ -754,7 +754,7 @@ function getSubjectsLocalStorage() {
 }
 
 function saveSubjectsLocalStorage() {
-  localStorage.setItem("subjects", JSON.stringify(subjects));
+  localStorage.setItem("subjects", JSON.stringify(subjects || {}));
   return subjects;
 }
 
