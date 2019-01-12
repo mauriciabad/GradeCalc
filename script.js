@@ -53,10 +53,15 @@ var setPageMeEdit = (params) => {
 }
 
 var setPageMeSubjectEdit = (params) => {
-  popupShow('edit-container', false);
-  generateEditSubjectUI(subjects[params.id]);
-  // showSubjectInfo(params.id);
-  // window.history.back();
+  if (subjects[params.id]) {
+    popupShow('edit-container', false);
+    generateEditSubjectUI(params.id);
+    // showSubjectInfo(params.id);
+    // window.history.back();
+  }else{
+    showToast(`You don't have the subject ${params.id}`);
+    window.history.back();
+  }
 }
 
 var setPageMeSubjectAdd = (params) => {
@@ -143,10 +148,21 @@ function loadData(){
   console.info('Subjects loaded from localStorage');
   
   for (const id in subjects) {
+    // autoUpdate(id); // TODO: remove, this is only a fix for DBD
     createSubjectCardCollapsed(id);
   }
   hideLoader('dashboard');
 }
+
+// function autoUpdate(id) {
+//   if (id = '3beCxEXHGIhPMouUkFCs' && (!subjects[id].version || subjects[id].version < 1)) {
+//     subjects[id].evaluation = JSON.parse('{"Continua":{"Compañerismo":{"C":0.1},"Final":{"F":0.2},"Teoria":{"noSQL":0.041176000000000004},"Lab":{"S1":0.08235300000000001,"S2":0.16470500000000002,"S3":0.08235300000000001,"S4":0.08235300000000001,"S5":0.08235300000000001,"S6":0.16470500000000002},"Auto estudio":{"Gen":0.020588000000000002,"Opt":0.020588000000000002,"OLAP":0.020588000000000002,"Group":0.020588000000000002}}}');
+//     // console.log( JSON.parse('{"Continua":{"Compañerismo":{"C":0.1},"Final":{"F":0.2},"Teoria":{"noSQL":0.041176000000000004},"Lab":{"S1":0.08235300000000001,"S2":0.16470500000000002,"S3":0.08235300000000001,"S4":0.08235300000000001,"S5":0.08235300000000001,"S6":0.16470500000000002},"Auto estudio":{"Gen":0.020588000000000002,"Opt":0.020588000000000002,"OLAP":0.020588000000000002,"Group":0.020588000000000002}}}'));
+//     subjects[id].version = 1;
+//     uploadEvaluation(id,subjects[id].evaluation);
+//     saveSubjectsLocalStorage();
+//   }
+// }
 
 //updates the subject card information (bar, inputs and names)
 function updateSubjectCardInfo(id){
@@ -225,7 +241,7 @@ function generateEvaluations(id) {
   let evaluationsHTML = 
 `<div class="eval-select"${Object.keys(subjects[id].evaluation).length <= 1 ? ' style="display: none;"':'' }>
   <span>Evaluación:</span>
-  <select onchange="changeEvaluation('${id}',this.value);">`;
+  <select onchange="setSelectedEvaluation('${id}',this.value);">`;
   for (const eval in subjects[id].evaluation) {    
     evaluationsHTML += `<option value="${eval}"${eval == subjects[id].selectedEvaluation ? 'selected="selected"':''}>${eval}</option>`;
   }
@@ -294,9 +310,9 @@ function completeSubject(...subjects) {
   return subject;
 }
 
-function generateEditSubjectUI(subject) {
-  let evaluation = toNewEval(subject.evaluation);
-  let evals      = Object.keys(subject.evaluation);
+function generateEditSubjectUI(id) {
+  let evaluation = toNewEval(subjects[id].evaluation);
+  let evals      = Object.keys(subjects[id].evaluation);
   let grid       = '';
   let newEvals   = '';
   let newExams   = '';
@@ -331,44 +347,44 @@ function generateEditSubjectUI(subject) {
   for (const color of [1,8,3,4,6,5,2,7]) {
     colors += `
     <label class="scol${color}"  for="color-bar-elem${color}">
-      <input type="radio" name="color-bar" value="${color}" id="color-bar-elem${color}" ${(color == subject.color) ? 'checked': ''}>
+      <input type="radio" name="color-bar" value="${color}" id="color-bar-elem${color}" ${(color == subjects[id].color) ? 'checked': ''}>
       <span class="edit-color-checkmark"></span>
     </label>`;
   }
 
   let html = `
-  <input type="hidden" name="id" id="edit-id" value="${subject.id}" style="display: none;" hidden>
+  <input type="hidden" name="id" id="edit-id" value="${id}" style="display: none;" hidden>
   <h2>Información</h2>
   <div class="edit-popup-info">
     <div>
       <label for="subjectName">Nombre</label>
-      <input type="text" name="subjectName" id="edit-shortName" value="${subject.shortName}">
+      <input type="text" name="subjectName" id="edit-shortName" value="${subjects[id].shortName}">
     </div>
     <div class="edit-fullName" >
       <label for="subjectfullName">Nombre Largo</label>
-      <input type="text" name="subjectfullName" id="edit-fullName" value="${subject.fullName ? subject.fullName : ''}">
+      <input type="text" name="subjectfullName" id="edit-fullName" value="${subjects[id].fullName ? subjects[id].fullName : ''}">
     </div>
   </div>
   <div class="edit-popup-info">
     <div>
       <label for="faculty">Curso</label>
-      <input type="text" name="course" id="edit-course" value="${subject.course ? subject.course : ''}">
+      <input type="text" name="course" id="edit-course" value="${subjects[id].course ? subjects[id].course : ''}">
     </div>
     <div>
       <label for="faculty">Facultad</label>
-      <input type="text" name="faculty" id="edit-faculty" value="${subject.faculty ? subject.faculty : ''}">
+      <input type="text" name="faculty" id="edit-faculty" value="${subjects[id].faculty ? subjects[id].faculty : ''}">
     </div>
     <div>
       <label for="uni">Universidad</label>
-      <input type="text" name="uni" id="edit-uni" value="${subject.uni ? subject.uni : ''}">
+      <input type="text" name="uni" id="edit-uni" value="${subjects[id].uni ? subjects[id].uni : ''}">
     </div>
   </div>
   <div class="edit-popup-info">
     <div>
-      <span>Fecha de creación: <span>${subject.creationDate ? subject.creationDate : '--/--/----'}</span></span>
+      <span>Fecha de creación: <span>${subjects[id].creationDate ? subjects[id].creationDate : '--/--/----'}</span></span>
     </div>
     <div>
-      <span>Creador: <span>${subject.creator ? subject.creator : 'Anónimo'}</span></span>
+      <span>Creador: <span>${subjects[id].creator ? subjects[id].creator : 'Anónimo'}</span></span>
     </div>
   </div>
 
@@ -524,7 +540,8 @@ function updateCardGrades(id) {
   }
 }
 
-function changeEvaluation(id,eval=subjects[id].selectedEvaluation) {
+// updates the selectedEvaluation, saves the subjects and displays the new selectedEvaluation
+function setSelectedEvaluation(id,eval=subjects[id].selectedEvaluation) {
   subjects[id].selectedEvaluation = eval;
   saveSubjectsLocalStorage();
   let card = getCard(id);
@@ -534,6 +551,7 @@ function changeEvaluation(id,eval=subjects[id].selectedEvaluation) {
   updateAndDisplayMarks(id);
 }
 
+// shoot confeti in that element's left down corner
 function showConfetti(elem, conf) {
   if (conf == undefined) {
     conf = {
@@ -548,21 +566,23 @@ function showConfetti(elem, conf) {
   window.confetti(elem, conf);
 }
 
-
+// returns the card DOM element with that id
 function getCard(id) {
   return document.getElementById('card-'+id);
 }
+// returns the input DOM element of the card from the subject id and exam exam
 function getInput(id, exam) {
   return document.getElementById('in-'+id+exam);
 }
+// returns the card bar DOM element of the card from the subject id and exam exam
 function getBarElem(id, exam) {
   return document.getElementById('bar-'+id+exam);
 }
 
 /* ------------------------------ MATH ------------------------------ */
 
-//Returns the mark you need to get in the remaining exams to pass
-function gradeCalcAllEqual(id,eval) {
+//Returns the mark you need to get in the remaining exams to pass with mark (5)
+function gradeCalcAllEqual(id,eval,mark=5) {
   let sumUndoneExams = 0;
   for (const examType in subjects[id].evaluation[eval]) {
     for (const exam in subjects[id].evaluation[eval][examType]) {
@@ -570,14 +590,15 @@ function gradeCalcAllEqual(id,eval) {
     }
   }
   
-  return (5-subjects[id].finalMark[eval])/sumUndoneExams;
+  return (mark-subjects[id].finalMark[eval])/sumUndoneExams;
 }
 
-//returns n rounded to 2 decimals
+//returns n rounded to d decimals (2)
 function round(n,d = 2) {
   return (n==='' || n == undefined) ? undefined : Math.floor(Math.round(n*Math.pow(10,d)))/Math.pow(10,d);
 }
 
+// returns a random number from smallest to biggest
 function random(smallest, biggest) {
   return Math.floor(Math.random()*(biggest-smallest))+smallest;
 }
@@ -590,6 +611,7 @@ function congratulate() {
   }
 }
 
+// returns true if all subjects are passed in each selectedEvaluation
 function hasPassedEverything() {
   if (isEmpty(subjects)) return false;
   for (const id in subjects) {
@@ -598,9 +620,9 @@ function hasPassedEverything() {
   return true;
 }
 
-function isPassed(id, mark=5) {
-  return subjects[id].finalMark[subjects[id].selectedEvaluation] >= mark;
-
+// returns true if the subject with that id has a finalMark greater than mark (5) in the eval (selectedEvaluation)
+function isPassed(id, mark=5, eval=subjects[id].selectedEvaluation) {
+  return subjects[id].finalMark[eval] >= mark;
 }
 
 /* ------------------------------ UI MANIPULATION ------------------------------ */
@@ -666,9 +688,9 @@ function moveCards(){
   updateCards();
   
   cards.forEach((card) => {
-    console.log(card.id);
-    console.log(cardsOldInfo[card.id]);
-    console.log(cardsNewInfo[card.id]);
+    // console.log(card.id);
+    // console.log(cardsOldInfo[card.id]);
+    // console.log(cardsNewInfo[card.id]);
       card.animate([ 
         {transform: `translate(${cardsOldInfo[card.id].x - cardsNewInfo[card.id].x}px, ${cardsOldInfo[card.id].y -cardsNewInfo[card.id].y}px) scaleX(${cardsOldInfo[card.id].width/cardsNewInfo[card.id].width})`}, 
         {transform: 'none'}
@@ -751,7 +773,7 @@ function saveSubjectsLocalStorage() {
 //     let newEval = isValidJSON(json);
 //     if (newEval) {
 //       subjects[id].evaluation = newEval;
-//       changeEvaluation(id);
+//       setSelectedEvaluation(id);
 //       uploadEvaluation(id,newEval);
 //       updateCardGrades(id);
 //     }else{
@@ -894,6 +916,8 @@ function saveEditSubject() {
       color:     editSubject.querySelector('input[name="color-bar"]:checked').value,
       evaluation: newEval
   });
+
+  uploadEvaluation(id,newEval);
 
   updateSubjectCardInfo(id);
 
@@ -1061,7 +1085,7 @@ function uploadColor(id,color) {
 function uploadToUserDB(ref,value) {
   if (!isAnonymous && ref) {
     let obj = {};
-    if (value != undefined || value != null) {
+    if (value != undefined && value != null && value != '' && value != {} && value != []) {
       obj[ref] = value;
     }else{
       obj[ref] = firebase.firestore.FieldValue.delete();
@@ -1082,12 +1106,12 @@ function getAndDisplayUserSubjects() {
     showToast('Guarda tus notas en la nube', 'Iniciar sesión','loginGoogle();');
     hideLoader('dashboard');
   }else{
+    showLoader('Descargando asignaturas','dashboard');
     userDB.get().then((doc) => {
       if (doc.exists) {
-        userInfo = doc.data();
-        showLoader('Descargando asignaturas','dashboard');
-        let count = 0;
+        let userInfo = doc.data();
         for (const id in userInfo.subjects) {
+          
           subjectsDB.doc(id).get().then((doc) => {
             if (doc.exists) {
               var subjectInfo = doc.data();
@@ -1114,9 +1138,8 @@ function getAndDisplayUserSubjects() {
           }).catch((error) => {
             console.error("Error getting subject info:", error);
           });
-          count++;
         }
-        console.info(`User has ${count} saved subjects`);
+        console.info(`User has ${userInfo.subjects.length} saved subjects`);
       } else{
         userDB.set({});
         console.error(`User ${uid} dosen\'t exists`);
