@@ -44,7 +44,26 @@ button:focus:not(:active){
 svg{
   fill: currentColor;
 }
-
+em{
+  font-style: normal;
+  position: relative;
+}
+em::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -4px;
+  right: -4px;
+  background-color: #1b9f64;
+  opacity: 0.333;
+  /* z-index: -1; */
+  border-radius: 2px;
+  font-style: normal;
+}
+label{
+  cursor: pointer;
+}
 #top-bar{
   position: fixed;
   top: 0;
@@ -138,7 +157,7 @@ svg{
   border-radius: 0.3em;
   padding: 1em;
   max-width: 25em;
-  flex-basis: 15em;
+  flex-basis: 17.5em;
   flex-grow: 1;
   text-align: center;
   user-select: none;
@@ -552,7 +571,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
     position: absolute;
     bottom: -1.5em;
   }
-  .edit-popup > div{
+  .popup-content > div{
     scroll-behavior: smooth;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -562,8 +581,28 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   }
   .edit-popup{
     max-width: 40em;
+  }
+  .add-popup{
+    max-width: 30em;
+  }
+  .popup-content{
     max-height: calc(100vh - 6em);
   }
+}
+.popup h2{
+  margin: 0.75em 0 0.25em;
+  line-height: 1;
+}
+.popup h3{
+  margin: 1em 0 0.5em;
+  line-height: 1;
+  text-align: left;
+}
+.popup p{
+  text-align: left;
+}
+.popup li{
+  text-align: left;
 }
 .popup-small{
   width: 100vw;
@@ -592,20 +631,119 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 .add-popup{
   text-align: center;
 }
-.add-popup > div > label{
+.searchGroupDesc{
   margin: 0.5em 0;
   display: block;
   color: #777;
   font-size: 0.9em;
 }
-.add-popup > div > p{
+.add-popup p{
   margin: 0.5em 0;
   display: block;
   color: #777;
   font-size: 0.9em;
   text-align: center;
 }
-#subjects-search-results{
+/* .blur-bottom{
+  position: relative;
+}
+.blur-bottom::before{
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1em;
+  background: linear-gradient(to bottom, transparent, #fff);
+  opacity: 0.9;
+  z-index: 1;
+  border-radius: 0  0 1em 1em;
+} */
+.subjects-search-results{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 1em;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  /* max-height: 50vh; */
+}
+.subjects-search-results > li{
+  display: flex;
+  align-items: center;
+  border-bottom: solid 1px #ddd;
+  margin: 0;
+}
+.searchResultCheck{
+  margin: 1em;
+  height: 1.5em;
+  width: 1.5em;
+  background-color: #eee;
+  border-radius: 100%;
+  box-sizing: content-box;
+  border: solid 4px #aaa;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition: border-color 200ms linear;
+}
+.subjects-search-results input:checked ~ .searchResultCheck{
+  border-color: #209D64;
+}
+.subjects-search-results input:disabled ~ .searchResultCheck{
+  border-color: #aaa;
+}
+.subjects-search-results input:disabled ~ .searchResultCheck::after{
+  border-color: #aaa;
+  border-right: solid 4px #aaa;
+  border-bottom: solid 4px #aaa;
+}
+.searchResultCheck::after{
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 7px;
+  height: 16px;
+  width: 10px;
+  border-right: solid 4px #209D64;
+  border-bottom: solid 4px #209D64;
+  transform: rotate(90deg) scale(2);
+  opacity: 0;
+  transition: transform 200ms var(--easing-bounce), opacity 200ms var(--easing-bounce);
+}
+.subjects-search-results input:checked ~ .searchResultCheck::after{
+  transform: rotate(40deg) scale(1);
+  opacity: 1;
+}
+.searchResultTitle{
+  flex-grow: 1;
+  padding: 0.5em 0;
+}
+.searchResultAction:hover{
+  transform: scale(1.2);
+}
+.searchResultAction{
+  padding: 1em;
+  height: 1.5em;
+  width: 1.5em;
+  box-sizing: content-box;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 150ms var(--easing-bounce);
+}
+.searchResultAction > img{
+  width: 100%;
+  height: 100%;
+}
+.searchResultRow1{
+  
+}
+.searchResultRow2{
+  font-size: 0.8em;
+}
+/* OLD */
+/* #subjects-search-results{
   list-style-type: none;
   padding-left: 0;
   display: flex;
@@ -641,7 +779,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 #subjects-search-results input{
   margin: 0.75em 0.5em 0.75em 1em;
   display: none;
-}
+} */
 #subject-start-creator{
   background-color: #bf5ed4;
   padding: 0.66em 1em;
@@ -672,29 +810,14 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 .btn-red{
   background-color: #cf5155 !important;
 }
-.popup h2{
-  margin: 0.75em 0 0.25em;
-  line-height: 1;
-}
-.popup h3{
-  margin: 1em 0 0.5em;
-  line-height: 1;
-  text-align: left;
-}
-.popup p{
-  text-align: left;
-}
-.popup li{
-  text-align: left;
-}
-.add-popup > div > div{
+/* .add-popup > div > div{
   display: flex;
   justify-content: space-between;
   padding: 0;
 }
 .add-popup > div > div > span{
   padding: 0 0.25em;
-}
+} */
 .popup-round-img-top{
   width: 8em;
   margin: -40% auto 0.5em;
