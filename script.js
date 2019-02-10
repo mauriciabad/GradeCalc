@@ -1198,7 +1198,7 @@ function generateSearchResultSubject(match, id) {
               <span class="searchResultRow1">${match.shortName.value} - ${match.fullName.value}</span><br>
               <span class="searchResultRow2">${match.faculty.value} ${match.uni.value} - ${match.course.value}</span>
             </label>
-            <div class="searchResultAction"><img src="media/discount.svg"></div>
+            <!-- <div class="searchResultAction"><img src="media/discount.svg"></div> -->
           </li>`;
 }
 
