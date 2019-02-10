@@ -1,7 +1,8 @@
 /* ------------------------------ START UP ------------------------------ */
 var dashboard = document.getElementById('dashboard');
-var editSubject = document.getElementById('edit-popup-content');
-var viewSubject = document.getElementById('view-popup-content');
+var editSubjectPopup = document.getElementById('edit-popup-content');
+var viewSubjectPopup = document.getElementById('view-popup-content');
+var newSubjectPopup = document.getElementById('new-popup-content');
 var topbar = document.getElementById('top-bar');
 var currentScreen = document.getElementsByClassName('screen')[0];
 var searchResultContainer = document.getElementById('subjects-search-results');
@@ -12,6 +13,7 @@ var allPopups = [
   'add-container',
   'edit-container',
   'view-container',
+  'new-container',
 ]
 var userInfo;
 var subjects = {};
@@ -83,7 +85,8 @@ var setPageMeSubjectAdd = (params) => {
 }
 
 var setPageSubjectNew = (params) => {
-
+  popupShow('new-container', false);
+  clearNewSubjectUI();
 }
 
 var setPageSubjectView = (params) => {
@@ -132,6 +135,10 @@ function showEditSubject(id) {
 
 function showViewSubject(id) {
   router.navigate(`/subjects/${id}`);
+}
+
+function showNewSubject() {
+  router.navigate(`/subjects/new`);
 }
 
 //Shows the popup
@@ -285,7 +292,6 @@ function generateEvaluations(id) {
 }
 
 function addToSubjectsToAdd(id, checked) {
-  // debugger;
   if(checked){
     subjectsToAdd[id] = null;
   } else {
@@ -357,25 +363,31 @@ function completeSubject(...subjects) {
   return subject;
 }
 
+function clearNewSubjectUI() {
+  let html = generateEditSubjectUIHTML('new', completeSubject({creator: displayName, creationDate: new Date()}), 'new');
+  
+  newSubjectPopup.innerHTML = html;
+}
+
 function generateViewSubjectUI(id, subject) {
   let html = generateEditSubjectUIHTML(id, subject, 'view');
   
-  viewSubject.innerHTML = html;
+  viewSubjectPopup.innerHTML = html;
 
   let evals = Object.keys(subject.evaluation);
   for (const evalCount in evals) {
-    updateSumWeight(viewSubject, evalCount);
+    updateSumWeight(viewSubjectPopup, evalCount);
   }
 }
 
 function generateEditSubjectUI(id, subject = subjects[id]) {
   let html = generateEditSubjectUIHTML(id, subject, 'edit');
 
-  editSubject.innerHTML = html;
+  editSubjectPopup.innerHTML = html;
 
   let evals = Object.keys(subject.evaluation);
   for (const evalCount in evals) {
-    updateSumWeight(editSubject, evalCount);
+    updateSumWeight(editSubjectPopup, evalCount);
   }
 }
 
@@ -388,7 +400,7 @@ function generateEditSubjectUIHTML(id, subject, popup) {
   let footer = '';
   let colors = '';
 
-  newEvals += `<input style="grid-row: 1; grid-column: ${(5 + evals.length * 1)};" class=" edit-new-eval" data-eval="${evals.length}" type="text" name="nameEval" value="" placeholder="NEW" autocomplete="off" required>`;
+  newEvals += `<input style="grid-row: 1; grid-column: ${(5 + evals.length * 1)};" class=" edit-new-eval" data-eval="${evals.length}" type="text" name="nameEval" value="" placeholder="Continua" autocomplete="off" required>`;
 
   let examCount = 0;
   for (const exam in evaluation) {
@@ -403,12 +415,12 @@ function generateEditSubjectUIHTML(id, subject, popup) {
     ++examCount;
   }
   for (const evalCount in evals) {
-    grid += `<input style="grid-row: 1; grid-column: ${(5 + evalCount * 1)};" class="edit-nameEval" type="text" name="nameEval" value="${evals[evalCount]}" data-eval="${evalCount}"placeholder="NEW" autocomplete="off" required>`;
+    grid += `<input style="grid-row: 1; grid-column: ${(5 + evalCount * 1)};" class="edit-nameEval" type="text" name="nameEval" value="${evals[evalCount]}" data-eval="${evalCount}" placeholder="NEW" autocomplete="off" required>`;
     newExams += `<div style="grid-row: ${(2 + examCount * 1)}; grid-column: ${(5 + evalCount * 1)};" class="edit-weight edit-new-exam" data-exam="${examCount}" data-eval="${evalCount}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
     footer += `<span  style="grid-row: ${(3 + examCount * 1)}; grid-column: ${(5 + evalCount * 1)};" class="edit-total" data-eval="${evalCount}">0%</span>`;
   }
   newExams += `
-  <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="${examCount}" placeholder="NEW" autocomplete="off" maxlength="5" required>
+  <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="${examCount}" placeholder="P1" autocomplete="off" maxlength="5" required>
   <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 2;" class="edit-new-exam" type="text"   name="examType"   value="" data-exam="${examCount}" placeholder="Parciales" required>
   <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="${examCount}" placeholder="-" autocomplete="off" min="0" max="10" step="0.01">
   `;
@@ -427,37 +439,27 @@ function generateEditSubjectUIHTML(id, subject, popup) {
   <div class="edit-popup-info">
     <div>
       <label for="${popup}-shortName">Nombre</label>
-      <input type="text" name="shortName" id="${popup}-shortName" value="${subject.shortName}">
+      <input type="text" name="shortName" id="${popup}-shortName" value="${subject.shortName}" placeholder="M2" required>
     </div>
     <div class="edit-fullName">
       <label for="${popup}-fullName">Nombre Largo</label>
-      <input type="text" name="fullName" id="${popup}-fullName" value="${subject.fullName ? subject.fullName : ''}">
+      <input type="text" name="fullName" id="${popup}-fullName" value="${subject.fullName ? subject.fullName : ''}" placeholder="Matemáticas 2" required>
     </div>
   </div>
   <div class="edit-popup-info">
     <div>
       <label for="${popup}-course">Curso</label>
-      <input type="text" name="course" id="${popup}-course" value="${subject.course ? subject.course : ''}">
+      <input type="text" name="course" id="${popup}-course" value="${subject.course ? subject.course : ''}" placeholder="Q1 2019-2020" required>
     </div>
     <div>
       <label for="${popup}-faculty">Facultad</label>
-      <input type="text" name="faculty" id="${popup}-faculty" value="${subject.faculty ? subject.faculty : ''}">
+      <input type="text" name="faculty" id="${popup}-faculty" value="${subject.faculty ? subject.faculty : ''}" placeholder="FIB" required>
     </div>
     <div>
       <label for="${popup}-uni">Universidad</label>
-      <input type="text" name="uni" id="${popup}-uni" value="${subject.uni ? subject.uni : ''}">
+      <input type="text" name="uni" id="${popup}-uni" value="${subject.uni ? subject.uni : ''}" placeholder="UPC" required>
     </div>
   </div>
-  <div class="edit-popup-info">
-    <div>
-      <span>Fecha de creación: <span>${subject.creationDate ? subject.creationDate : '--/--/----'}</span></span>
-    </div>
-    <div>
-      <span>Creador: <span>${subject.creator ? subject.creator : 'Anónimo'}</span></span>
-    </div>
-  </div>
-
-  <h2>Color</h2>
   <div class="color-bar">
     ${colors}
     <!-- <label class="scol0"  for="color-bar-elem0">
@@ -465,6 +467,16 @@ function generateEditSubjectUIHTML(id, subject, popup) {
       <span class="edit-color-checkmark edit-color-checkmark-random"></span>
     </label> -->
   </div>
+
+  <div class="edit-popup-info">
+    <div>
+      <span>Fecha de creación: <span id="${popup}-creationDate">${subject.creationDate ? subject.creationDate.toLocaleDateString('es-ES') : '--/--/----'}</span></span>
+    </div>
+    <div>
+      <span>Creador: <span id="${popup}-creator">${subject.creator ? subject.creator : 'Anónimo'}</span></span>
+    </div>
+  </div>
+
   <h2>Evaluación</h2>
   <div class="scroll">
     <div class="edit-popup-grid" onkeyup="editUIUpdateGrid(this, event);" data-evals="${evals.length}" data-exams="${examCount}">
@@ -476,7 +488,7 @@ function generateEditSubjectUIHTML(id, subject, popup) {
       <!-- Body -->
       ${grid}
       <!-- Divider -->
-      <div   style="grid-row: 2 / ${2 + examCount};" class="grid-separator-eval"></div>
+      <div style="grid-row: 2 / ${2 + examCount};" class="grid-separator-eval"></div>
 
       <!-- new -->
       ${newEvals}
@@ -484,7 +496,16 @@ function generateEditSubjectUIHTML(id, subject, popup) {
 
       <!-- Footer -->
       ${footer}
+      
     </div>
+
+    <!-- Conditions -->
+    <!-- <h2>Condiciones para aprovar</h2>
+    <div>
+      <div>
+        <label>Continua</label><input type="text">
+      </div>
+    </div> -->
   </div>`;
 
   return html;
@@ -949,7 +970,7 @@ function editGridIsEmpty(grid, type, n) {
 }
 
 function saveEditSubject() {
-  let newSubject = readSubjectFromPopup(editSubject);
+  let newSubject = readSubjectFromPopup(editSubjectPopup);
   let id = newSubject.id;
 
   subjects[id] = completeSubject(
@@ -1000,10 +1021,19 @@ function readSubjectFromPopup(popup) {
 }
 
 function saveViewSubject() {
-  let newSubject = readSubjectFromPopup(viewSubject);
+  let newSubject = readSubjectFromPopup(viewSubjectPopup);
   let id = newSubject.id;
   
   subjectsToAdd[id] = newSubject;
+}
+
+function saveNewSubject() {
+  let newSubject = readSubjectFromPopup(newSubjectPopup);
+  delete newSubject.id;
+
+  let id = uploadSubject(newSubject);
+
+  addSubject(id, newSubject);
 }
 
 function deleteSubject(id) {
@@ -1124,9 +1154,10 @@ function logoutGoogle() {
 
 function uploadSubject(subject) { // TODO: add sanitise as cloud function
   if (subject != undefined && subject != null && subject != '' && subject != {} && subject != []) {
-    subjectsDB.add(subject)
+    subjectsDB.add({creator: displayName, creatorId: uid, creationDate: new Date(), ...subject})
       .then((doc) => {
         console.log(`Created ${subject.shortName} with id ${doc.id}`);
+        return doc.id;
       })
       .catch((error) => {
         console.error("Error creating subject ", error);

@@ -96,10 +96,10 @@
         <!-- <h3>Resultados</h3> -->
         <ul id="subjects-search-results" class="subjects-search-results"></ul>
         
-        <!-- <h2>Crear</h2>
+        <h2>Crear</h2>
         <p>¿No la encuentras o ninguna está bien?</p>
-        <button id="subject-start-creator" onclick="createSubjectTesting()">Crear</button>
-        <p>Evita contenido duplicado; si ya existe la asignatura que buscas, no la crees. <small>plis</small></p> -->
+        <button id="subject-start-creator" onclick="showNewSubject();">Crear</button>
+        <p>Evita contenido duplicado; si ya existe la asignatura que buscas, no la crees. <small>plis</small></p>
         <!-- <textarea name="" id="create-subject-text" placeholder="JSON of new subject. (this is for testing)"></textarea> -->
         <button class="popup-main-button" onclick="addSubjects();">Añadir</button>
       </div>
@@ -119,6 +119,14 @@
     <div class="popup-content edit-popup">
       <div id="view-popup-content"></div>
       <button class="popup-main-button" onclick="saveViewSubject(); window.history.back();"">Añadir</button>
+    </div>
+  </div>
+
+  <div id="new-container" class="popup" style="display: none;">
+    <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Ir atrás">Nueva asignatura</div>
+    <div class="popup-content edit-popup">
+      <div id="new-popup-content"></div>
+      <button class="popup-main-button" onclick="saveNewSubject(); router.navigate(`/`);">Crear</button>
     </div>
   </div>
 

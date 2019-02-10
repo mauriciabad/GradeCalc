@@ -594,6 +594,9 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   margin: 0.75em 0 0.25em;
   line-height: 1;
 }
+.popup h2:first-child{
+  margin-top: 0;
+}
 .popup h3{
   margin: 1em 0 0.5em;
   line-height: 1;
@@ -639,7 +642,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   font-size: 0.9em;
 }
 .add-popup p{
-  margin: 0.5em 0;
+  margin: 0.5em 0 0;
   display: block;
   color: #777;
   font-size: 0.9em;
@@ -796,6 +799,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   font-weight: bold;
   text-shadow: 0 0.15em 0.5em rgba(0, 0, 0, 0.4);
   color: #fff;
+  margin-top: 0.5em;
 }
 .popup-content input[type=search] {
   border: none;
@@ -1087,6 +1091,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 .color-bar{
   display: flex;
   justify-content: space-between;
+  margin: 1em 0;
 }
 .color-bar > *{
   height: 2.5em;
