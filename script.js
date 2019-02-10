@@ -434,8 +434,8 @@ function generateEditSubjectUIHTML(id, subject, popup) {
   }
 
   let html = `
-  <input type="hidden" name="id" id="${popup}-id" value="${id}" style="display: none;" hidden>
   <h2>Información</h2>
+  <input type="hidden" name="id" id="${popup}-id" value="${id}" style="display: none;" hidden>
   <div class="edit-popup-info">
     <div>
       <label for="${popup}-shortName">Nombre</label>

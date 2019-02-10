@@ -1,0 +1,6 @@
+- Use heroku cronjob to add new subjects (where date >= lastUpdate) to algolia
+- Cloud funtion to delete old subjects and users
+- Cloud function to sanitize subjects and upload them
+- Conditions
+- Set creator and creationDate for each subject
+- Add subjects from 1st course and 3rd
