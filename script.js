@@ -1,11 +1,18 @@
 /* ------------------------------ START UP ------------------------------ */
 var dashboard = document.getElementById('dashboard');
 var editSubject = document.getElementById('edit-popup-content');
+var viewSubject = document.getElementById('view-popup-content');
 var topbar = document.getElementById('top-bar');
 var currentScreen = document.getElementsByClassName('screen')[0];
 var searchResultContainer = document.getElementById('subjects-search-results');
 var searchResultsSubject = document.getElementById('subjects-search-results');
 
+var allPopups = [
+  'user-container',
+  'add-container',
+  'edit-container',
+  'view-container',
+]
 var userInfo;
 var subjects = {};
 var removedSubject = {};
@@ -25,6 +32,8 @@ var subjectsDB = db.collection('subjects');
 
 var client = algoliasearch('2R59JNYNOA', 'b8fd696952b9984035a380a3837662e0');
 var index = client.initIndex('subjects_search');
+
+var subjectsToAdd = {};
 
 loadData();
 
@@ -78,7 +87,18 @@ var setPageSubjectNew = (params) => {
 }
 
 var setPageSubjectView = (params) => {
-
+  subjectsDB.doc(params.id).get().then((doc) => {
+    if (doc.exists) {
+      popupShow('view-container', false);
+      generateViewSubjectUI(params.id, doc.data());
+    } else {
+      window.history.back();
+      console.error(`Subject width id ${params.id} doesn't exist`);
+    }
+  }).catch((error) => {
+    window.history.back();
+    console.error("Error getting subject info:", error);
+  });
 }
 
 var setPageSubjectEdit = (params) => {
@@ -90,11 +110,11 @@ router.on({
   '/user/:id': { as: 'user.view', uses: setPageUser },
   '/me': { as: 'me', uses: setPageMe },
   '/me/edit': { as: 'me.edit', uses: setPageMeEdit },
-  '/me/subject/:id/edit': { as: 'me.subject.edit', uses: setPageMeSubjectEdit },
-  '/me/subject/add': { as: 'me.subject.add', uses: setPageMeSubjectAdd },
-  '/subject/new': { as: 'subject.new', uses: setPageSubjectNew }, //asks basic info and finds duplicates, then goes to subject.edit
-  '/subject/:id': { as: 'subject.view', uses: setPageSubjectView },
-  '/subject/:id/edit': { as: 'subject.edit', uses: setPageSubjectEdit },
+  '/me/subjects/:id/edit': { as: 'me.subject.edit', uses: setPageMeSubjectEdit },
+  '/me/subjects/add': { as: 'me.subject.add', uses: setPageMeSubjectAdd },
+  '/subjects/new': { as: 'subject.new', uses: setPageSubjectNew }, //asks basic info and finds duplicates, then goes to subject.edit
+  '/subjects/:id': { as: 'subject.view', uses: setPageSubjectView },
+  '/subjects/:id/edit': { as: 'subject.edit', uses: setPageSubjectEdit },
   '*': { as: 'dashboard', uses: setPageDashboard }
 }).resolve();
 
@@ -103,15 +123,20 @@ function showUserInfo() {
 }
 
 function showAddSubject() {
-  router.navigate(`/me/subject/add`);
+  router.navigate(`/me/subjects/add`);
 }
 
 function showEditSubject(id) {
-  router.navigate(`/me/subject/${id}/edit`);
+  router.navigate(`/me/subjects/${id}/edit`);
+}
+
+function showViewSubject(id) {
+  router.navigate(`/subjects/${id}`);
 }
 
 //Shows the popup
 function popupShow(id, isSmall) {
+  popupHideAll(id);
   let elem = document.getElementById(id);
   elem.style.display = 'flex';
   elem.animate({
@@ -138,10 +163,12 @@ function popupHide(popup) {
 }
 
 //Hides all popups
-function popupHideAll() {
-  popupHide(document.getElementById('user-container'));
-  popupHide(document.getElementById('add-container'));
-  popupHide(document.getElementById('edit-container'));
+function popupHideAll(exeption) {
+  for (const popup of allPopups) {
+    if(popup != exeption){
+      popupHide(document.getElementById(popup));
+    }
+  }
 }
 
 /* ------------------------------ UI CREATION ------------------------------ */
@@ -257,17 +284,28 @@ function generateEvaluations(id) {
   return evaluationsHTML;
 }
 
+function addToSubjectsToAdd(id, checked) {
+  // debugger;
+  if(checked){
+    subjectsToAdd[id] = null;
+  } else {
+    delete subjectsToAdd[id];
+  }
+  
+}
+
 //Adds the subjects selected in the popup
 function addSubjects() {
   showLoader('Cargando tus asignaturas', 'dashboard');
-  let checkeds = document.querySelectorAll("#add-container input:checked");
   document.getElementById('search-subject-input').value = '';
 
-  for (const checked of checkeds) {
-    let id = checked.value;    
-
+  for (let id in subjectsToAdd) {
     if (subjects[id] == undefined) {
-      addSubjectFromDB(id);
+      if(subjectsToAdd[id] == null){
+        addSubjectFromDB(id);
+      } else {
+        addSubject(id, subjectsToAdd[id])
+      }
     } else {
       // showToast(`Ya tienes ${subjects[id].shortName}`);
     }
@@ -276,17 +314,20 @@ function addSubjects() {
   searchSubjects();
 }
 
+function addSubject(id, subject) {
+  subjects[id] = completeSubject(subject);
+
+  updateFinalMark(id);
+  updateNecesaryMark(id);
+
+  createSubjectCardCollapsed(id);
+  saveSubjectsLocalStorage();
+  hideLoader('dashboard');
+}
 function addSubjectFromDB(id) {
   subjectsDB.doc(id).get().then((doc) => {
     if (doc.exists) {
-      subjects[id] = completeSubject(doc.data());
-
-      updateFinalMark(id);
-      updateNecesaryMark(id);
-
-      createSubjectCardCollapsed(id);
-      saveSubjectsLocalStorage();
-      hideLoader('dashboard');
+      addSubject(id, doc.data());
     } else {
       console.error('Subject dosen\'t exists');
     }
@@ -316,9 +357,31 @@ function completeSubject(...subjects) {
   return subject;
 }
 
-function generateEditSubjectUI(id) {
-  let evaluation = toNewEval(subjects[id].evaluation);
-  let evals = Object.keys(subjects[id].evaluation);
+function generateViewSubjectUI(id, subject) {
+  let html = generateEditSubjectUIHTML(id, subject, 'view');
+  
+  viewSubject.innerHTML = html;
+
+  let evals = Object.keys(subject.evaluation);
+  for (const evalCount in evals) {
+    updateSumWeight(viewSubject, evalCount);
+  }
+}
+
+function generateEditSubjectUI(id, subject = subjects[id]) {
+  let html = generateEditSubjectUIHTML(id, subject, 'edit');
+
+  editSubject.innerHTML = html;
+
+  let evals = Object.keys(subject.evaluation);
+  for (const evalCount in evals) {
+    updateSumWeight(editSubject, evalCount);
+  }
+}
+
+function generateEditSubjectUIHTML(id, subject, popup) {
+  let evaluation = toNewEval(subject.evaluation);
+  let evals = Object.keys(subject.evaluation);
   let grid = '';
   let newEvals = '';
   let newExams = '';
@@ -353,44 +416,44 @@ function generateEditSubjectUI(id) {
   for (const color of [1, 8, 3, 4, 6, 5, 2, 7]) {
     colors += `
     <label class="scol${color}"  for="color-bar-elem${color}">
-      <input type="radio" name="color-bar" value="${color}" id="color-bar-elem${color}" ${(color == subjects[id].color) ? 'checked' : ''}>
+      <input type="radio" name="color-bar" value="${color}" id="color-bar-elem${color}" ${(color == subject.color) ? 'checked' : ''}>
       <span class="edit-color-checkmark"></span>
     </label>`;
   }
 
   let html = `
-  <input type="hidden" name="id" id="edit-id" value="${id}" style="display: none;" hidden>
+  <input type="hidden" name="id" id="${popup}-id" value="${id}" style="display: none;" hidden>
   <h2>Información</h2>
   <div class="edit-popup-info">
     <div>
-      <label for="subjectName">Nombre</label>
-      <input type="text" name="subjectName" id="edit-shortName" value="${subjects[id].shortName}">
+      <label for="${popup}-shortName">Nombre</label>
+      <input type="text" name="shortName" id="${popup}-shortName" value="${subject.shortName}">
     </div>
-    <div class="edit-fullName" >
-      <label for="subjectfullName">Nombre Largo</label>
-      <input type="text" name="subjectfullName" id="edit-fullName" value="${subjects[id].fullName ? subjects[id].fullName : ''}">
-    </div>
-  </div>
-  <div class="edit-popup-info">
-    <div>
-      <label for="faculty">Curso</label>
-      <input type="text" name="course" id="edit-course" value="${subjects[id].course ? subjects[id].course : ''}">
-    </div>
-    <div>
-      <label for="faculty">Facultad</label>
-      <input type="text" name="faculty" id="edit-faculty" value="${subjects[id].faculty ? subjects[id].faculty : ''}">
-    </div>
-    <div>
-      <label for="uni">Universidad</label>
-      <input type="text" name="uni" id="edit-uni" value="${subjects[id].uni ? subjects[id].uni : ''}">
+    <div class="edit-fullName">
+      <label for="${popup}-fullName">Nombre Largo</label>
+      <input type="text" name="fullName" id="${popup}-fullName" value="${subject.fullName ? subject.fullName : ''}">
     </div>
   </div>
   <div class="edit-popup-info">
     <div>
-      <span>Fecha de creación: <span>${subjects[id].creationDate ? subjects[id].creationDate : '--/--/----'}</span></span>
+      <label for="${popup}-course">Curso</label>
+      <input type="text" name="course" id="${popup}-course" value="${subject.course ? subject.course : ''}">
     </div>
     <div>
-      <span>Creador: <span>${subjects[id].creator ? subjects[id].creator : 'Anónimo'}</span></span>
+      <label for="${popup}-faculty">Facultad</label>
+      <input type="text" name="faculty" id="${popup}-faculty" value="${subject.faculty ? subject.faculty : ''}">
+    </div>
+    <div>
+      <label for="${popup}-uni">Universidad</label>
+      <input type="text" name="uni" id="${popup}-uni" value="${subject.uni ? subject.uni : ''}">
+    </div>
+  </div>
+  <div class="edit-popup-info">
+    <div>
+      <span>Fecha de creación: <span>${subject.creationDate ? subject.creationDate : '--/--/----'}</span></span>
+    </div>
+    <div>
+      <span>Creador: <span>${subject.creator ? subject.creator : 'Anónimo'}</span></span>
     </div>
   </div>
 
@@ -423,11 +486,8 @@ function generateEditSubjectUI(id) {
       ${footer}
     </div>
   </div>`;
-  editSubject.innerHTML = html;
 
-  for (const evalCount in evals) {
-    updateSumWeight(editSubject, evalCount);
-  }
+  return html;
 }
 
 /* ------------------------------ UI & DATA UPDATE ------------------------------ */
@@ -889,10 +949,27 @@ function editGridIsEmpty(grid, type, n) {
 }
 
 function saveEditSubject() {
-  let id = document.getElementById('edit-id').value;
+  let newSubject = readSubjectFromPopup(editSubject);
+  let id = newSubject.id;
+
+  subjects[id] = completeSubject(
+    subjects[id],
+    newSubject
+  );
+
+  uploadEvaluation(id, newSubject.evaluation);
+
+  updateSubjectCardInfo(id);
+
+  saveSubjectsLocalStorage();
+  hideLoader('dashboard');
+}
+
+function readSubjectFromPopup(popup) {
+  let id = popup.querySelector('input[name="id"]').value;
 
   let newEval = {};
-  let grid = editSubject.querySelector('.edit-popup-grid');
+  let grid = popup.querySelector('.edit-popup-grid');
 
   for (let evalN = 0; evalN < grid.dataset['evals']; evalN++) {
     let eval = grid.querySelector(`input[name='nameEval'][data-eval='${evalN}']`).value;
@@ -910,25 +987,23 @@ function saveEditSubject() {
     }
   }
 
-  subjects[id] = completeSubject(
-    subjects[id],
-    {
-      id: id,
-      shortName: editSubject.querySelector('#edit-shortName').value,
-      fullName: editSubject.querySelector('#edit-fullName').value,
-      course: editSubject.querySelector('#edit-course').value,
-      faculty: editSubject.querySelector('#edit-faculty').value,
-      uni: editSubject.querySelector('#edit-uni').value,
-      color: editSubject.querySelector('input[name="color-bar"]:checked').value,
-      evaluation: newEval
-    });
+  return {
+    id: id,
+    shortName: popup.querySelector('input[name="shortName"]').value,
+    fullName: popup.querySelector('input[name="fullName"]').value,
+    course: popup.querySelector('input[name="course"]').value,
+    faculty: popup.querySelector('input[name="faculty"]').value,
+    uni: popup.querySelector('input[name="uni"]').value,
+    color: popup.querySelector('input[name="color-bar"]:checked').value,
+    evaluation: newEval
+  };
+}
 
-  uploadEvaluation(id, newEval);
-
-  updateSubjectCardInfo(id);
-
-  saveSubjectsLocalStorage();
-  hideLoader('dashboard');
+function saveViewSubject() {
+  let newSubject = readSubjectFromPopup(viewSubject);
+  let id = newSubject.id;
+  
+  subjectsToAdd[id] = newSubject;
 }
 
 function deleteSubject(id) {
@@ -1191,14 +1266,16 @@ function searchSubjects(query = '') {
 }
 
 function generateSearchResultSubject(match, id) {
-  return `<li>
-            <input style="display: none;" type="checkbox" value="${id}" name="subject" id="checkbox-${id}" ${(subjects[id]) ? 'checked disabled' : ''}>
-            <label class="searchResultCheck" for="checkbox-${id}"></label>
+  return `<li onclick="addToSubjectsToAdd('${id}', this.querySelector('input[name=\\'id\\']').checked);" class="searchResult">
+            <label for="checkbox-${id}">
+              <input style="display: none;" type="checkbox" value="${id}" name="id" id="checkbox-${id}" ${(subjects[id] || subjectsToAdd[id]) ? 'checked' : ''} ${(subjects[id]) ? 'disabled' : ''}>
+              <div class="searchResultCheck" for="checkbox-${id}"></div>
+            </label>
             <label class="searchResultTitle" for="checkbox-${id}">
               <span class="searchResultRow1">${match.shortName.value} - ${match.fullName.value}</span><br>
               <span class="searchResultRow2">${match.faculty.value} ${match.uni.value} - ${match.course.value}</span>
             </label>
-            <!-- <div class="searchResultAction"><img src="media/discount.svg"></div> -->
+            ${(subjects[id]) ? '<!-- ' : ''}<div class="searchResultAction" onclick="this.parentElement.querySelector('input[name=\\'id\\']').checked = true; showViewSubject('${id}');"><img src="media/discount.svg"></div>${(subjects[id]) ? ' --> ' : ''}
           </li>`;
 }
 

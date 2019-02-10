@@ -40,13 +40,13 @@
   </script>
 
   <!-- Google Adsense -->
-  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   <script>
     (adsbygoogle = window.adsbygoogle || []).push({
       google_ad_client: "ca-pub-1291996022944773",
       enable_page_level_ads: true
     });
-  </script>
+  </script> -->
 
 </head>
 <body>
@@ -87,7 +87,7 @@
   </main>
 
   <div id="add-container" class="popup" style="display: none;">
-    <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Go back">Nueva asignatura</div>
+    <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Ir atrás">Nueva asignatura</div>
     <div class="popup-content add-popup">
       <div id="add-popup-content">
         <h2>Buscar</h2>
@@ -107,10 +107,18 @@
   </div>
 
   <div id="edit-container" class="popup" style="display: none;">
-    <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Go back">Editar asignatura</div>
+    <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Ir atrás">Editar asignatura</div>
     <div class="popup-content edit-popup">
       <div id="edit-popup-content"></div>
       <button class="popup-main-button" onclick="saveEditSubject(); window.history.back();"">Guardar</button>
+    </div>
+  </div>
+
+  <div id="view-container" class="popup" style="display: none;">
+    <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Ir atrás">Editar y añadir asignatura</div>
+    <div class="popup-content edit-popup">
+      <div id="view-popup-content"></div>
+      <button class="popup-main-button" onclick="saveViewSubject(); window.history.back();"">Añadir</button>
     </div>
   </div>
 

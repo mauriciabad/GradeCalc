@@ -5,6 +5,7 @@
 *, *::before, *::after{
   font-family: 'Nunito', 'Quicksand', 'Roboto', -apple-system, system, system-ui, sans-serif;
   box-sizing: border-box;
+  -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
 }
 body{
   font-family: 'Nunito', 'Quicksand', 'Roboto', -apple-system, system, system-ui, sans-serif;
@@ -669,7 +670,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   scroll-behavior: smooth;
   /* max-height: 50vh; */
 }
-.subjects-search-results > li{
+.searchResult{
   display: flex;
   align-items: center;
   border-bottom: solid 1px #ddd;
@@ -688,16 +689,20 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   position: relative;
   transition: border-color 200ms linear;
 }
-.subjects-search-results input:checked ~ .searchResultCheck{
+.searchResult input:checked ~ .searchResultCheck{
   border-color: #209D64;
 }
-.subjects-search-results input:disabled ~ .searchResultCheck{
+.searchResult input:disabled ~ .searchResultCheck{
   border-color: #aaa;
 }
-.subjects-search-results input:disabled ~ .searchResultCheck::after{
+.searchResult input:disabled ~ .searchResultCheck::after{
   border-color: #aaa;
   border-right: solid 4px #aaa;
   border-bottom: solid 4px #aaa;
+}
+.searchResult:active input:disabled ~ .searchResultCheck::after{
+  transform: rotate(130deg) scale(0.75);
+  opacity: 0.5;
 }
 .searchResultCheck::after{
   content: '';
