@@ -1,6 +1,10 @@
-- Use heroku cronjob to add new subjects (where date >= lastUpdate) to algolia
-- Cloud funtion to delete old subjects and users
-- Cloud function to sanitize subjects and upload them
+- (future) Use heroku cronjob to add new subjects (where date >= lastUpdate) to algolia
+- (future) Cloud funtion to delete old subjects and users
+- (future) Cloud function to sanitize subjects and upload them
+- (future) you must be logged in to create subjects
+- (future) Add subjects from 1st course and 3rd
 - Conditions
-- Set creator and creationDate for each subject
-- Add subjects from 1st course and 3rd
+- new subject ask for required inputs
+- autoupdate evaluationConditions
+- add my subject to firebase when added
+- fix: some atributes in create subject are set to string, not an int

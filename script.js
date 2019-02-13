@@ -194,9 +194,9 @@ function loadData() {
 }
 
 function autoUpdate(id) {
-  if (id == '3beCxEXHGIhPMouUkFCs' && (subjects[id].version == undefined || subjects[id].version < 2)) {
-    subjects[id].evaluation = JSON.parse('{"Continua":{"Compañerismo":{"C":0.1},"Final":{"F":0.2},"Teoria":{"noSQL":0.041176000000000004},"Lab":{"S1":0.08235300000000001,"S2":0.16470500000000002,"S3":0.08235300000000001,"S4":0.08235300000000001,"S5":0.08235300000000001,"S6":0.16470500000000002},"Auto estudio":{"Gen":0.020588000000000002,"Opt":0.020588000000000002,"OLAP":0.020588000000000002,"Group":0.020588000000000002}}}');
-    subjects[id].version = 2;
+  if (subjects[id].evaluations == undefined) {
+    subjects[id].evaluations = toNewEvalNeeeeeeeeew(subjects[id].evaluation);
+    subjects[id].version = 3;
     uploadEvaluation(id, subjects[id].evaluation);
     uploadVersion(id, subjects[id].version);
     saveSubjectsLocalStorage();
@@ -345,7 +345,7 @@ function addSubjectFromDB(id) {
 function completeSubject(...subjects) {
   let subject = Object.assign(
     {
-      evaluation: [],
+      evaluation: {},
       grades: {},
       fullName: '',
       shortName: '',
@@ -399,8 +399,9 @@ function generateEditSubjectUIHTML(id, subject, popup) {
   let newExams = '';
   let footer = '';
   let colors = '';
+  let conditions = '';
 
-  newEvals += `<input style="grid-row: 1; grid-column: ${(5 + evals.length * 1)};" class=" edit-new-eval" data-eval="${evals.length}" type="text" name="nameEval" value="" placeholder="Continua" autocomplete="off" required>`;
+  newEvals += `<input style="grid-row: 1; grid-column: ${(5 + evals.length * 1)};" class=" edit-new-eval" data-eval="${evals.length}" type="text" name="nameEval" value="" placeholder="NEW" autocomplete="off" required>`;
 
   let examCount = 0;
   for (const exam in evaluation) {
@@ -418,9 +419,10 @@ function generateEditSubjectUIHTML(id, subject, popup) {
     grid += `<input style="grid-row: 1; grid-column: ${(5 + evalCount * 1)};" class="edit-nameEval" type="text" name="nameEval" value="${evals[evalCount]}" data-eval="${evalCount}" placeholder="NEW" autocomplete="off" required>`;
     newExams += `<div style="grid-row: ${(2 + examCount * 1)}; grid-column: ${(5 + evalCount * 1)};" class="edit-weight edit-new-exam" data-exam="${examCount}" data-eval="${evalCount}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
     footer += `<span  style="grid-row: ${(3 + examCount * 1)}; grid-column: ${(5 + evalCount * 1)};" class="edit-total" data-eval="${evalCount}">0%</span>`;
+    conditions += `<label class="edit-conditions-label">${evals[evalCount]}</label><input type="text" placeholder="F >= 3 and Parciales >= 4" name="condition" data-eval="${evalCount}" value="${(subject.evaluations ? subject.evaluations[evals[evalCount]].conditions || '' : '')}">`;
   }
   newExams += `
-  <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="${examCount}" placeholder="P1" autocomplete="off" maxlength="5" required>
+  <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="${examCount}" placeholder="NEW" autocomplete="off" maxlength="5" required>
   <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 2;" class="edit-new-exam" type="text"   name="examType"   value="" data-exam="${examCount}" placeholder="Parciales" required>
   <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="${examCount}" placeholder="-" autocomplete="off" min="0" max="10" step="0.01">
   `;
@@ -470,7 +472,7 @@ function generateEditSubjectUIHTML(id, subject, popup) {
 
   <div class="edit-popup-info">
     <div>
-      <span>Fecha de creación: <span id="${popup}-creationDate">${subject.creationDate ? subject.creationDate.toLocaleDateString('es-ES') : '--/--/----'}</span></span>
+      <span>Fecha de creación: <span id="${popup}-creationDate">${subject.creationDate ? subject.creationDate.toDate().toLocaleDateString('es-ES') : '--/--/----'}</span></span>
     </div>
     <div>
       <span>Creador: <span id="${popup}-creator">${subject.creator ? subject.creator : 'Anónimo'}</span></span>
@@ -501,10 +503,8 @@ function generateEditSubjectUIHTML(id, subject, popup) {
 
     <!-- Conditions -->
     <!-- <h2>Condiciones para aprovar</h2>
-    <div>
-      <div>
-        <label>Continua</label><input type="text">
-      </div>
+    <div class="edit-conditions">
+      ${conditions}
     </div> -->
   </div>`;
 
@@ -852,6 +852,24 @@ function saveSubjectsLocalStorage() {
 //   return json;
 // }
 
+function toNewEvalNeeeeeeeeew(evaluation) {
+  var evaluationNew = {};
+  for (let eval in evaluation) {
+    if(evaluation[eval].exams) return evaluation;
+    evaluationNew[eval] = {};
+    // evaluationNew[eval].condition = '';
+    evaluationNew[eval].passMark = 5;
+    evaluationNew[eval].exams = {};
+    for (let examType in evaluation[eval]) {
+      for (let exam in evaluation[eval][examType]) {
+        evaluationNew[eval].exams[exam] = {};
+        evaluationNew[eval].exams[exam].weight = evaluation[eval][examType][exam];
+        evaluationNew[eval].exams[exam].type = examType;
+      }
+    }
+  }
+  return evaluationNew;
+}
 /* ------------------------------ EDITOR ------------------------------ */
 
 // function showSubjectInfo(id,placeholder=JSON.stringify(subjects[id].evaluation)) {
@@ -1005,6 +1023,10 @@ function readSubjectFromPopup(popup) {
           newEval[eval][examType][exam] = weight;
         }
       }
+      let condition = grid.querySelector(`input[name='condition'][data-eval='${evalN}']`).value;
+      if (condition) {
+        newEval[eval].condition = condition;
+      }
     }
   }
 
@@ -1016,7 +1038,8 @@ function readSubjectFromPopup(popup) {
     faculty: popup.querySelector('input[name="faculty"]').value,
     uni: popup.querySelector('input[name="uni"]').value,
     color: popup.querySelector('input[name="color-bar"]:checked').value,
-    evaluation: newEval
+    evaluation: newEval,
+    evaluations: toNewEvalNeeeeeeeeew(newEval),
   };
 }
 
@@ -1187,6 +1210,7 @@ function uploadGrade(id, exam, mark) {
 
 function uploadEvaluation(id, evaluation) {
   uploadToUserDB(`subjects.${id}.evaluation`, evaluation);
+  uploadToUserDB(`subjects.${id}.evaluations`, toNewEvalNeeeeeeeeew(evaluation));
 }
 
 function uploadColor(id, color) {

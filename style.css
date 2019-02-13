@@ -62,9 +62,9 @@ em::before{
   border-radius: 2px;
   font-style: normal;
 }
-label{
+/* label{
   cursor: pointer;
-}
+} */
 #top-bar{
   position: fixed;
   top: 0;
@@ -1218,4 +1218,13 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   -webkit-appearance: none;
 }
 
+.edit-conditions{
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-gap: 0.5em;
+}
+.edit-conditions-label{
+  padding: 0.3em 0;
+  text-align: right;
+}
 /* ----------------- Next section -------------------*/
