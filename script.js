@@ -472,7 +472,7 @@ function generateEditSubjectUIHTML(id, subject, popup) {
 
   <div class="edit-popup-info">
     <div>
-      <span>Fecha de creación: <span id="${popup}-creationDate">${subject.creationDate ? subject.creationDate.toDate().toLocaleDateString('es-ES') : '--/--/----'}</span></span>
+      <span>Fecha de creación: <span id="${popup}-creationDate">${subject.creationDate ? subject.creationDate.toDate.toLocaleDateString('es-ES') : '--/--/----'}</span></span>
     </div>
     <div>
       <span>Creador: <span id="${popup}-creator">${subject.creator ? subject.creator : 'Anónimo'}</span></span>
