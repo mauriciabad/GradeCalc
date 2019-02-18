@@ -18,6 +18,7 @@ var allPopups = [
 var userInfo;
 var subjects = {};
 var removedSubject = {};
+var removedSubjectId = 'defaultID';
 
 var toastTimer = 0;
 var toast = document.getElementById('toast');
@@ -364,6 +365,7 @@ function completeSubject(...subjects) {
     },
     ...subjects
   );
+  delete id;
   delete subject.evaluation; // TODO: remove this if all subjects have last evaluation structure
   if (!subject.selectedEvaluation || !Object.keys(subject.evaluations).includes(subject.selectedEvaluation)) subject.selectedEvaluation = Object.keys(subject.evaluations)[0] || '';
   return subject;
@@ -1062,9 +1064,10 @@ function saveNewSubject() {
 }
 
 function deleteSubject(id) {
-  removedSubject = subjects[id]
+  removedSubject = subjects[id];
+  removedSubjectId = id;
   delete subjects[id];
-  saveSubjectsLocalStorage()
+  saveSubjectsLocalStorage();
   if (!isAnonymous) {
     let obj = {};
     obj['subjects.' + id] = firebase.firestore.FieldValue.delete();
@@ -1078,7 +1081,7 @@ function deleteSubject(id) {
 }
 
 function undoRemoveSubject() {
-  let id = removedSubject.id;
+  let id = removedSubjectId;
   subjects[id] = removedSubject;
   createSubjectCardCollapsed(id);
   saveSubjectsLocalStorage()
