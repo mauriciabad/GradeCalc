@@ -5,6 +5,5 @@
 - (future) Add subjects from 1st course and 3rd
 - Conditions
 - new subject ask for required inputs
-- autoupdate evaluationConditions
 - add my subject to firebase when added
 - fix: some atributes in create subject are set to string, not an int

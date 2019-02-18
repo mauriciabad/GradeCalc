@@ -194,11 +194,10 @@ function loadData() {
 }
 
 function autoUpdate(id) {
-  if (subjects[id].evaluations == undefined) {
+  if (subjects[id].evaluation != undefined || subjects[id].evaluations == undefined) {
     subjects[id].evaluations = toNewEvalNeeeeeeeeew(subjects[id].evaluation);
-    subjects[id].version = 3;
-    uploadEvaluation(id, subjects[id].evaluation);
-    uploadVersion(id, subjects[id].version);
+    delete subjects[id].evaluation;
+    uploadEvaluation(id, subjects[id].evaluations);
     saveSubjectsLocalStorage();
   }
 }
@@ -234,7 +233,7 @@ function createSubjectCardCollapsed(id) {
   <img src="media/discount.svg" alt="%" aria-label="Show subject information">
 </button>
 <h2>${subjects[id].shortName}</h2>
-<p class="subject-finalMark" style="color: ${subjects[id].finalMark[subjects[id].selectedEvaluation] >= 5 ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
+<p class="subject-finalMark" style="color: ${subjects[id].finalMark[subjects[id].selectedEvaluation] >= (subjects[id].evaluations[subjects[id].selectedEvaluation].passMark || 5) ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
 <div class="subject-bar">${generateBar(id)}</div>
 <div class="grades-input hidden" style="height: 0px;">${generateInputs(id) + generateEvaluations(id)}</div>`;
 
@@ -246,42 +245,48 @@ function createSubjectCardCollapsed(id) {
 function generateBar(id) {
   let weight = 0;
   let barHTML = "";
-  for (const examType in subjects[id].evaluation[subjects[id].selectedEvaluation]) {
-    for (const exam in subjects[id].evaluation[subjects[id].selectedEvaluation][examType]) {
-      if (isUndone(id, exam)) {
-        barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scolN" style="flex-grow: ${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam] * 100}" title="${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam] * 100}%">${exam}<div id="bar-${id + exam}">${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}</div></div>`;
-      } else {
-        barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color}" style="flex-grow: ${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam] * 100}" title="${subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam] * 100}%">${exam}<div id="bar-${id + exam}">${subjects[id].grades[exam]}</div></div>`;
-      }
+  for (const exam in subjects[id].evaluations[subjects[id].selectedEvaluation].exams) {
+    if (isUndone(id, exam)) {
+      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scolN" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}%">${exam}<div id="bar-${id + exam}">${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}</div></div>`;
+    } else {
+      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color}" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}%">${exam}<div id="bar-${id + exam}">${subjects[id].grades[exam]}</div></div>`;
     }
   }
   return barHTML;
 }
 function generateInputs(id) {
-  let weight = 0;
-  let inputsHTML = "";
-  for (const examType in subjects[id].evaluation[subjects[id].selectedEvaluation]) {
-    let aux = '';
-    weight = 0;
-    for (const exam in subjects[id].evaluation[subjects[id].selectedEvaluation][examType]) {
-      if (isUndone(id, exam)) {
-        aux += `<div><span>${exam}:</span><input type="number" id="in-${id + exam}" placeholder="${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}" value="" class="scolN2" oninput="updateMarkFromCardInput('${id}', '${exam}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
-      } else {
-        aux += `<div><span>${exam}:</span><input type="number" id="in-${id + exam}" placeholder="${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}" value="${subjects[id].grades[exam]}" class="scol${subjects[id].color}" oninput="updateMarkFromCardInput('${id}', '${exam}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
-      }
-      weight += subjects[id].evaluation[subjects[id].selectedEvaluation][examType][exam] * 100;
+  let html = '';
+  let types = {};
+
+  for (const examName in subjects[id].evaluations[subjects[id].selectedEvaluation].exams) {
+    let exam = subjects[id].evaluations[subjects[id].selectedEvaluation].exams[examName];
+    
+    if(!types[exam.type]) types[exam.type] = {};
+    if(!types[exam.type].weight) types[exam.type].weight = 0;
+    if(!types[exam.type].inputsHTML) types[exam.type].inputsHTML = '';
+
+    types[exam.type].weight += exam.weight;
+
+    if (isUndone(id, exam)) {
+      types[exam.type].inputsHTML += `<div><span>${examName}:</span><input type="number" id="in-${id + examName}" placeholder="${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}" value="" class="scolN2" oninput="updateMarkFromCardInput('${id}', '${examName}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
+    } else {
+      types[exam.type].inputsHTML += `<div><span>${examName}:</span><input type="number" id="in-${id + examName}" placeholder="${subjects[id].necesaryMark[subjects[id].selectedEvaluation]}" value="${subjects[id].grades[examName]}" class="scol${subjects[id].color}" oninput="updateMarkFromCardInput('${id}', '${examName}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
     }
-    inputsHTML += `<h3>${examType}</h3><span>${round(weight, 0)}%</span><div>${aux}</div>`;
   }
-  return inputsHTML;
+
+  for (const type in types) {
+    html += `<h3>${type}</h3><span>${round(types[type].weight * 100, 0)}%</span><div>${types[type].inputsHTML}</div>`;
+  }
+
+  return html;
 }
 
 function generateEvaluations(id) {
   let evaluationsHTML =
-    `<div class="eval-select"${Object.keys(subjects[id].evaluation).length <= 1 ? ' style="display: none;"' : ''}>
+    `<div class="eval-select"${Object.keys(subjects[id].evaluations).length <= 1 ? ' style="display: none;"' : ''}>
   <span>Evaluación:</span>
   <select onchange="setSelectedEvaluation('${id}',this.value);">`;
-  for (const eval in subjects[id].evaluation) {
+  for (const eval in subjects[id].evaluations) {
     evaluationsHTML += `<option value="${eval}"${eval == subjects[id].selectedEvaluation ? 'selected="selected"' : ''}>${eval}</option>`;
   }
   evaluationsHTML +=
@@ -345,7 +350,7 @@ function addSubjectFromDB(id) {
 function completeSubject(...subjects) {
   let subject = Object.assign(
     {
-      evaluation: {},
+      evaluations: {},
       grades: {},
       fullName: '',
       shortName: '',
@@ -359,7 +364,8 @@ function completeSubject(...subjects) {
     },
     ...subjects
   );
-  if (!subject.selectedEvaluation || !Object.keys(subject.evaluation).includes(subject.selectedEvaluation)) subject.selectedEvaluation = Object.keys(subject.evaluation)[0] || '';
+  delete subject.evaluation; // TODO: remove this if all subjects have last evaluation structure
+  if (!subject.selectedEvaluation || !Object.keys(subject.evaluations).includes(subject.selectedEvaluation)) subject.selectedEvaluation = Object.keys(subject.evaluations)[0] || '';
   return subject;
 }
 
@@ -374,7 +380,7 @@ function generateViewSubjectUI(id, subject) {
   
   viewSubjectPopup.innerHTML = html;
 
-  let evals = Object.keys(subject.evaluation);
+  let evals = Object.keys(subject.evaluations);
   for (const evalCount in evals) {
     updateSumWeight(viewSubjectPopup, evalCount);
   }
@@ -385,15 +391,15 @@ function generateEditSubjectUI(id, subject = subjects[id]) {
 
   editSubjectPopup.innerHTML = html;
 
-  let evals = Object.keys(subject.evaluation);
+  let evals = Object.keys(subject.evaluations);
   for (const evalCount in evals) {
     updateSumWeight(editSubjectPopup, evalCount);
   }
 }
 
 function generateEditSubjectUIHTML(id, subject, popup) {
-  let evaluation = toNewEval(subject.evaluation);
-  let evals = Object.keys(subject.evaluation);
+  let exams = toNewEval(subject.evaluations);
+  let evals = Object.keys(subject.evaluations);
   let grid = '';
   let newEvals = '';
   let newExams = '';
@@ -404,14 +410,14 @@ function generateEditSubjectUIHTML(id, subject, popup) {
   newEvals += `<input style="grid-row: 1; grid-column: ${(5 + evals.length * 1)};" class=" edit-new-eval" data-eval="${evals.length}" type="text" name="nameEval" value="" placeholder="NEW" autocomplete="off" required>`;
 
   let examCount = 0;
-  for (const exam in evaluation) {
+  for (const exam in exams) {
     grid += `
     <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 1;" class="" type="text"   name="exam"       value="${exam}"                      data-exam="${examCount}" placeholder="NEW"       autocomplete="off" maxlength="5" required>
-    <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 2;" class="" type="text"   name="examType"   value="${evaluation[exam].examType}" data-exam="${examCount}" placeholder="Parciales" required>
+    <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 2;" class="" type="text"   name="examType"   value="${exams[exam].examType}" data-exam="${examCount}" placeholder="Parciales" required>
     <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 3;" class="" type="number" name="mark"       value=""                             data-exam="${examCount}" placeholder="-"         autocomplete="off" min="0" max="10" step="0.01">`;
     newEvals += `<div style="grid-row: ${(2 + examCount * 1)}; grid-column: ${(5 + evals.length * 1)};" class="edit-weight edit-new-eval" data-exam="${examCount}" data-eval="${evals.length}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
     for (const evalCount in evals) {
-      grid += `<div style="grid-row: ${(2 + examCount * 1)}; grid-column: ${(5 + evalCount * 1)};" class="edit-weight" data-exam="${examCount}" data-eval="${evalCount}"><input type="number" name="weight" value="${evaluation[exam].weight[evals[evalCount]] && evaluation[exam].weight[evals[evalCount]] != 0 ? round(evaluation[exam].weight[evals[evalCount]] * 100, 4) : ''}" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
+      grid += `<div style="grid-row: ${(2 + examCount * 1)}; grid-column: ${(5 + evalCount * 1)};" class="edit-weight" data-exam="${examCount}" data-eval="${evalCount}"><input type="number" name="weight" value="${exams[exam].weight[evals[evalCount]] && exams[exam].weight[evals[evalCount]] != 0 ? round(exams[exam].weight[evals[evalCount]] * 100, 4) : ''}" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
     }
     ++examCount;
   }
@@ -472,7 +478,7 @@ function generateEditSubjectUIHTML(id, subject, popup) {
 
   <div class="edit-popup-info">
     <div>
-      <span>Fecha de creación: <span id="${popup}-creationDate">${subject.creationDate ? subject.creationDate.toLocaleDateString('es-ES') : '--/--/----'}</span></span>
+      <span>Fecha de creación: <span id="${popup}-creationDate">${false && subject.creationDate ? subject.creationDate.toLocaleDateString('es-ES') : '--/--/----'}</span></span>
     </div>
     <div>
       <span>Creador: <span id="${popup}-creator">${subject.creator ? subject.creator : 'Anónimo'}</span></span>
@@ -546,7 +552,7 @@ function displayFinalMark(id) {
 function updateNecesaryMark(id) {
   let mark = gradeCalcAllEqual(id, subjects[id].selectedEvaluation);
   var bestOption = true;
-  for (const eval in subjects[id].evaluation) {
+  for (const eval in subjects[id].evaluations) {
     subjects[id].necesaryMark[eval] = Math.max(0, round(gradeCalcAllEqual(id, eval)));
     if (bestOption && subjects[id].necesaryMark[eval] < mark) bestOption = false;
   }
@@ -558,18 +564,17 @@ function updateNecesaryMark(id) {
 
 //Saves and updates the value of the finalMark
 function updateFinalMark(id, confetti = true) {
-  var oldMark = subjects[id].finalMark[subjects[id].selectedEvaluation];
-  for (const eval in subjects[id].evaluation) {
+  let oldMark = subjects[id].finalMark[subjects[id].selectedEvaluation];
+  for (const eval in subjects[id].evaluations) {
     subjects[id].finalMark[eval] = 0;
-    for (const examType in subjects[id].evaluation[eval]) {
-      for (const exam in subjects[id].evaluation[eval][examType]) {
-        if (!isUndone(id, exam)) subjects[id].finalMark[eval] += subjects[id].grades[exam] * subjects[id].evaluation[eval][examType][exam];
-      }
+    for (const exam in subjects[id].evaluations[eval].exams) {
+      if (!isUndone(id, exam)) subjects[id].finalMark[eval] += subjects[id].grades[exam] * subjects[id].evaluations[eval].exams[exam].weight;
     }
     subjects[id].finalMark[eval] = round(subjects[id].finalMark[eval]);
   }
-  var newMark = subjects[id].finalMark[subjects[id].selectedEvaluation];
-  if (confetti && oldMark < 5 && newMark >= 5) showConfetti(getCard(id));
+  let newMark = subjects[id].finalMark[subjects[id].selectedEvaluation];
+  let passMark = subjects[id].evaluations[subjects[id].selectedEvaluation].passMark || 5;
+  if (confetti && oldMark < passMark && newMark >= passMark) showConfetti(getCard(id));
   return subjects[id].finalMark[subjects[id].selectedEvaluation];
 }
 
@@ -601,12 +606,10 @@ function updateCardGrades(id) {
     for (let div in card.getElementsByClassName('subject-bar')[0]) {
       div.className = 'scolN';
     }
-    for (const examType in subjects[id].evaluation[subjects[id].selectedEvaluation]) {
-      for (const exam in subjects[id].evaluation[subjects[id].selectedEvaluation][examType]) {
-        let input = getInput(id, exam);
-        input.className = 'scolN2';
-        input.value = '';
-      }
+    for (const exam in subjects[id].evaluations[subjects[id].selectedEvaluation].exams) {
+      let input = getInput(id, exam);
+      input.className = 'scolN2';
+      input.value = '';
     }
     for (const exam in subjects[id].grades) {
       let barElem = getBarElem(id, exam);
@@ -668,16 +671,16 @@ function getBarElem(id, exam) {
 
 /* ------------------------------ MATH ------------------------------ */
 
-//Returns the mark you need to get in the remaining exams to pass with mark (5)
-function gradeCalcAllEqual(id, eval, mark = 5) {
+//Returns the mark you need to get in the remaining exams to pass
+function gradeCalcAllEqual(id, eval) {
+
   let sumUndoneExams = 0;
-  for (const examType in subjects[id].evaluation[eval]) {
-    for (const exam in subjects[id].evaluation[eval][examType]) {
-      if (isUndone(id, exam)) sumUndoneExams += subjects[id].evaluation[eval][examType][exam];
-    }
+  for (const exam in subjects[id].evaluations[eval].exams) {
+    if (isUndone(id, exam)) sumUndoneExams += subjects[id].evaluations[eval].exams[exam].weight;
   }
 
-  return (mark - subjects[id].finalMark[eval]) / sumUndoneExams;
+  let passMark = subjects[id].evaluations[eval].passMark || 5;
+  return (passMark - subjects[id].finalMark[eval]) / sumUndoneExams;
 }
 
 //returns n rounded to d decimals (2)
@@ -888,17 +891,15 @@ function toNewEvalNeeeeeeeeew(evaluation) {
 // }
 
 
-function toNewEval(evaluation) {
+function toNewEval(evaluations) {
   let newEval = {};
-  for (const eval in evaluation) {
-    for (const examType in evaluation[eval]) {
-      for (const exam in evaluation[eval][examType]) {
-        if (!newEval[exam]) newEval[exam] = {};
-        if (!newEval[exam].weight) newEval[exam].weight = {};
-        newEval[exam].weight[eval] = evaluation[eval][examType][exam];
-        newEval[exam].mark = undefined;
-        newEval[exam].examType = examType;
-      }
+  for (const eval in evaluations) {
+    for (const exam in evaluations[eval].exams) {
+      if (!newEval[exam]) newEval[exam] = {};
+      if (!newEval[exam].weight) newEval[exam].weight = {};
+      newEval[exam].weight[eval] = evaluations[eval].exams[exam].weight;
+      newEval[exam].mark = evaluations[eval].exams[exam].mark;
+      newEval[exam].examType = evaluations[eval].exams[exam].type;
     }
   }
   return newEval;
@@ -996,7 +997,7 @@ function saveEditSubject() {
     newSubject
   );
 
-  uploadEvaluation(id, newSubject.evaluation);
+  uploadEvaluation(id, newSubject.evaluations);
 
   updateSubjectCardInfo(id);
 
@@ -1019,14 +1020,16 @@ function readSubjectFromPopup(popup) {
         let weight = grid.querySelector(`div[data-exam='${examN}'][data-eval='${evalN}'] > input[name='weight']`).value / 100;
         if (exam && examType && weight) {
           if (!newEval[eval]) newEval[eval] = {};
-          if (!newEval[eval][examType]) newEval[eval][examType] = {};
-          newEval[eval][examType][exam] = weight;
+          if (!newEval[eval].exams) newEval[eval].exams = {};
+          if (!newEval[eval].exams[exam]) newEval[eval].exams[exam] = {};
+          newEval[eval].exams[exam].weight = weight;
+          newEval[eval].exams[exam].type = examType;
         }
       }
-      let condition = grid.querySelector(`input[name='condition'][data-eval='${evalN}']`).value;
-      if (condition) {
-        newEval[eval].condition = condition;
-      }
+      // let condition = grid.querySelector(`input[name='condition'][data-eval='${evalN}']`).value;
+      // if (condition) {
+      //   newEval[eval].condition = condition;
+      // }
     }
   }
 
@@ -1038,8 +1041,7 @@ function readSubjectFromPopup(popup) {
     faculty: popup.querySelector('input[name="faculty"]').value,
     uni: popup.querySelector('input[name="uni"]').value,
     color: popup.querySelector('input[name="color-bar"]:checked').value,
-    evaluation: newEval,
-    evaluations: toNewEvalNeeeeeeeeew(newEval),
+    evaluations: newEval,
   };
 }
 
@@ -1209,8 +1211,7 @@ function uploadGrade(id, exam, mark) {
 }
 
 function uploadEvaluation(id, evaluation) {
-  uploadToUserDB(`subjects.${id}.evaluation`, evaluation);
-  uploadToUserDB(`subjects.${id}.evaluations`, toNewEvalNeeeeeeeeew(evaluation));
+  uploadToUserDB(`subjects.${id}.evaluations`, evaluation);
 }
 
 function uploadColor(id, color) {
