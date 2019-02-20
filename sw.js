@@ -28,8 +28,7 @@ var urlsToCache = [
   '/icons/favicon-32x32.png',
   '/icons/android-chrome-192x192.png',
 
-  'https://fonts.googleapis.com/css?family=Nunito:300,400,700',
-  'https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'
+  'https://fonts.googleapis.com/css?family=Nunito:300,400,700'
 ];
 
 self.addEventListener('install', (event) => {
