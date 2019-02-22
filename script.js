@@ -566,7 +566,7 @@ function updateNecesaryMark(id) {
 
 //Saves and updates the value of the finalMark
 function updateFinalMark(id, confetti = true) {
-  let oldMark = subjects[id].finalMark[subjects[id].selectedEvaluation];
+  let oldMark = subjects[id].finalMark[subjects[id].selectedEvaluation] || 0;
   for (const eval in subjects[id].evaluations) {
     subjects[id].finalMark[eval] = 0;
     for (const exam in subjects[id].evaluations[eval].exams) {
@@ -687,7 +687,7 @@ function gradeCalcAllEqual(id, eval) {
 
 //returns n rounded to d decimals (2)
 function round(n, d = 2) {
-  return (n == '' || n == undefined) ? undefined : Math.floor(Math.round(n * Math.pow(10, d))) / Math.pow(10, d);
+  return (isNaN(n) || n === '' || n == undefined) ? undefined : Math.floor(Math.round(n * (10 ** d))) / (10 ** d);
 }
 
 // returns a random number from smallest to biggest

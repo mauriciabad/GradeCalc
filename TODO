@@ -9,3 +9,7 @@
 - fix: some atributes in create subject are set to string, not an int
 - fix: quan borres una assignatura no es treu dels dispositius sincronitzats
 - fix: quan afegeixes una nova evaluació el nom es queda com a disabled (els required no estan gaire be al edit-grid)
+
+
+Do now: 
+- Conditions
