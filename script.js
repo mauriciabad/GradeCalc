@@ -409,7 +409,7 @@ function generateEditSubjectUIHTML(id, subject, popup) {
   let colors = '';
   let conditions = '';
 
-  newEvals += `<input style="grid-row: 1; grid-column: ${(5 + evals.length * 1)};" class=" edit-new-eval" data-eval="${evals.length}" type="text" name="nameEval" value="" placeholder="NEW" autocomplete="off" required>`;
+  newEvals += `<input style="grid-row: 1; grid-column: ${(5 + evals.length * 1)};" class=" edit-new-eval" data-eval="${evals.length}" type="text" name="nameEval" value="" placeholder="NEW" autocomplete="off">`;
 
   let examCount = 0;
   for (const exam in exams) {
@@ -687,7 +687,7 @@ function gradeCalcAllEqual(id, eval) {
 
 //returns n rounded to d decimals (2)
 function round(n, d = 2) {
-  return (n === '' || n == undefined) ? undefined : Math.floor(Math.round(n * Math.pow(10, d))) / Math.pow(10, d);
+  return (n == '' || n == undefined) ? undefined : Math.floor(Math.round(n * Math.pow(10, d))) / Math.pow(10, d);
 }
 
 // returns a random number from smallest to biggest
@@ -742,10 +742,11 @@ function selectInput(idInput) {
   document.getElementById(idInput).select();
 }
 
-function appendElement(parent, type, str) {
-  let element = document.createElement(type);
+function appendElement(parent, str) {
+  let div = document.createElement('div');
+  div.innerHTML = str.trim();
+  let element = div.firstChild;
   parent.appendChild(element);
-  element.outerHTML = str;
   return element;
 }
 
@@ -920,67 +921,90 @@ function updateSumWeight(grid, n) {
 function editUIUpdateGrid(grid, e) {
   const input = e.target;
   const elem = input.parentNode == grid ? input : input.parentNode;
-  input.value = input.value;
 
+  // if input is filled
   if (input.value) {
-    if (elem.dataset.eval == grid.dataset.evals) {
+    // if is last eval --> add another column
+    if (parseInt(elem.dataset.eval) == parseInt(grid.dataset.evals)) {
       ++grid.dataset.evals;
 
-      appendElement(grid, 'input', `<input style="grid-row: 1; grid-column: ${(5 + grid.dataset.evals * 1)};" class="edit-new-eval" data-eval="${grid.dataset.evals}" type="text" name="nameEval" value="" placeholder="NEW" autocomplete="off" required>`);
-      for (let i = 0; i < grid.dataset.exams; i++) {
-        editGridFadeOrUnfade(grid, appendElement(grid, 'div', `<div style="grid-row: ${(2 + i * 1)}; grid-column: ${(5 + grid.dataset.evals * 1)};" class="edit-weight edit-new-eval" data-exam="${i}" data-eval="${grid.dataset.evals}" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`));
+      appendElement(grid, `<input style="grid-row: 1; grid-column: ${(5 + parseInt(grid.dataset.evals))};" class="edit-new-eval" data-eval="${grid.dataset.evals}" type="text" name="nameEval" value="" placeholder="NEW" autocomplete="off">`);
+      for (let i = 0; i < parseInt(grid.dataset.exams); i++) {
+        editGridFadeOrUnfade(grid, appendElement(grid, `<div style="grid-row: ${(2 + i * 1)}; grid-column: ${(5 + parseInt(grid.dataset.evals))};" class="edit-weight edit-new-eval" data-exam="${i}" data-eval="${grid.dataset.evals}" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`), ['exam']);
       }
-      appendElement(grid, 'div', `<div style="grid-row: ${(2 + grid.dataset.exams * 1)}; grid-column: ${(4 + grid.dataset.evals * 1)};" class="edit-weight edit-new-exam" data-exam="${grid.dataset.exams}" data-eval="${grid.dataset.evals - 1}" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`);
-      appendElement(grid, 'span', `<span style="grid-row: ${(3 + grid.dataset.exams * 1)}; grid-column: ${(4 + grid.dataset.evals * 1)};" class="edit-total" data-eval="${-1 + grid.dataset.evals * 1}">0%</span>`);
-    } else if (elem.dataset.exam == grid.dataset.exams) {
+      appendElement(grid, `<div style="grid-row: ${(2 + parseInt(grid.dataset.exams))}; grid-column: ${(4 + parseInt(grid.dataset.evals))};" class="edit-weight edit-new-exam" data-exam="${grid.dataset.exams}" data-eval="${grid.dataset.evals - 1}" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`);
+      appendElement(grid, `<span style="grid-row: ${(3 + parseInt(grid.dataset.exams))}; grid-column: ${(4 + parseInt(grid.dataset.evals))};" class="edit-total" data-eval="${-1 + parseInt(grid.dataset.evals)}">0%</span>`);
+      
+      //if is last exam --> add another row
+    } else if (parseInt(elem.dataset.exam) == parseInt(grid.dataset.exams)) {
       ++grid.dataset.exams;
 
-      appendElement(grid, 'input', `<input style="grid-row: ${(2 + grid.dataset.exams * 1)}; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="${grid.dataset.exams}" placeholder="NEW" autocomplete="off" maxlength="5" required>`);
-      appendElement(grid, 'input', `<input style="grid-row: ${(2 + grid.dataset.exams * 1)}; grid-column: 2;" class="edit-new-exam" type="text"   name="examType"   value="" data-exam="${grid.dataset.exams}" placeholder="Parciales" required>`);
-      appendElement(grid, 'input', `<input style="grid-row: ${(2 + grid.dataset.exams * 1)}; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="${grid.dataset.exams}" placeholder="-" autocomplete="off" min="0" max="10" step="0.01">`);
+      appendElement(grid, `<input style="grid-row: ${(2 + parseInt(grid.dataset.exams))}; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="${grid.dataset.exams}" placeholder="NEW" autocomplete="off" maxlength="5" required>`);
+      appendElement(grid, `<input style="grid-row: ${(2 + parseInt(grid.dataset.exams))}; grid-column: 2;" class="edit-new-exam" type="text"   name="examType"   value="" data-exam="${grid.dataset.exams}" placeholder="Parciales" required>`);
+      appendElement(grid, `<input style="grid-row: ${(2 + parseInt(grid.dataset.exams))}; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="${grid.dataset.exams}" placeholder="-" autocomplete="off" min="0" max="10" step="0.01">`);
       for (let i = 0; i < grid.dataset.evals; i++) {
-        editGridFadeOrUnfade(grid, appendElement(grid, 'div', `<div style="grid-row: ${(2 + grid.dataset.exams * 1)}; grid-column: ${(5 + i * 1)};" class="edit-weight edit-new-exam" data-exam="${grid.dataset.exams}" data-eval="${i}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`));
+        editGridFadeOrUnfade(grid, appendElement(grid, `<div style="grid-row: ${(2 + parseInt(grid.dataset.exams))}; grid-column: ${(5 + i * 1)};" class="edit-weight edit-new-exam" data-exam="${grid.dataset.exams}" data-eval="${i}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`), ['exam']);
       }
-      appendElement(grid, 'div', `<div style="grid-row: ${(1 + grid.dataset.exams * 1)}; grid-column: ${(5 + grid.dataset.evals * 1)};" class="edit-weight edit-new-eval" data-exam="${-1 + grid.dataset.exams * 1}" data-eval="${grid.dataset.evals}" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`);
+      appendElement(grid, `<div style="grid-row: ${(1 + parseInt(grid.dataset.exams))}; grid-column: ${(5 + parseInt(grid.dataset.evals))};" class="edit-weight edit-new-eval" data-exam="${-1 + parseInt(grid.dataset.exams)}" data-eval="${grid.dataset.evals}" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`);
 
-      grid.querySelector('.grid-separator-eval').style.gridRow = `2 / ${2 + grid.dataset.exams * 1}`;
       for (let element of grid.querySelectorAll('.edit-total')) {
-        element.style.gridRow = 3 + grid.dataset.exams * 1;
+        element.style.gridRow = 3 + parseInt(grid.dataset.exams);
       }
     }
+  // if input is empty
   } else {
     // add on blur event to delete
   }
+
   editGridFadeOrUnfade(grid, elem);
 
-  if (elem.classList.contains('edit-weight') && !elem.classList.contains('edit-new-eval') && !elem.classList.contains('edit-new-exam')) {
+  if (elem.classList.contains('edit-weight') && !elem.classList.contains('edit-new-eval') && !elem.classList.contains('edit-new-exam') && elem.value != '') {
     updateSumWeight(grid, elem.dataset.eval);
   }
 
 }
 
-function editGridFadeOrUnfade(grid, element) {
-  if (editGridIsEmpty(grid, 'exam', element.dataset.exam)) {
-    editGridFade(grid, 'exam', element.dataset.exam);
-  } else {
-    editGridUnfade(grid, 'exam', element.dataset.exam);
+function editGridFadeOrUnfade(grid, element, check=['exam','eval']) {
+  for (const type of check) {
+    if (element.dataset[type] != undefined && parseInt(element.dataset[type]) < parseInt(grid.dataset[type+'s'])) {
+      if (editGridIsEmpty(grid, type, parseInt(element.dataset[type]))) {
+        editGridFade(grid, type, parseInt(element.dataset[type]));
+      } else {
+        editGridUnfade(grid, type, parseInt(element.dataset.exam));
+      }
+    }
   }
-  if (editGridIsEmpty(grid, 'eval', element.dataset.eval)) {
-    editGridFade(grid, 'eval', element.dataset.eval);
-  } else {
-    editGridUnfade(grid, 'eval', element.dataset.eval);
-  }
+  grid.querySelector('.grid-separator-eval').style.gridRow = `2 / ${2 + parseInt(grid.dataset.exams)}`;
 }
 
 function editGridUnfade(grid, type, n) {
   for (let element of grid.querySelectorAll(`*[data-${type}='${n}'`)) {
-    element.classList.remove(`edit-new-${type}`);
+    if ((element.dataset.eval == undefined || parseInt(element.dataset.eval) < parseInt(grid.dataset.evals)) && (element.dataset.exam == undefined || parseInt(element.dataset.exam) < parseInt(grid.dataset.exams))) {
+      element.classList.remove(`edit-new-exam`);
+      element.classList.remove(`edit-new-eval`);
+    }
   }
 }
 function editGridFade(grid, type, n) {
-  for (let element of grid.querySelectorAll(`*[data-${type}='${n}']`)) {
-    element.classList.add(`edit-new-${type}`);
+  let removed = false;
+  for (let element of grid.querySelectorAll(`*[data-${type}]`)) {
+    if (parseInt(element.dataset[type]) == n) {
+      element.classList.add(`edit-new-${type}`);
+      element.parentNode.removeChild(element);
+      removed = true;
+  }else if (parseInt(element.dataset[type]) > n) {
+    element.dataset[type] = parseInt(element.dataset[type]) - 1;
+    switch (type) {
+      case 'eval':
+        element.style.gridColumn = `${parseInt(element.dataset[type]) + 5} / auto`;
+        break;
+      case 'exam':
+        element.style.gridRow = `${parseInt(element.dataset[type]) + 2} / auto`;
+        break;
+      }
+    }
   }
+  if(removed) grid.dataset[type+'s'] = parseInt(grid.dataset[type+'s']) - 1;
 }
 
 function editGridIsEmpty(grid, type, n) {
@@ -1013,25 +1037,28 @@ function readSubjectFromPopup(popup) {
   let newEval = {};
   let grid = popup.querySelector('.edit-popup-grid');
 
-  for (let evalN = 0; evalN < grid.dataset['evals']; evalN++) {
-    let eval = grid.querySelector(`input[name='nameEval'][data-eval='${evalN}']`).value;
-    if (eval) {
-      for (let examN = 0; examN < grid.dataset['exams']; examN++) {
-        let exam = grid.querySelector(`input[name='exam'][data-exam='${examN}']`).value;
-        let examType = grid.querySelector(`input[name='examType'][data-exam='${examN}']`).value;
-        let weight = grid.querySelector(`div[data-exam='${examN}'][data-eval='${evalN}'] > input[name='weight']`).value / 100;
-        if (exam && examType && weight) {
-          if (!newEval[eval]) newEval[eval] = {};
-          if (!newEval[eval].exams) newEval[eval].exams = {};
-          if (!newEval[eval].exams[exam]) newEval[eval].exams[exam] = {};
-          newEval[eval].exams[exam].weight = weight;
-          newEval[eval].exams[exam].type = examType;
+  for (let evalN = 0; evalN < parseInt(grid.dataset['evals']); evalN++) {
+    let evalNameElem = grid.querySelector(`input[name='nameEval'][data-eval='${evalN}']`);
+    if (evalNameElem) {
+      let eval = evalNameElem.value;
+      if (eval) {
+        for (let examN = 0; examN < parseInt(grid.dataset['exams']); examN++) {
+          let exam = grid.querySelector(`input[name='exam'][data-exam='${examN}']`).value;
+          let examType = grid.querySelector(`input[name='examType'][data-exam='${examN}']`).value;
+          let weight = grid.querySelector(`div[data-exam='${examN}'][data-eval='${evalN}'] > input[name='weight']`).value / 100;
+          if (exam && examType && weight) {
+            if (!newEval[eval]) newEval[eval] = {};
+            if (!newEval[eval].exams) newEval[eval].exams = {};
+            if (!newEval[eval].exams[exam]) newEval[eval].exams[exam] = {};
+            newEval[eval].exams[exam].weight = weight;
+            newEval[eval].exams[exam].type = examType;
+          }
         }
-      }
       // let condition = grid.querySelector(`input[name='condition'][data-eval='${evalN}']`).value;
       // if (condition) {
-      //   newEval[eval].condition = condition;
-      // }
+        //   newEval[eval].condition = condition;
+        // }
+      }
     }
   }
 

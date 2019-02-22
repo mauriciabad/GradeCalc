@@ -108,23 +108,29 @@
     <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Ir atrás">Editar asignatura</div>
     <div class="popup-content edit-popup">
       <div id="edit-popup-content"></div>
-      <button class="popup-main-button" onclick="saveEditSubject(); window.history.back();"">Guardar</button>
+      <button class="popup-main-button" onclick="saveEditSubject(); window.history.back();">Guardar</button>
     </div>
   </div>
 
   <div id="view-container" class="popup" style="display: none;">
     <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Ir atrás">Editar y añadir asignatura</div>
     <div class="popup-content edit-popup">
-      <div id="view-popup-content"></div>
-      <button class="popup-main-button" onclick="saveViewSubject(); window.history.back();"">Añadir</button>
+      <form>
+        <div id="view-popup-content"></div>
+        <!-- <button class="popup-main-button" onclick="saveViewSubject(); window.history.back();">Añadir</button> -->
+        <input type="submit" class="popup-main-button" onsubmit="saveViewSubject(); window.history.back();" value="Añadir">
+      </form>
     </div>
   </div>
 
   <div id="new-container" class="popup" style="display: none;">
     <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Ir atrás">Nueva asignatura</div>
     <div class="popup-content edit-popup">
-      <div id="new-popup-content"></div>
-      <button class="popup-main-button" onclick="saveNewSubject(); router.navigate(`/`);">Crear</button>
+      <form>
+        <div id="new-popup-content"></div>
+        <!-- <button class="popup-main-button" onclick="saveNewSubject(); router.navigate(`/`);">Crear</button> -->
+        <input type="submit" class="popup-main-button" onsubmit="saveNewSubject(); router.navigate(`/`);" value="Crear">
+      </form>
     </div>
   </div>
 
