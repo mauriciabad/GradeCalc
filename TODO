@@ -3,6 +3,8 @@
 - (future) Cloud function to sanitize subjects and upload them
 - (future) you must be logged in to create subjects
 - (future) Add subjects from 1st course and 3rd
+- (future) Cargando asignaturas is always on in iOS
+- (future) Popup iOS cuts on scroll
 - Conditions
 - new subject ask for required inputs
 - add my subject to firebase when added

@@ -27,6 +27,7 @@ button{
   cursor: pointer;
   user-select: none;
   transition: transform 150ms var(--easing-bounce);
+  appearance: none;
   -webkit-appearance: none;
 }
 button:hover, [type="submit"]:hover{
@@ -41,7 +42,8 @@ button:focus:not(:active), [type="submit"]:focus:not(:active){
   outline: none;
 }
 [type="submit"] {
-  -webkit-appearance: button;
+  appearance: none;
+  -webkit-appearance: none;
   border: none;
   outline: none;
   font-size: 1em;
@@ -422,6 +424,7 @@ input[type=text], input[type=number]{
   border-width: 0;
   outline: none;
   transition: border 300ms ease-out, background-color 200ms ease-out, color 200ms ease-out;
+  appearance: none;
   -webkit-appearance: none;
 }
 input[type=text]:invalid, input[type=number]:invalid{
@@ -1003,6 +1006,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 
 .edit-popup input::-webkit-outer-spin-button,
 .edit-popup input::-webkit-inner-spin-button {
+  appearance: none;
   -webkit-appearance: none;
 }
 
