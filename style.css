@@ -27,6 +27,7 @@ button{
   cursor: pointer;
   user-select: none;
   transition: transform 150ms var(--easing-bounce);
+  -webkit-appearance: none;
 }
 button:hover, [type="submit"]:hover{
   transform: scale(1.15);
@@ -421,6 +422,7 @@ input[type=text], input[type=number]{
   border-width: 0;
   outline: none;
   transition: border 300ms ease-out, background-color 200ms ease-out, color 200ms ease-out;
+  -webkit-appearance: none;
 }
 input[type=text]:invalid, input[type=number]:invalid{
   border: solid 0.2em#cf5155;
