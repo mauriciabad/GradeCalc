@@ -1,0 +1,44 @@
+{
+  "name": "gradecalc",
+  "version": "1.0.0",
+  "description": "GradeCalc es aplicación web para calcular la nota que necesitas en cada examen para aprobar una asignatura. Originalmente hecha para la FIB, Facultad de Informàtica de Barcelona",
+  "main": "index.html",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mauriciabad/GradeCalc.git"
+  },
+  "author": "Maurici Abad Gutierrez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mauriciabad/GradeCalc/issues"
+  },
+  "homepage": "https://github.com/mauriciabad/GradeCalc#readme",
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "browser-sync": "^2.26.3",
+    "del": "^3.0.0",
+    "gulp": "^4.0.0",
+    "gulp-autoprefixer": "^6.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-cache": "^1.1.1",
+    "gulp-clean-css": "^4.0.0",
+    "gulp-imagemin": "^5.0.3",
+    "gulp-minify": "^3.1.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-uglify": "^3.0.1",
+    "gulp-useref": "^3.1.6",
+    "run-sequence": "^2.2.1"
+  },
+  "dependencies": {
+    "gulp-cssnano": "^2.1.3"
+  }
+}
