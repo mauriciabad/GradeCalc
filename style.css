@@ -1019,7 +1019,9 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   padding: 0.3em 0;
   text-align: right;
 }
-
+.edit-conditions-input:placeholder-shown{
+  opacity: 0.3333;
+}
 /* ----------------- Popup -------------------*/
 .popup{
   position: absolute;

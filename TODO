@@ -5,13 +5,10 @@
 - (future) Add subjects from 1st course and 3rd
 - (future) Cargando asignaturas is always on in iOS
 - (future) Popup iOS cuts on scroll
+- (future) examName && typeName && evalName must be diferent
+- (future) check if condition is valid
 - Conditions
 - new subject ask for required inputs
 - add my subject to firebase when added
 - fix: some atributes in create subject are set to string, not an int
 - fix: quan borres una assignatura no es treu dels dispositius sincronitzats
-- fix: quan afegeixes una nova evaluació el nom es queda com a disabled (els required no estan gaire be al edit-grid)
-
-
-Do now: 
-- Conditions

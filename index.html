@@ -115,22 +115,16 @@
   <div id="view-container" class="popup" style="display: none;">
     <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Ir atrás">Editar y añadir asignatura</div>
     <div class="popup-content edit-popup">
-      <form>
-        <div id="view-popup-content"></div>
-        <!-- <button class="popup-main-button" onclick="saveViewSubject(); window.history.back();">Añadir</button> -->
-        <input type="submit" class="popup-main-button" onsubmit="saveViewSubject(); window.history.back();" value="Añadir">
-      </form>
+      <div id="view-popup-content"></div>
+      <button class="popup-main-button" onclick="saveViewSubject(); window.history.back();">Añadir</button>
     </div>
   </div>
 
   <div id="new-container" class="popup" style="display: none;">
     <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Ir atrás">Nueva asignatura</div>
     <div class="popup-content edit-popup">
-      <form>
-        <div id="new-popup-content"></div>
-        <!-- <button class="popup-main-button" onclick="saveNewSubject(); router.navigate(`/`);">Crear</button> -->
-        <input type="submit" class="popup-main-button" onsubmit="saveNewSubject(); router.navigate(`/`);" value="Crear">
-      </form>
+      <div id="new-popup-content"></div>
+      <button class="popup-main-button" onclick="saveNewSubject();">Crear</button>
     </div>
   </div>
 
@@ -185,6 +179,7 @@
   <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-firestore.js"></script>
   <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearchLite.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsep@0.3.4/build/jsep.min.js"></script>
   <script>
     // Initialize Firebase
     var config = {
