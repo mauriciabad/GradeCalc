@@ -1,1 +1,1809 @@
-"use strict";function asyncGeneratorStep(e,t,a,n,s,o,c){try{var r=e[o](c),i=r.value}catch(e){return void a(e)}r.done?t(i):Promise.resolve(i).then(n,s)}function _asyncToGenerator(e){return function(){var t=this,a=arguments;return new Promise(function(n,s){var o=e.apply(t,a);function c(e){asyncGeneratorStep(o,n,s,c,r,"next",e)}function r(e){asyncGeneratorStep(o,n,s,c,r,"throw",e)}c(void 0)})}}function _objectSpread(e){for(var t=1;t<arguments.length;t++){var a=null!=arguments[t]?arguments[t]:{},n=Object.keys(a);"function"==typeof Object.getOwnPropertySymbols&&(n=n.concat(Object.getOwnPropertySymbols(a).filter(function(e){return Object.getOwnPropertyDescriptor(a,e).enumerable}))),n.forEach(function(t){_defineProperty(e,t,a[t])})}return e}function _defineProperty(e,t,a){return t in e?Object.defineProperty(e,t,{value:a,enumerable:!0,configurable:!0,writable:!0}):e[t]=a,e}var userInfo,dashboard=document.getElementById("dashboard"),editSubjectPopup=document.getElementById("edit-popup-content"),viewSubjectPopup=document.getElementById("view-popup-content"),newSubjectPopup=document.getElementById("new-popup-content"),topbar=document.getElementById("top-bar"),currentScreen=document.getElementsByClassName("screen")[0],searchResultContainer=document.getElementById("subjects-search-results"),searchResultsSubject=document.getElementById("subjects-search-results"),allPopups=["user-container","add-container","edit-container","view-container","new-container"],subjects={},removedSubject={},removedSubjectId="defaultID",toastTimer=0,toast=document.getElementById("toast"),displayName="Anónimo",photoURL="media/profile-pic.jpg",isAnonymous=!0,uid=0,db=firebase.firestore();db.settings({timestampsInSnapshots:!0});var userDB=null,subjectsDB=db.collection("subjects"),client=algoliasearch("2R59JNYNOA","b8fd696952b9984035a380a3837662e0"),index=client.initIndex("subjects_search"),subjectsToAdd={};loadData();var cards,setPageDashboard=function(e){popupHideAll()},setPageUser=function(e){},setPageMe=function(e){popupShow("user-container",!0)},setPageMeEdit=function(e){},setPageMeSubjectEdit=function(e){subjects[e.id]?(popupShow("edit-container",!1),generateEditSubjectUI(e.id)):(showToast("You don't have the subject ".concat(e.id)),window.history.back())},setPageMeSubjectAdd=function(e){popupShow("add-container",!1),document.getElementById("search-subject-input").focus()},setPageSubjectNew=function(e){popupShow("new-container",!1),clearNewSubjectUI()},setPageSubjectView=function(e){subjectsDB.doc(e.id).get().then(function(t){t.exists?(popupShow("view-container",!1),generateViewSubjectUI(e.id,t.data())):(window.history.back(),console.error("Subject width id ".concat(e.id," doesn't exist")))}).catch(function(e){window.history.back(),console.error("Error getting subject info:",e)})},setPageSubjectEdit=function(e){},router=new Navigo(null,!0);function showUserInfo(){router.navigate("/me")}function showAddSubject(){router.navigate("/me/subjects/add")}function showEditSubject(e){router.navigate("/me/subjects/".concat(e,"/edit"))}function showViewSubject(e){router.navigate("/subjects/".concat(e))}function showNewSubject(){router.navigate("/subjects/new")}function popupShow(e,t){popupHideAll(e);var a=document.getElementById(e);a.style.display="flex",a.animate({opacity:[0,1],easing:["ease-in"]},125).onfinish=function(){!t&&window.matchMedia("(max-width: 600px)").matches&&(currentScreen.style.display="none",topbar.style.display="none")}}function popupHide(e){currentScreen.style.display="block",topbar.style.display="flex",e.animate({opacity:[1,0],easing:["ease-in"]},125).onfinish=function(){e.style.display="none"}}function popupHideAll(e){for(var t=0;t<allPopups.length;t++){var a=allPopups[t];a!=e&&popupHide(document.getElementById(a))}}function loadData(){for(var e in showLoader("Cargando tus asignaturas","dashboard"),subjects=getSubjectsLocalStorage(),console.info("Subjects loaded from localStorage"),subjects)autoUpdate(e),createSubjectCardCollapsed(e);hideLoader("dashboard")}function autoUpdate(e){if(null==subjects[e].evaluation&&null!=subjects[e].evaluations||(subjects[e].evaluations=toNewEvalNeeeeeeeeew(subjects[e].evaluation),delete subjects[e].evaluation,uploadEvaluation(e,subjects[e].evaluations),saveSubjectsLocalStorage()),null!=subjects[e].necesaryMark||null==subjects[e].necesaryMarks){for(var t in subjects[e].evaluations)if(!subjects[e].necesaryMarks[t])for(var a in subjects[e].necesaryMarks[t]={},subjects[e].evaluations[t].exams)subjects[e].necesaryMarks[t][a]=subjects[e].evaluations[t].passMark;delete subjects[e].necesaryMark,saveSubjectsLocalStorage()}}function updateSubjectCardInfo(e){getCard(e).innerHTML="<button onclick=\"deleteSubject('".concat(e,'\')" class="subject-card-remove">\n  <img src="media/trash.svg" alt="x" aria-label="Delete subject">\n</button>\n<button onclick="showEditSubject(\'').concat(e,'\')" class="subject-card-info">\n  <img src="media/discount.svg" alt="%" aria-label="Show subject information">\n</button>\n<h2>').concat(subjects[e].shortName,'</h2>\n<p class="subject-finalMark" style="color: ').concat(isPassed(e,subjects[e].selectedEvaluation)?"#5a9764":"#b9574c",';">').concat(subjects[e].finalMark[subjects[e].selectedEvaluation],'</p>\n<div class="subject-bar">').concat(generateBar(e),'</div>\n<div class="grades-input hidden" style="height: 0px;">').concat(generateInputs(e)+generateEvaluations(e),"</div>"),updateAndDisplayMarks(e,!1)}function createSubjectCardCollapsed(e){var t=document.createElement("div");t.id="card-"+e,t.className="subject-card",t.onclick=function(e){toggleExpandCard(e,this)},t.innerHTML="<button onclick=\"deleteSubject('".concat(e,'\')" class="subject-card-remove">\n  <img src="media/trash.svg" alt="x" aria-label="Delete subject">\n</button>\n<button onclick="showEditSubject(\'').concat(e,'\')" class="subject-card-info">\n  <img src="media/discount.svg" alt="%" aria-label="Show subject information">\n</button>\n<h2>').concat(subjects[e].shortName,'</h2>\n<p class="subject-finalMark" style="color: ').concat(isPassed(e,subjects[e].selectedEvaluation)?"#5a9764":"#b9574c",';">').concat(subjects[e].finalMark[subjects[e].selectedEvaluation],'</p>\n<div class="subject-bar">').concat(generateBar(e),'</div>\n<div class="grades-input hidden" style="height: 0px;">').concat(generateInputs(e)+generateEvaluations(e),"</div>"),dashboard.appendChild(t),updateAndDisplayMarks(e,!1),hideTutorial()}function generateBar(e){var t="";for(var a in subjects[e].evaluations[subjects[e].selectedEvaluation].exams)if(isUndone(e,a)){var n="";n=null==subjects[e].necesaryMarks[subjects[e].selectedEvaluation][a]?"ಥ_ಥ":subjects[e].necesaryMarks[subjects[e].selectedEvaluation][a],t+="<div onclick=\"selectInput('in-".concat(e+a,'\')" class="scolN" style="flex-grow: ').concat(100*subjects[e].evaluations[subjects[e].selectedEvaluation].exams[a].weight,'" title="').concat(100*subjects[e].evaluations[subjects[e].selectedEvaluation].exams[a].weight,'%" data-exam="').concat(a,'">').concat(a,'<div id="bar-').concat(e+a,'" data-exam="').concat(a,'">').concat(n,"</div></div>")}else t+="<div onclick=\"selectInput('in-".concat(e+a,'\')" class="scol').concat(subjects[e].color,'" style="flex-grow: ').concat(100*subjects[e].evaluations[subjects[e].selectedEvaluation].exams[a].weight,'" title="').concat(100*subjects[e].evaluations[subjects[e].selectedEvaluation].exams[a].weight,'%" data-exam="').concat(a,'">').concat(a,'<div id="bar-').concat(e+a,'" data-exam="').concat(a,'">').concat(subjects[e].grades[a],"</div></div>");return t}function generateInputs(e){var t="",a={};for(var n in subjects[e].evaluations[subjects[e].selectedEvaluation].exams){var s=subjects[e].evaluations[subjects[e].selectedEvaluation].exams[n];a[s.type]||(a[s.type]={}),a[s.type].weight||(a[s.type].weight=0),a[s.type].inputsHTML||(a[s.type].inputsHTML=""),a[s.type].weight+=s.weight;var o="";o=null==subjects[e].necesaryMarks[subjects[e].selectedEvaluation][n]?"ಥ_ಥ":subjects[e].necesaryMarks[subjects[e].selectedEvaluation][n],isUndone(e,n)?a[s.type].inputsHTML+="<div><span>".concat(n,':</span><input type="number" id="in-').concat(e+n,'" data-exam="').concat(n,'" placeholder="').concat(o,'" value="" class="scolN2" oninput="updateMarkFromCardInput(\'').concat(e,"', '").concat(n,'\', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>'):a[s.type].inputsHTML+="<div><span>".concat(n,':</span><input type="number" id="in-').concat(e+n,'" data-exam="').concat(n,'" placeholder="').concat(o,'" value="').concat(subjects[e].grades[n],'" class="scol').concat(subjects[e].color,'" oninput="updateMarkFromCardInput(\'').concat(e,"', '").concat(n,'\', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>')}for(var c in a)t+="<h3>".concat(c,"</h3><span>").concat(round(100*a[c].weight,0),"%</span><div>").concat(a[c].inputsHTML,"</div>");return t}function generateEvaluations(e){var t='<div class="evaluation-select"'.concat(Object.keys(subjects[e].evaluations).length<=1?' style="display: none;"':"",">\n  <span>Evaluación:</span>\n  <select onchange=\"setSelectedEvaluation('").concat(e,"',this.value);\">");for(var a in subjects[e].evaluations)t+='<option value="'.concat(a,'"').concat(a==subjects[e].selectedEvaluation?'selected="selected"':"",">").concat(a,"</option>");return t+='</select>\n  <img src="media/dislike.svg" style="display: none;" title="Hay otra evaluación mejor">\n</div>'}function addToSubjectsToAdd(e,t){t?subjectsToAdd[e]=null:delete subjectsToAdd[e]}function addSubjects(){for(var e in showLoader("Cargando tus asignaturas","dashboard"),document.getElementById("search-subject-input").value="",subjectsToAdd)null==subjects[e]&&(null==subjectsToAdd[e]?addSubjectFromDB(e):addSubject(e,subjectsToAdd[e]));window.history.back(),searchSubjects()}function addSubject(e,t){subjects[e]=completeSubject(t),updateFinalMark(e),updateNecesaryMark(e),createSubjectCardCollapsed(e),saveSubjectsLocalStorage(),hideLoader("dashboard")}function addSubjectFromDB(e){subjectsDB.doc(e).get().then(function(t){t.exists?addSubject(e,t.data()):console.error("Subject dosen't exists")}).catch(function(e){console.error("Error getting subject info:",e)})}function completeSubject(){for(var e=arguments.length,t=new Array(e),a=0;a<e;a++)t[a]=arguments[a];var n=Object.assign.apply(Object,[{evaluations:{},grades:{},fullName:"",shortName:"",faculty:"",uni:"",course:"",color:1,necesaryMarks:{},finalMark:{}}].concat(t));for(var s in delete n.id,delete n.evaluation,n.selectedEvaluation&&Object.keys(n.evaluations).includes(n.selectedEvaluation)||(n.selectedEvaluation=Object.keys(n.evaluations)[0]||""),n.evaluations)if(!n.necesaryMarks[s]){for(var o in n.necesaryMarks[s]={},n.evaluations[s].exams)n.necesaryMarks[s][o]=n.evaluations[s].passMark;n.finalMark[s]=0}return n}function clearNewSubjectUI(){var e=generateEditSubjectUIHTML("new",completeSubject({creator:displayName,creationDate:new Date}),"new");newSubjectPopup.innerHTML=e}function generateViewSubjectUI(e,t){var a=generateEditSubjectUIHTML(e,t,"view");viewSubjectPopup.innerHTML=a;var n=Object.keys(t.evaluations);for(var s in n)updateSumWeight(viewSubjectPopup,s)}function generateEditSubjectUI(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:subjects[e],a=generateEditSubjectUIHTML(e,t,"edit");editSubjectPopup.innerHTML=a;var n=Object.keys(t.evaluations);for(var s in n)updateSumWeight(editSubjectPopup,s)}function generateEditSubjectUIHTML(e,t,a){var n=toNewEval(t.evaluations),s=Object.keys(t.evaluations),o="",c="",r="",i="",u="",l="";c+='<input style="grid-row: 1; grid-column: '.concat(5+1*s.length,';" class=" edit-new-evaluation" data-evaluation="').concat(s.length,'" type="text" name="evaluationName" value="" placeholder="NEW" autocomplete="off" oninput="updateEvalName(this.dataset.evaluation, this.value, \'').concat(a,"');\">");var d=0;for(var p in n){for(var m in o+='\n    <input style="grid-row: '.concat(2+1*d,'; grid-column: 1;" class="" type="text"   name="exam"       value="').concat(p,'"                 data-exam="').concat(d,'" placeholder="NEW" autocomplete="off" maxlength="5" required>\n    <input style="grid-row: ').concat(2+1*d,'; grid-column: 2;" class="" type="text"   name="examType"   value="').concat(n[p].examType,'" data-exam="').concat(d,'" placeholder="Parciales" required>\n    <input style="grid-row: ').concat(2+1*d,'; grid-column: 3;" class="" type="number" name="mark"       value=""                        data-exam="').concat(d,'" placeholder="-" autocomplete="off" min="0" max="10" step="0.01">'),c+='<div style="grid-row: '.concat(2+1*d,"; grid-column: ").concat(5+1*s.length,';" class="edit-weight edit-new-evaluation" data-exam="').concat(d,'" data-evaluation="').concat(s.length,'"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>'),s)o+='<div style="grid-row: '.concat(2+1*d,"; grid-column: ").concat(5+1*m,';" class="edit-weight" data-exam="').concat(d,'" data-evaluation="').concat(m,'"><input type="number" name="weight" value="').concat(n[p].weight[s[m]]&&0!=n[p].weight[s[m]]?round(100*n[p].weight[s[m]],4):"",'" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>');++d}for(var v in s)o+='<input style="grid-row: 1; grid-column: '.concat(5+1*v,';" class="edit-evaluationName" type="text" name="evaluationName" value="').concat(s[v],'" data-evaluation="').concat(v,'" placeholder="NEW" autocomplete="off" required oninput="updateEvalName(this.dataset.evaluation, this.value, \'').concat(a,"');\">"),r+='<div style="grid-row: '.concat(2+1*d,"; grid-column: ").concat(5+1*v,';" class="edit-weight edit-new-exam" data-exam="').concat(d,'" data-evaluation="').concat(v,'"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>'),i+='<span  style="grid-row: '.concat(3+1*d,"; grid-column: ").concat(5+1*v,';" class="edit-total" data-evaluation="').concat(v,'">0%</span>'),l+='<label class="edit-conditions-label">'.concat(s[v],'</label><input class="edit-conditions-input" type="text" placeholder="nombreExamen >= 2" name="condition" data-evaluation="').concat(v,'" value="').concat(t.evaluations[s[v]].condition||"",'">');r+='\n  <input style="grid-row: '.concat(2+1*d,'; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="').concat(d,'" placeholder="NEW" autocomplete="off" maxlength="5">\n  <input style="grid-row: ').concat(2+1*d,'; grid-column: 2;" class="edit-new-exam" type="text"   name="examType"   value="" data-exam="').concat(d,'" placeholder="Parciales">\n  <input style="grid-row: ').concat(2+1*d,'; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="').concat(d,'" placeholder="-" autocomplete="off" min="0" max="10" step="0.01">\n  ');for(var b=[1,8,3,4,6,5,2,7],f=0;f<b.length;f++){var g=b[f];u+='\n    <label class="scol'.concat(g,'"  for="color-bar-').concat(a,"-elem").concat(g,'">\n      <input type="radio" name="color-bar" value="').concat(g,'" id="color-bar-').concat(a,"-elem").concat(g,'" ').concat(g==t.color?"checked":"",'>\n      <span class="edit-color-checkmark"></span>\n    </label>')}return'\n  <h2>Información</h2>\n  <input type="hidden" name="id" id="'.concat(a,'-id" value="').concat(e,'" style="display: none;" hidden>\n  <div class="edit-popup-info">\n    <div>\n      <label for="').concat(a,'-shortName">Nombre</label>\n      <input type="text" name="shortName" id="').concat(a,'-shortName" value="').concat(t.shortName,'" placeholder="M2" required>\n    </div>\n    <div class="edit-fullName">\n      <label for="').concat(a,'-fullName">Nombre Largo</label>\n      <input type="text" name="fullName" id="').concat(a,'-fullName" value="').concat(t.fullName?t.fullName:"",'" placeholder="Matemáticas 2" required>\n    </div>\n  </div>\n  <div class="edit-popup-info">\n    <div>\n      <label for="').concat(a,'-course">Curso</label>\n      <input type="text" name="course" id="').concat(a,'-course" value="').concat(t.course?t.course:"",'" placeholder="Q1 2019-2020" required>\n    </div>\n    <div>\n      <label for="').concat(a,'-faculty">Facultad</label>\n      <input type="text" name="faculty" id="').concat(a,'-faculty" value="').concat(t.faculty?t.faculty:"",'" placeholder="FIB" required>\n    </div>\n    <div>\n      <label for="').concat(a,'-uni">Universidad</label>\n      <input type="text" name="uni" id="').concat(a,'-uni" value="').concat(t.uni?t.uni:"",'" placeholder="UPC" required>\n    </div>\n  </div>\n  <div class="color-bar">\n    ').concat(u,'\n    \x3c!-- <label class="scol0"  for="color-bar-elem0">\n      <input type="radio" name="color-bar" value="0" id="color-bar-elem0">\n      <span class="edit-color-checkmark edit-color-checkmark-random"></span>\n    </label> --\x3e\n  </div>\n\n  <div class="edit-popup-info">\n    <div>\n      <span>Fecha de creación: <span id="').concat(a,'-creationDate">').concat("--/--/----",'</span></span>\n    </div>\n    <div>\n      <span>Creador: <span id="').concat(a,'-creator">').concat(t.creator?t.creator:"Anónimo",'</span></span>\n    </div>\n  </div>\n\n  <h2>Evaluación</h2>\n  <div class="scroll">\n    <div class="edit-popup-grid" onkeyup="editUIUpdateGrid(this, event, \'').concat(a,'\');" data-evaluations="').concat(s.length,'" data-exams="').concat(d,'">\n      \x3c!-- Header --\x3e\n      <span  style="grid-row: 1; grid-column: 1;" >Nombre</span>\n      <span  style="grid-row: 1; grid-column: 2;" >Categoría</span>\n      <span  style="grid-row: 1; grid-column: 3;" >Nota</span>\n\n      \x3c!-- Body --\x3e\n      ').concat(o,'\n      \x3c!-- Divider --\x3e\n      <div style="grid-row: 2 / ').concat(2+d,';" class="grid-separator-evaluation"></div>\n\n      \x3c!-- new --\x3e\n      ').concat(c,"\n      ").concat(r,"\n\n      \x3c!-- Footer --\x3e\n      ").concat(i,'\n      \n    </div>\n\n    \x3c!-- Conditions --\x3e\n    <h2>Condiciones para aprovar</h2>\n    <div class="edit-conditions">\n      ').concat(l,"\n    </div>\n  </div>")}function updateEvalName(e,t,a){var n=document.querySelector("#".concat(a,"-popup-content .edit-conditions-label[data-evaluation='").concat(e,"']"));n&&(n.textContent=t||"")}function updateAndDisplayMarks(e){updateFinalMark(e,!(arguments.length>1&&void 0!==arguments[1])||arguments[1]),updateNecesaryMark(e),displayFinalMark(e),displayNecesaryMark(e),congratulate()}function displayNecesaryMark(e){for(var t=getCard(e),a=t.getElementsByClassName("scolN"),n=t.getElementsByClassName("scolN2"),s=0;s<a.length;s++){var o="";o=null==subjects[e].necesaryMarks[subjects[e].selectedEvaluation][a[s].dataset.exam]?"ಥ_ಥ":subjects[e].necesaryMarks[subjects[e].selectedEvaluation][a[s].dataset.exam],a[s].children[0].textContent=o}for(var c=0;c<n.length;c++){var r="";r=null==subjects[e].necesaryMarks[subjects[e].selectedEvaluation][n[c].dataset.exam]?"ಥ_ಥ":subjects[e].necesaryMarks[subjects[e].selectedEvaluation][n[c].dataset.exam],n[c].placeholder=r}}function displayFinalMark(e){var t=getCard(e).getElementsByClassName("subject-finalMark")[0];t.textContent=subjects[e].finalMark[subjects[e].selectedEvaluation],t.style.color=isPassed(e,subjects[e].selectedEvaluation)?"#5a9764":"#b9574c"}function updateNecesaryMark(e){var t=subjects[e].selectedEvaluation,a=getConditionIdentifiers(e,t);for(var n in subjects[e].necesaryMarks[t])subjects[e].necesaryMarks[t][n]=void 0;for(var s in a.exams)switch(a.exams[s].operator){case">=":subjects[e].necesaryMarks[t][s]=a.exams[s].value}for(var o in a.types)switch(a.types[o].operator){case">=":for(var c in subjects[e].necesaryMarks[t])subjects[e].evaluations[t].exams[c].type==o&&void 0!==subjects[e].necesaryMarks[t][c]&&subjects[e].necesaryMarks[t][c]<a.types[o].value&&(subjects[e].necesaryMarks[t][c]=a.types[o].value)}gradeCalcAllEqual(e,subjects[e].selectedEvaluation);var r=getBestEval(e)===subjects[e].selectedEvaluation,i=getCard(e);i&&(i.querySelector(".evaluation-select > img").style.display=r?"none":"block")}function getBestEval(e){var t,a;for(var n in subjects[e].evaluations){var s=void 0;for(var o in subjects[e].evaluations[n].exams)(null==s||s<subjects[e].necesaryMarks[n][o])&&(s=subjects[e].necesaryMarks[n][o]),(null==a||a>s)&&(a=subjects[e].necesaryMarks[n][o],t=n)}return t}function smallestNecessaryMark(e,t){var a={};for(var n in subjects[e].necesaryMarks[t])(void 0===a.mark||a.mark<subjects[e].necesaryMarks[t][n])&&(a.exam=n,a.mark=subjects[e].necesaryMarks[t][n]);return a}function updateFinalMark(e){var t=!(arguments.length>1&&void 0!==arguments[1])||arguments[1];for(var a in subjects[e].evaluations){for(var n in subjects[e].finalMark[a]=0,subjects[e].evaluations[a].exams)isUndone(e,n)||(subjects[e].finalMark[a]+=subjects[e].grades[n]*subjects[e].evaluations[a].exams[n].weight);subjects[e].finalMark[a]=round(subjects[e].finalMark[a])}var s=isPassed(e);return t&&!subjects[e].passed&&s&&showConfetti(getCard(e)),subjects[e].passed=s,subjects[e].finalMark[subjects[e].selectedEvaluation]}function updateMarkFromCardInput(e,t,a,n){var s=getBarElem(e,t);isNaN(a)||""==a?(delete subjects[e].grades[t],uploadGrade(e,t,void 0),s.parentElement.className="scolN",n.className="scolN2"):(subjects[e].passed=isPassed(e),subjects[e].grades[t]=Number(a),uploadGrade(e,t,subjects[e].grades[t]),s.parentElement.className="scol"+subjects[e].color,s.textContent=n.value,n.className="scol"+subjects[e].color),updateAndDisplayMarks(e),saveSubjectsLocalStorage()}function updateCardGrades(e){var t=getCard(e);if(t){for(var a in t.getElementsByClassName("subject-bar")[0])a.className="scolN";for(var n in subjects[e].evaluations[subjects[e].selectedEvaluation].exams){var s=getInput(e,n);s.className="scolN2",s.value=""}for(var o in subjects[e].grades){var c=getBarElem(e,o),r=getInput(e,o);c&&r?(c.textContent=subjects[e].grades[o],c.parentElement.className="scol"+subjects[e].color,r.value=subjects[e].grades[o],r.className="scol"+subjects[e].color):console.log("Exam ".concat(o," of ").concat(subjects[e].shortName," (").concat(e,") is not in the card"))}updateAndDisplayMarks(e)}else createSubjectCardCollapsed(e),updateCardGrades(e)}function setSelectedEvaluation(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:subjects[e].selectedEvaluation;subjects[e].selectedEvaluation=t,saveSubjectsLocalStorage();var a=getCard(e);a.getElementsByClassName("subject-bar")[0].innerHTML=generateBar(e),a.getElementsByClassName("grades-input")[0].innerHTML=generateInputs(e)+generateEvaluations(e,t),updateHeigth(a.getElementsByClassName("grades-input")[0]),updateAndDisplayMarks(e)}function showConfetti(e,t){null==t&&(t={angle:random(60,70),spread:random(40,50),startVelocity:random(60,90),elementCount:random(30,60),decay:.8,colors:["#E68F17","#FAB005","#FA5252","#E64980","#BE4BDB","#0B7285","#15AABF","#EE1233","#40C057"]}),window.confetti(e,t)}function getCard(e){return document.getElementById("card-"+e)}function getInput(e,t){return document.getElementById("in-"+e+t)}function getBarElem(e,t){return document.getElementById("bar-"+e+t)}function gradeCalcAllEqual(e,t){var a=0,n=[],s=0;for(var o in subjects[e].evaluations[t].exams)isUndone(e,o)?null==subjects[e].necesaryMarks[t][o]?(a+=subjects[e].evaluations[t].exams[o].weight,n.push(o)):s+=subjects[e].evaluations[t].exams[o].weight*subjects[e].necesaryMarks[t][o]:s+=subjects[e].evaluations[t].exams[o].weight*subjects[e].grades[o];var c=((subjects[e].evaluations[t].passMark||5)-s)/a,r=smallestNecessaryMark(e,t);if(null!=r.mark&&r.mark<c)subjects[e].necesaryMarks[t][r.exam]=void 0,gradeCalcAllEqual(e,t);else{var i=calcCondition(e,t,!1);for(var u in subjects[e].evaluations[t].exams)subjects[e].necesaryMarks[t][u]||(isUndone(e,u)?subjects[e].necesaryMarks[t][u]=!1===i?null:Math.max(0,round(c)):subjects[e].necesaryMarks[t][u]=subjects[e].grades[u])}}function round(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:2;return isNaN(e)||""===e||null==e?void 0:Math.floor(Math.round(e*Math.pow(10,t)))/Math.pow(10,t)}function random(e,t){return Math.floor(Math.random()*(t-e))+e}function congratulate(){hasPassedEverything()?document.getElementById("congratulations-img").style.display="block":document.getElementById("congratulations-img").style.display="none"}function hasPassedEverything(){if(isEmpty(subjects))return!1;for(var e in subjects)if(!isPassed(e))return!1;return!0}function isPassed(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:subjects[e].selectedEvaluation;return subjects[e].finalMark[t]>=(subjects[e].evaluations[t].passMark||5)&&calcCondition(e,t)}function getExamTypesGrades(e,t){var a={};for(var n in subjects[e].evaluations[t].exams){var s=subjects[e].evaluations[t].exams[n];a[s.type]||(a[s.type]=0),a[s.type]+=s.weight*(subjects[e].grades[n]||0)}return a}function getConditionIdentifiers(e,t){if(!subjects[e].evaluations[t].condition)return!0;var a={exams:{},evaluations:{},types:{}};return findIdentifiersTree(jsep(subjects[e].evaluations[t].condition),a,Object.keys(getExamTypesGrades(e,t)),e,t),a}function findIdentifiersTree(e,t,a,n,s){switch(e.type){case"LogicalExpression":case"BinaryExpression":"Identifier"==e.left.type&&"Literal"==e.right.type?t[identifierCategory(e.left.name,n,s,a)][e.left.name]={value:e.right.value,operator:e.operator}:(findIdentifiersTree(e.left,t,a,n,s),findIdentifiersTree(e.right,t,a,n,s))}}function identifierCategory(e,t,a){var n=arguments.length>3&&void 0!==arguments[3]?arguments[3]:void 0;return Object.keys(subjects[t].evaluations[a].exams).includes(e)?"exams":Object.keys(subjects[t].evaluations).includes(e)?"evaluations":(null==n&&(n=Object.keys(getExamTypesGrades(t,a))),n.includes(e)?"types":void 0)}function calcCondition(e,t){var a=!(arguments.length>2&&void 0!==arguments[2])||arguments[2];return!subjects[e].evaluations[t].condition||evaluationTree(jsep(subjects[e].evaluations[t].condition),_objectSpread({},subjects[e].grades,subjects[e].finalMark,getExamTypesGrades(e,t)),a)}function evaluationTree(e,t,a){switch(e.type){case"LogicalExpression":switch(e.operator){case"&&":return evaluationTree(e.left,t,a)&&evaluationTree(e.right,t,a);default:return null}break;case"BinaryExpression":switch(e.operator){case">=":return"Identifier"!=e.left.type||"Literal"!=e.right.type?null:!a&&null==t[e.left.name]||(t[e.left.name]||0)>=e.right.value;case"<":return"Identifier"!=e.left.type||"Literal"!=e.right.type||"evaluations"!=identifierCategory(e.left.name)?null:!a&&null==t[e.left.name]||(t[e.left.name]||0)<e.lerightft.value;default:return null}break;case"Literal":return e.value;case"Identifier":return t[e.name]||0;default:return null}}function toggleExpandCard(e,t){var a=t.getElementsByClassName("grades-input")[0],n=t.getElementsByClassName("subject-bar")[0];["INPUT","SELECT","OPTION","BUTTON","IMG"].includes(e.target.tagName)||(n.contains(e.target)?a.classList.remove("hidden"):a.classList.toggle("hidden"),updateHeigth(a))}function updateHeigth(e){e.style.height=(e.classList.contains("hidden")?0:e.scrollHeight)+"px"}function selectInput(e){document.getElementById(e).select()}function appendElement(e,t){var a=document.createElement("div");a.innerHTML=t.trim();var n=a.firstChild;return e.appendChild(n),n}router.on({"/user/:id":{as:"user.view",uses:setPageUser},"/me":{as:"me",uses:setPageMe},"/me/edit":{as:"me.edit",uses:setPageMeEdit},"/me/subjects/:id/edit":{as:"me.subject.edit",uses:setPageMeSubjectEdit},"/me/subjects/add":{as:"me.subject.add",uses:setPageMeSubjectAdd},"/subjects/new":{as:"subject.new",uses:setPageSubjectNew},"/subjects/:id":{as:"subject.view",uses:setPageSubjectView},"/subjects/:id/edit":{as:"subject.edit",uses:setPageSubjectEdit},"*":{as:"dashboard",uses:setPageDashboard}}).resolve(),updateCards();var cardsOldInfo={},cardsNewInfo=cardsOldInfo;function removeCard(e){cardsOldInfo=getCardsInfo(),e.parentNode.removeChild(e),cardsNewInfo=getCardsInfo(),moveCards()}function getCardsInfo(){updateCards();var e={};return cards.forEach(function(t){var a=t.getBoundingClientRect();e[t.id]={x:a.left,y:a.top,width:a.right-a.left}}),e}function moveCards(){updateCards(),cards.forEach(function(e){e.animate([{transform:"translate(".concat(cardsOldInfo[e.id].x-cardsNewInfo[e.id].x,"px, ").concat(cardsOldInfo[e.id].y-cardsNewInfo[e.id].y,"px) scaleX(").concat(cardsOldInfo[e.id].width/cardsNewInfo[e.id].width,")")},{transform:"none"}],{duration:250,easing:"ease-out"})})}function updateCards(){cards=document.querySelectorAll(".subject-card")}function isUndone(e,t){return void 0===subjects[e].grades[t]}function isEmpty(e){for(var t in e)if(e.hasOwnProperty(t))return!1;return!0}function showToast(e,t,a){var n=arguments.length>3&&void 0!==arguments[3]?arguments[3]:8e3;toast.style.display="none",toast.style.animation="goUp 500ms cubic-bezier(0.215, 0.61, 0.355, 1), fadeOut ".concat(Math.max(0,n-3e3),"ms 2.5s cubic-bezier(1, 0, 1, 1), opaque 2.5s"),toast.offsetHeight,toast.style.display="flex",toast.firstChild.innerHTML="<p>".concat(e,"</p>"),t&&a&&(toast.firstChild.innerHTML+='<button onclick="'.concat(a,'">').concat(t,"</button>")),clearTimeout(toastTimer),toastTimer=setTimeout(function(){toast.style.display="none"},n)}function showLoader(e,t){var a=document.getElementById(t+"-loader");a.lastElementChild.textContent=e,a.style.display="block"}function hideLoader(e){document.getElementById(e+"-loader").style.display="none"}function getSubjectsLocalStorage(){return JSON.parse(localStorage.getItem("subjects"))||{}}function saveSubjectsLocalStorage(){return localStorage.setItem("subjects",JSON.stringify(subjects||{})),subjects}function toNewEvalNeeeeeeeeew(e){var t={};for(var a in a){if(a[a].exams)return a;for(var n in t[a]={},t[a].passMark=5,t[a].exams={},a[a])for(var s in a[a][n])t[a].exams[s]={},t[a].exams[s].weight=a[a][n][s],t[a].exams[s].type=n}return t}function toNewEval(e){var t={};for(var a in e)for(var n in e[a].exams)t[n]||(t[n]={}),t[n].weight||(t[n].weight={}),t[n].weight[a]=e[a].exams[n].weight,t[n].mark=e[a].exams[n].mark,t[n].examType=e[a].exams[n].type;return t}function updateSumWeight(e,t){var a=0,n=!0,s=!1,o=void 0;try{for(var c,r=e.querySelectorAll(".edit-weight[data-evaluation='".concat(t,"'] > input"))[Symbol.iterator]();!(n=(c=r.next()).done);n=!0){a+=1*c.value.value}}catch(e){s=!0,o=e}finally{try{n||null==r.return||r.return()}finally{if(s)throw o}}return e.querySelector(".edit-total[data-evaluation='".concat(t,"']")).textContent=round(a,4)+"%",a}function editUIUpdateGrid(e,t,a){var n=t.target,s=n.parentNode==e?n:n.parentNode,o=e.parentNode.lastElementChild;if(n.value)if(parseInt(s.dataset.evaluation)==parseInt(e.dataset.evaluations)){++e.dataset.evaluations,appendElement(e,'<input style="grid-row: 1; grid-column: '.concat(5+parseInt(e.dataset.evaluations),';" class="edit-new-evaluation" data-evaluation="').concat(e.dataset.evaluations,'" type="text" name="evaluationName" value="" placeholder="NEW" autocomplete="off" oninput="updateEvalName(this.dataset.evaluation, this.value, \'').concat(a,"');\">"));for(var c=0;c<parseInt(e.dataset.exams);c++)editGridFadeOrUnfade(e,appendElement(e,'<div style="grid-row: '.concat(2+1*c,"; grid-column: ").concat(5+parseInt(e.dataset.evaluations),';" class="edit-weight edit-new-evaluation" data-exam="').concat(c,'" data-evaluation="').concat(e.dataset.evaluations,'" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>')),["exam"]);appendElement(e,'<div style="grid-row: '.concat(2+parseInt(e.dataset.exams),"; grid-column: ").concat(4+parseInt(e.dataset.evaluations),';" class="edit-weight edit-new-exam" data-exam="').concat(e.dataset.exams,'" data-evaluation="').concat(e.dataset.evaluations-1,'" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>')),appendElement(e,'<span style="grid-row: '.concat(3+parseInt(e.dataset.exams),"; grid-column: ").concat(4+parseInt(e.dataset.evaluations),';" class="edit-total" data-evaluation="').concat(-1+parseInt(e.dataset.evaluations),'">0%</span>')),appendElement(o,'<label class="edit-conditions-label" data-evaluation="'.concat(parseInt(e.dataset.evaluations)-1,'"></label>')),appendElement(o,'<input class="edit-conditions-input" type="text" placeholder="nombreExamen >= 2" name="condition" data-evaluation="'.concat(parseInt(e.dataset.evaluations)-1,'">')),(n.name="evaluationName")&&updateEvalName(parseInt(e.dataset.evaluations)-1,n.value,a)}else if(parseInt(s.dataset.exam)==parseInt(e.dataset.exams)){++e.dataset.exams,appendElement(e,'<input style="grid-row: '.concat(2+parseInt(e.dataset.exams),'; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="').concat(e.dataset.exams,'" placeholder="NEW" autocomplete="off" maxlength="5">')),appendElement(e,'<input style="grid-row: '.concat(2+parseInt(e.dataset.exams),'; grid-column: 2;" class="edit-new-exam" type="text"   name="examType"   value="" data-exam="').concat(e.dataset.exams,'" placeholder="Parciales">')),appendElement(e,'<input style="grid-row: '.concat(2+parseInt(e.dataset.exams),'; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="').concat(e.dataset.exams,'" placeholder="-" autocomplete="off" min="0" max="10" step="0.01">'));for(var r=0;r<e.dataset.evaluations;r++)editGridFadeOrUnfade(e,appendElement(e,'<div style="grid-row: '.concat(2+parseInt(e.dataset.exams),"; grid-column: ").concat(5+1*r,';" class="edit-weight edit-new-exam" data-exam="').concat(e.dataset.exams,'" data-evaluation="').concat(r,'"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>')),["exam"]);appendElement(e,'<div style="grid-row: '.concat(1+parseInt(e.dataset.exams),"; grid-column: ").concat(5+parseInt(e.dataset.evaluations),';" class="edit-weight edit-new-evaluation" data-exam="').concat(-1+parseInt(e.dataset.exams),'" data-evaluation="').concat(e.dataset.evaluations,'" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>'));var i=!0,u=!1,l=void 0;try{for(var d,p=e.querySelectorAll(".edit-total")[Symbol.iterator]();!(i=(d=p.next()).done);i=!0){d.value.style.gridRow=3+parseInt(e.dataset.exams)}}catch(e){u=!0,l=e}finally{try{i||null==p.return||p.return()}finally{if(u)throw l}}}editGridFadeOrUnfade(e,s),!s.classList.contains("edit-weight")||s.classList.contains("edit-new-evaluation")||s.classList.contains("edit-new-exam")||""==s.value||updateSumWeight(e,s.dataset.evaluation)}function editGridFadeOrUnfade(e,t){var a=arguments.length>2&&void 0!==arguments[2]?arguments[2]:["exam","evaluation"],n=!0,s=!1,o=void 0;try{for(var c,r=a[Symbol.iterator]();!(n=(c=r.next()).done);n=!0){var i=c.value;null!=t.dataset[i]&&parseInt(t.dataset[i])<parseInt(e.dataset[i+"s"])&&(editGridIsEmpty(e,i,parseInt(t.dataset[i]))?editGridFade(e,i,parseInt(t.dataset[i])):editGridUnfade(e,i,parseInt(t.dataset[i])))}}catch(e){s=!0,o=e}finally{try{n||null==r.return||r.return()}finally{if(s)throw o}}e.querySelector(".grid-separator-evaluation").style.gridRow="2 / ".concat(2+parseInt(e.dataset.exams))}function editGridUnfade(e,t,a){var n=!0,s=!1,o=void 0;try{for(var c,r=e.querySelectorAll("*[data-".concat(t,"='").concat(a,"'"))[Symbol.iterator]();!(n=(c=r.next()).done);n=!0){var i=c.value;(null==i.dataset.evaluation||parseInt(i.dataset.evaluation)<parseInt(e.dataset.evaluations))&&(null==i.dataset.exam||parseInt(i.dataset.exam)<parseInt(e.dataset.exams))&&(i.classList.remove("edit-new-exam"),i.classList.remove("edit-new-evaluation"),["exam","examType","evaluationName"].includes(i.name)&&(i.required=!0))}}catch(e){s=!0,o=e}finally{try{n||null==r.return||r.return()}finally{if(s)throw o}}}function editGridFade(e,t,a){var n=!1,s=!0,o=!1,c=void 0;try{for(var r,i=e.querySelectorAll("*[data-".concat(t,"]"))[Symbol.iterator]();!(s=(r=i.next()).done);s=!0){var u=r.value;if(parseInt(u.dataset[t])==a)u.classList.add("edit-new-".concat(t)),u.required=!1,u.parentNode.removeChild(u),n=!0;else if(parseInt(u.dataset[t])>a)switch(u.dataset[t]=parseInt(u.dataset[t])-1,t){case"evaluation":u.style.gridColumn="".concat(parseInt(u.dataset[t])+5," / auto");break;case"exam":u.style.gridRow="".concat(parseInt(u.dataset[t])+2," / auto")}}}catch(e){o=!0,c=e}finally{try{s||null==i.return||i.return()}finally{if(o)throw c}}var l=e.parentNode.lastElementChild,d=!0,p=!1,m=void 0;try{for(var v,b=l.querySelectorAll("*[data-".concat(t,"]"))[Symbol.iterator]();!(d=(v=b.next()).done);d=!0){var f=v.value;parseInt(f.dataset[t])==a?(f.classList.add("edit-new-".concat(t)),f.parentNode.removeChild(f)):parseInt(f.dataset[t])>a&&(f.dataset[t]=parseInt(f.dataset[t])-1)}}catch(e){p=!0,m=e}finally{try{d||null==b.return||b.return()}finally{if(p)throw m}}n&&(e.dataset[t+"s"]=parseInt(e.dataset[t+"s"])-1)}function editGridIsEmpty(e,t,a){var n=!0,s=!1,o=void 0;try{for(var c,r=e.querySelectorAll("input[data-".concat(t,"='").concat(a,"'], div[data-").concat(t,"='").concat(a,"'] > input"))[Symbol.iterator]();!(n=(c=r.next()).done);n=!0){if(c.value.value)return!1}}catch(e){s=!0,o=e}finally{try{n||null==r.return||r.return()}finally{if(s)throw o}}return!0}function saveEditSubject(){var e=readSubjectFromPopup(editSubjectPopup),t=e.id;subjects[t]=completeSubject(subjects[t],e),uploadEvaluation(t,e.evaluations),updateSubjectCardInfo(t),saveSubjectsLocalStorage(),hideLoader("dashboard")}function readSubjectFromPopup(e){for(var t=e.querySelector('input[name="id"]').value,a={},n=e.querySelector(".edit-popup-grid"),s=0;s<parseInt(n.dataset.evaluations);s++){var o=n.querySelector("input[name='evaluationName'][data-evaluation='".concat(s,"']"));if(o){var c=o.value;if(c){for(var r=0;r<parseInt(n.dataset.exams);r++){var i=n.querySelector("input[name='exam'][data-exam='".concat(r,"']")).value,u=n.querySelector("input[name='examType'][data-exam='".concat(r,"']")).value,l=n.querySelector("div[data-exam='".concat(r,"'][data-evaluation='").concat(s,"'] > input[name='weight']")).value/100;i&&u&&l&&(a[c]||(a[c]={}),a[c].exams||(a[c].exams={}),a[c].exams[i]||(a[c].exams[i]={}),a[c].exams[i].weight=l,a[c].exams[i].type=u)}var d=e.querySelector("input[name='condition'][data-evaluation='".concat(s,"']")).value;d&&(a[c].condition=d)}}}return console.log(a),{id:t,shortName:e.querySelector('input[name="shortName"]').value,fullName:e.querySelector('input[name="fullName"]').value,course:e.querySelector('input[name="course"]').value,faculty:e.querySelector('input[name="faculty"]').value,uni:e.querySelector('input[name="uni"]').value,color:e.querySelector('input[name="color-bar"]:checked').value,evaluations:a}}function saveViewSubject(){var e=readSubjectFromPopup(viewSubjectPopup),t=e.id;subjectsToAdd[t]=e}function saveNewSubject(){return _saveNewSubject.apply(this,arguments)}function _saveNewSubject(){return(_saveNewSubject=_asyncToGenerator(regeneratorRuntime.mark(function e(){var t;return regeneratorRuntime.wrap(function(e){for(;;)switch(e.prev=e.next){case 0:return delete(t=readSubjectFromPopup(newSubjectPopup)).id,e.next=4,uploadSubject(t);case 4:addSubject(e.sent,t),router.navigate("/");case 7:case"end":return e.stop()}},e)}))).apply(this,arguments)}function deleteSubject(e){if(removedSubject=subjects[e],removedSubjectId=e,delete subjects[e],saveSubjectsLocalStorage(),!isAnonymous){var t={};t["subjects."+e]=firebase.firestore.FieldValue.delete(),userDB.update(t)}removeCard(getCard(e)),showToast("Has borrado <b>".concat(removedSubject.shortName,"</b>"),"Deshacer","undoRemoveSubject();"),isEmpty(subjects)&&showTutorial(),congratulate()}function undoRemoveSubject(){var e=removedSubjectId;if(subjects[e]=removedSubject,createSubjectCardCollapsed(e),saveSubjectsLocalStorage(),!isAnonymous){var t={};t["subjects."+e+".grades"]=subjects[e].grades,userDB.update(t)}clearTimeout(toastTimer),document.getElementById("toast").style.display="none"}function hideTutorial(){document.getElementById("tutorial").style.display="none",document.getElementById("add-button-topbar").classList.remove("focus-animation-loop")}function showTutorial(){document.getElementById("tutorial").style.display="block"}var deferredPrompt,provider=new firebase.auth.GoogleAuthProvider;function loginGoogle(){showLoader("Redireccionando","login"),firebase.auth().signInWithRedirect(provider),hideLoader("login")}function logoutGoogle(){firebase.auth().signOut()}function uploadSubject(e){if(null!=e&&null!=e&&""!=e&&e!={}&&e!=[])return subjectsDB.add(_objectSpread({creator:displayName,creatorId:uid,creationDate:new Date},e)).then(function(t){return console.log("Created ".concat(e.shortName," with id ").concat(t.id)),t.id}).catch(function(e){console.error("Error creating subject ",e)})}function uploadGrade(e,t,a){uploadToUserDB("subjects.".concat(e,".grades.").concat(t),a)}function uploadEvaluation(e,t){uploadToUserDB("subjects.".concat(e,".evaluations"),t)}function uploadColor(e,t){uploadToUserDB("subjects.".concat(e,".color"),t)}function uploadVersion(e,t){uploadToUserDB("subjects.".concat(e,".version"),t)}function uploadToUserDB(e,t){uploadToDB(userDB,e,t)}function uploadToSubjectsDB(e,t,a){uploadToDB(subjectsDB.doc(e),t,a)}function uploadToDB(e,t,a){if(!isAnonymous){var n={};t?n[t]=null!=a&&null!=a&&""!=a&&a!={}&&a!=[]?a:firebase.firestore.FieldValue.delete():n=a,e.update(n)}}function getAndDisplayUserSubjects(){isAnonymous?(console.warn("To get user info you need to sign in"),showToast("Guarda tus notas en la nube","Iniciar sesión","loginGoogle();"),hideLoader("dashboard")):(showLoader("Descargando asignaturas","dashboard"),userDB.get().then(function(e){e.exists?function(){var t=e.data(),a=function(e){subjectsDB.doc(e).get().then(function(a){if(a.exists){var n=a.data();subjects[e]||(subjects[e]={}),t.subjects[e]||(t.subjects[e]={}),subjects[e]=completeSubject(n,subjects[e],t.subjects[e],{grades:subjects[e].grades||t.subjects[e].grades?Object.assign({},subjects[e].grades,t.subjects[e].grades):n.grades}),updateFinalMark(e),updateNecesaryMark(e),updateCardGrades(e),saveSubjectsLocalStorage(),console.info("Loaded subject: ".concat(subjects[e].shortName," - ").concat(e))}else console.error("Subject ".concat(e," dosen't exists"))}).catch(function(e){console.error("Error getting subject info:",e)})};for(var n in t.subjects)a(n);console.info("User has ".concat(t.subjects.length," saved subjects"))}():(userDB.set({}),console.error("User ".concat(uid," dosen't exists"))),hideLoader("dashboard")}).catch(function(e){console.error("Error getting user info:",e),hideLoader("dashboard")}))}function getSubjectsAllDB(){return subjectsDB.get()}function searchSubjects(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"";(e=e.trim())?index.search(e).then(function(t){console.log("Results for ".concat(e,":"),t.hits),searchResultsSubject.innerHTML=t.hits.reduce(function(e,t){return e+generateSearchResultSubject(t._highlightResult,t.objectID)},"")}):searchResultsSubject.innerHTML=""}function generateSearchResultSubject(e,t){return"<li onclick=\"addToSubjectsToAdd('".concat(t,"', this.querySelector('input[name=\\'id\\']').checked);\" class=\"searchResult\">\n            <label for=\"checkbox-").concat(t,'">\n              <input style="display: none;" type="checkbox" value="').concat(t,'" name="id" id="checkbox-').concat(t,'" ').concat(subjects[t]||subjectsToAdd[t]?"checked":""," ").concat(subjects[t]?"disabled":"",'>\n              <div class="searchResultCheck" for="checkbox-').concat(t,'"></div>\n            </label>\n            <label class="searchResultTitle" for="checkbox-').concat(t,'">\n              <span class="searchResultRow1">').concat(e.shortName.value," - ").concat(e.fullName.value,'</span><br>\n              <span class="searchResultRow2">').concat(e.faculty.value," ").concat(e.uni.value," - ").concat(e.course.value,"</span>\n            </label>\n            ").concat(subjects[t]?"\x3c!-- ":"","<div class=\"searchResultAction\" onclick=\"this.parentElement.querySelector('input[name=\\'id\\']').checked = true; showViewSubject('").concat(t,'\');"><img src="media/discount.svg"></div>').concat(subjects[t]?" --\x3e ":"","\n          </li>")}function install(){void 0!==deferredPrompt&&(deferredPrompt.prompt(),deferredPrompt.userChoice.then(function(e){e.outcome,deferredPrompt=null}))}provider.setCustomParameters({prompt:"select_account"}),provider.addScope("https://www.googleapis.com/auth/userinfo.profile"),firebase.auth().useDeviceLanguage(),firebase.auth().getRedirectResult().catch(function(e){console.error(e)}),firebase.auth().onAuthStateChanged(function(e){var t=document.getElementById("loginButton");e?(displayName=e.displayName,photoURL=e.photoURL,isAnonymous=e.isAnonymous,uid=e.uid,console.info("Signed in as ".concat(displayName," whith ID: ").concat(uid)),t.textContent="Cerrar sesión",t.classList.add("btn-red"),t.classList.remove("btn-green"),t.onclick=function(){logoutGoogle(),window.history.back()},showLoader("Buscando cambios","dashboard"),userDB=db.collection("users").doc(uid),getAndDisplayUserSubjects()):(hideLoader("dashboard"),displayName="Anónimo",photoURL="media/profile-pic.jpg",isAnonymous=!0,uid=0,userDB=null,console.info("Signed out"),t.textContent="Iniciar sesión",t.classList.remove("btn-red"),t.classList.add("btn-green"),t.onclick=function(){loginGoogle(),window.history.back()},showToast("Guarda tus notas en la nube","Iniciar sesión","loginGoogle();")),document.getElementById("user-container").children[1].children[0].src=photoURL,document.getElementById("profile-topbar").src=isAnonymous?"media/user-circle.svg":photoURL,document.getElementById("user-container").children[1].children[1].textContent=displayName}),window.addEventListener("beforeinstallprompt",function(e){return console.log("App can be installed"),deferredPrompt=e,setTimeout(function(){showToast("Usa GradeCalc offline","Instalar","install();")},1e4),!1});
+"use strict";
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/* ------------------------------ START UP ------------------------------ */
+var dashboard = document.getElementById('dashboard');
+var editSubjectPopup = document.getElementById('edit-popup-content');
+var viewSubjectPopup = document.getElementById('view-popup-content');
+var newSubjectPopup = document.getElementById('new-popup-content');
+var topbar = document.getElementById('top-bar');
+var currentScreen = document.getElementsByClassName('screen')[0];
+var searchResultContainer = document.getElementById('subjects-search-results');
+var searchResultsSubject = document.getElementById('subjects-search-results');
+var allPopups = ['user-container', 'add-container', 'edit-container', 'view-container', 'new-container'];
+var userInfo;
+var subjects = {};
+var removedSubject = {};
+var removedSubjectId = 'defaultID';
+var toastTimer = 0;
+var toast = document.getElementById('toast');
+var displayName = 'Anónimo';
+var photoURL = 'media/profile-pic.jpg';
+var isAnonymous = true;
+var uid = 0;
+var db = firebase.firestore();
+db.settings({
+  timestampsInSnapshots: true
+}); //remove when timestamps are updated
+
+var userDB = null;
+var subjectsDB = db.collection('subjects');
+var client = algoliasearch('2R59JNYNOA', 'b8fd696952b9984035a380a3837662e0');
+var index = client.initIndex('subjects_search');
+var subjectsToAdd = {};
+loadData(); // if (!isSubscribed) {
+//   setTimeout(() => {
+//     showToast('Quieres que te avisemos cuando salgan notas?', 'Avísame', 'subscribe();', 20000);
+//   }, 8000);
+// }
+// also load firebase (at the bottom)
+// also load navigo (at the next section)
+
+/* -------------------- HISTORY && POPUPs ------------------------------ */
+
+var setPageDashboard = function setPageDashboard(params) {
+  popupHideAll();
+};
+
+var setPageUser = function setPageUser(params) {};
+
+var setPageMe = function setPageMe(params) {
+  popupShow('user-container', true);
+};
+
+var setPageMeEdit = function setPageMeEdit(params) {};
+
+var setPageMeSubjectEdit = function setPageMeSubjectEdit(params) {
+  if (subjects[params.id]) {
+    popupShow('edit-container', false);
+    generateEditSubjectUI(params.id); // showSubjectInfo(params.id);
+    // window.history.back();
+  } else {
+    showToast("You don't have the subject ".concat(params.id));
+    window.history.back();
+  }
+};
+
+var setPageMeSubjectAdd = function setPageMeSubjectAdd(params) {
+  popupShow('add-container', false);
+  document.getElementById('search-subject-input').focus();
+};
+
+var setPageSubjectNew = function setPageSubjectNew(params) {
+  popupShow('new-container', false);
+  clearNewSubjectUI();
+};
+
+var setPageSubjectView = function setPageSubjectView(params) {
+  subjectsDB.doc(params.id).get().then(function (doc) {
+    if (doc.exists) {
+      popupShow('view-container', false);
+      generateViewSubjectUI(params.id, doc.data());
+    } else {
+      window.history.back();
+      console.error("Subject width id ".concat(params.id, " doesn't exist"));
+    }
+  }).catch(function (error) {
+    window.history.back();
+    console.error("Error getting subject info:", error);
+  });
+};
+
+var setPageSubjectEdit = function setPageSubjectEdit(params) {};
+
+var router = new Navigo(null, true);
+router.on({
+  '/user/:id': {
+    as: 'user.view',
+    uses: setPageUser
+  },
+  '/me': {
+    as: 'me',
+    uses: setPageMe
+  },
+  '/me/edit': {
+    as: 'me.edit',
+    uses: setPageMeEdit
+  },
+  '/me/subjects/:id/edit': {
+    as: 'me.subject.edit',
+    uses: setPageMeSubjectEdit
+  },
+  '/me/subjects/add': {
+    as: 'me.subject.add',
+    uses: setPageMeSubjectAdd
+  },
+  '/subjects/new': {
+    as: 'subject.new',
+    uses: setPageSubjectNew
+  },
+  //asks basic info and finds duplicates, then goes to subject.edit
+  '/subjects/:id': {
+    as: 'subject.view',
+    uses: setPageSubjectView
+  },
+  '/subjects/:id/edit': {
+    as: 'subject.edit',
+    uses: setPageSubjectEdit
+  },
+  '*': {
+    as: 'dashboard',
+    uses: setPageDashboard
+  }
+}).resolve();
+
+function showUserInfo() {
+  router.navigate("/me");
+}
+
+function showAddSubject() {
+  router.navigate("/me/subjects/add");
+}
+
+function showEditSubject(id) {
+  router.navigate("/me/subjects/".concat(id, "/edit"));
+}
+
+function showViewSubject(id) {
+  router.navigate("/subjects/".concat(id));
+}
+
+function showNewSubject() {
+  router.navigate("/subjects/new");
+} //Shows the popup
+
+
+function popupShow(id, isSmall) {
+  popupHideAll(id);
+  var elem = document.getElementById(id);
+  elem.style.display = 'flex';
+
+  elem.animate({
+    opacity: [0, 1],
+    easing: ["ease-in"]
+  }, 125).onfinish = function () {
+    if (!isSmall && window.matchMedia("(max-width: 600px)").matches) {
+      currentScreen.style.display = 'none';
+      topbar.style.display = 'none';
+    }
+  };
+} //Hides the popup
+
+
+function popupHide(popup) {
+  currentScreen.style.display = 'block';
+  topbar.style.display = 'flex';
+
+  popup.animate({
+    opacity: [1, 0],
+    easing: ["ease-in"]
+  }, 125).onfinish = function () {
+    popup.style.display = 'none';
+  };
+} //Hides all popups
+
+
+function popupHideAll(exeption) {
+  for (var _i = 0; _i < allPopups.length; _i++) {
+    var popup = allPopups[_i];
+
+    if (popup != exeption) {
+      popupHide(document.getElementById(popup));
+    }
+  }
+}
+/* ------------------------------ UI CREATION ------------------------------ */
+//Generate the cards with the subjects from localStorage
+
+
+function loadData() {
+  showLoader('Cargando tus asignaturas', 'dashboard');
+  subjects = getSubjectsLocalStorage();
+  console.info('Subjects loaded from localStorage');
+
+  for (var id in subjects) {
+    autoUpdate(id);
+    createSubjectCardCollapsed(id);
+  }
+
+  hideLoader('dashboard');
+}
+
+function autoUpdate(id) {
+  if (subjects[id].evaluation != undefined || subjects[id].evaluations == undefined) {
+    subjects[id].evaluations = toNewEvalNeeeeeeeeew(subjects[id].evaluation);
+    delete subjects[id].evaluation;
+    uploadEvaluation(id, subjects[id].evaluations);
+    saveSubjectsLocalStorage();
+  }
+
+  if (Object.keys(subjects[id].evaluations).length == 0) {
+    delete subjects[id];
+    saveSubjectsLocalStorage();
+  }
+
+  if (subjects[id].necesaryMark != undefined || subjects[id].necesaryMarks == undefined) {
+    delete subjects[id].necesaryMark;
+    subjects[id].necesaryMarks = {};
+
+    for (var evaluation in subjects[id].evaluations) {
+      subjects[id].necesaryMarks[evaluation] = {};
+
+      for (var examName in subjects[id].evaluations[evaluation].exams) {
+        subjects[id].necesaryMarks[evaluation][examName] = subjects[id].evaluations[evaluation].passMark;
+      }
+    }
+
+    updateNecesaryMark(id);
+    saveSubjectsLocalStorage();
+  }
+} //updates the subject card information (bar, inputs and names)
+
+
+function updateSubjectCardInfo(id) {
+  getCard(id).innerHTML = "<button onclick=\"deleteSubject('".concat(id, "')\" class=\"subject-card-remove\">\n  <img src=\"media/trash.svg\" alt=\"x\" aria-label=\"Delete subject\">\n</button>\n<button onclick=\"showEditSubject('").concat(id, "')\" class=\"subject-card-info\">\n  <img src=\"media/discount.svg\" alt=\"%\" aria-label=\"Show subject information\">\n</button>\n<h2>").concat(subjects[id].shortName, "</h2>\n<p class=\"subject-finalMark\" style=\"color: ").concat(isPassed(id, subjects[id].selectedEvaluation) ? '#5a9764' : '#b9574c', ";\">").concat(subjects[id].finalMark[subjects[id].selectedEvaluation], "</p>\n<div class=\"subject-bar\">").concat(generateBar(id), "</div>\n<div class=\"grades-input hidden\" style=\"height: 0px;\">").concat(generateInputs(id) + generateEvaluations(id), "</div>");
+  updateAndDisplayMarks(id, false);
+} //Creates the subject card and appends it to the dashboard
+
+
+function createSubjectCardCollapsed(id) {
+  var card = document.createElement('div');
+  card.id = 'card-' + id;
+  card.className = 'subject-card';
+
+  card.onclick = function (event) {
+    toggleExpandCard(event, this);
+  };
+
+  card.innerHTML = "<button onclick=\"deleteSubject('".concat(id, "')\" class=\"subject-card-remove\">\n  <img src=\"media/trash.svg\" alt=\"x\" aria-label=\"Delete subject\">\n</button>\n<button onclick=\"showEditSubject('").concat(id, "')\" class=\"subject-card-info\">\n  <img src=\"media/discount.svg\" alt=\"%\" aria-label=\"Show subject information\">\n</button>\n<h2>").concat(subjects[id].shortName, "</h2>\n<p class=\"subject-finalMark\" style=\"color: ").concat(isPassed(id, subjects[id].selectedEvaluation) ? '#5a9764' : '#b9574c', ";\">").concat(subjects[id].finalMark[subjects[id].selectedEvaluation], "</p>\n<div class=\"subject-bar\">").concat(generateBar(id), "</div>\n<div class=\"grades-input hidden\" style=\"height: 0px;\">").concat(generateInputs(id) + generateEvaluations(id), "</div>");
+  dashboard.appendChild(card);
+  updateAndDisplayMarks(id, false);
+  hideTutorial();
+}
+
+function generateBar(id) {
+  var weight = 0;
+  var barHTML = "";
+
+  for (var exam in subjects[id].evaluations[subjects[id].selectedEvaluation].exams) {
+    if (isUndone(id, exam)) {
+      var mark = '';
+
+      if (subjects[id].necesaryMarks[subjects[id].selectedEvaluation][exam] == null) {
+        mark = 'ಥ_ಥ';
+      } else {
+        mark = subjects[id].necesaryMarks[subjects[id].selectedEvaluation][exam];
+      }
+
+      barHTML += "<div onclick=\"selectInput('in-".concat(id + exam, "')\" class=\"scolN\" style=\"flex-grow: ").concat(subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100, "\" title=\"").concat(subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100, "%\" data-exam=\"").concat(exam, "\">").concat(exam, "<div id=\"bar-").concat(id + exam, "\" data-exam=\"").concat(exam, "\">").concat(mark, "</div></div>");
+    } else {
+      barHTML += "<div onclick=\"selectInput('in-".concat(id + exam, "')\" class=\"scol").concat(subjects[id].color, "\" style=\"flex-grow: ").concat(subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100, "\" title=\"").concat(subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100, "%\" data-exam=\"").concat(exam, "\">").concat(exam, "<div id=\"bar-").concat(id + exam, "\" data-exam=\"").concat(exam, "\">").concat(subjects[id].grades[exam], "</div></div>");
+    }
+  }
+
+  return barHTML;
+}
+
+function generateInputs(id) {
+  var html = '';
+  var types = {};
+
+  for (var examName in subjects[id].evaluations[subjects[id].selectedEvaluation].exams) {
+    var exam = subjects[id].evaluations[subjects[id].selectedEvaluation].exams[examName];
+    if (!types[exam.type]) types[exam.type] = {};
+    if (!types[exam.type].weight) types[exam.type].weight = 0;
+    if (!types[exam.type].inputsHTML) types[exam.type].inputsHTML = '';
+    types[exam.type].weight += exam.weight;
+    var mark = '';
+
+    if (subjects[id].necesaryMarks[subjects[id].selectedEvaluation][examName] == null) {
+      mark = 'ಥ_ಥ';
+    } else {
+      mark = subjects[id].necesaryMarks[subjects[id].selectedEvaluation][examName];
+    }
+
+    if (isUndone(id, examName)) {
+      types[exam.type].inputsHTML += "<div><span>".concat(examName, ":</span><input type=\"number\" id=\"in-").concat(id + examName, "\" data-exam=\"").concat(examName, "\" placeholder=\"").concat(mark, "\" value=\"\" class=\"scolN2\" oninput=\"updateMarkFromCardInput('").concat(id, "', '").concat(examName, "', this.value, this);\" autocomplete=\"off\" step=\"0.01\" min=\"0\" max=\"10\"></div>");
+    } else {
+      types[exam.type].inputsHTML += "<div><span>".concat(examName, ":</span><input type=\"number\" id=\"in-").concat(id + examName, "\" data-exam=\"").concat(examName, "\" placeholder=\"").concat(mark, "\" value=\"").concat(subjects[id].grades[examName], "\" class=\"scol").concat(subjects[id].color, "\" oninput=\"updateMarkFromCardInput('").concat(id, "', '").concat(examName, "', this.value, this);\" autocomplete=\"off\" step=\"0.01\" min=\"0\" max=\"10\"></div>");
+    }
+  }
+
+  for (var type in types) {
+    html += "<h3>".concat(type, "</h3><span>").concat(round(types[type].weight * 100, 0), "%</span><div>").concat(types[type].inputsHTML, "</div>");
+  }
+
+  return html;
+}
+
+function generateEvaluations(id) {
+  var evaluationsHTML = "<div class=\"evaluation-select\"".concat(Object.keys(subjects[id].evaluations).length <= 1 ? ' style="display: none;"' : '', ">\n  <span>Evaluaci\xF3n:</span>\n  <select onchange=\"setSelectedEvaluation('").concat(id, "',this.value);\">");
+
+  for (var evaluation in subjects[id].evaluations) {
+    evaluationsHTML += "<option value=\"".concat(evaluation, "\"").concat(evaluation == subjects[id].selectedEvaluation ? 'selected="selected"' : '', ">").concat(evaluation, "</option>");
+  }
+
+  evaluationsHTML += "</select>\n  <img src=\"media/dislike.svg\" style=\"display: none;\" title=\"Hay otra evaluaci\xF3n mejor\">\n</div>";
+  return evaluationsHTML;
+}
+
+function addToSubjectsToAdd(id, checked) {
+  if (checked) {
+    subjectsToAdd[id] = null;
+  } else {
+    delete subjectsToAdd[id];
+  }
+} //Adds the subjects selected in the popup
+
+
+function addSubjects() {
+  showLoader('Cargando tus asignaturas', 'dashboard');
+  document.getElementById('search-subject-input').value = '';
+
+  for (var id in subjectsToAdd) {
+    if (subjects[id] == undefined) {
+      if (subjectsToAdd[id] == null) {
+        addSubjectFromDB(id);
+      } else {
+        addSubject(id, subjectsToAdd[id]);
+      }
+    } else {// showToast(`Ya tienes ${subjects[id].shortName}`);
+    }
+  }
+
+  window.history.back();
+  searchSubjects();
+}
+
+function addSubject(id, subject) {
+  subjects[id] = completeSubject(subject);
+  updateFinalMark(id);
+  updateNecesaryMark(id);
+  createSubjectCardCollapsed(id);
+  saveSubjectsLocalStorage();
+  hideLoader('dashboard');
+}
+
+function addSubjectFromDB(id) {
+  subjectsDB.doc(id).get().then(function (doc) {
+    if (doc.exists) {
+      addSubject(id, doc.data());
+    } else {
+      console.error('Subject dosen\'t exists');
+    }
+  }).catch(function (error) {
+    console.error("Error getting subject info:", error);
+  });
+}
+
+function completeSubject() {
+  for (var _len = arguments.length, subjects = new Array(_len), _key = 0; _key < _len; _key++) {
+    subjects[_key] = arguments[_key];
+  }
+
+  var subject = Object.assign.apply(Object, [{
+    evaluations: {},
+    grades: {},
+    fullName: '',
+    shortName: '',
+    faculty: '',
+    uni: '',
+    course: '',
+    color: 1,
+    necesaryMarks: {},
+    finalMark: {}
+  }].concat(subjects));
+  delete subject.id;
+  delete subject.evaluation; // TODO: remove this if all subjects have last evaluation structure
+
+  if (!subject.selectedEvaluation || !Object.keys(subject.evaluations).includes(subject.selectedEvaluation)) subject.selectedEvaluation = Object.keys(subject.evaluations)[0] || '';
+
+  for (var evaluation in subject.evaluations) {
+    if (!subject.necesaryMarks[evaluation]) {
+      subject.necesaryMarks[evaluation] = {};
+
+      for (var examName in subject.evaluations[evaluation].exams) {
+        subject.necesaryMarks[evaluation][examName] = subject.evaluations[evaluation].passMark;
+      }
+
+      subject.finalMark[evaluation] = 0;
+    }
+  }
+
+  return subject;
+}
+
+function clearNewSubjectUI() {
+  var html = generateEditSubjectUIHTML('new', completeSubject({
+    creator: displayName,
+    creationDate: new Date()
+  }), 'new');
+  newSubjectPopup.innerHTML = html;
+}
+
+function generateViewSubjectUI(id, subject) {
+  var html = generateEditSubjectUIHTML(id, subject, 'view');
+  viewSubjectPopup.innerHTML = html;
+  var evaluations = Object.keys(subject.evaluations);
+
+  for (var evaluationCount in evaluations) {
+    updateSumWeight(viewSubjectPopup, evaluationCount);
+  }
+}
+
+function generateEditSubjectUI(id) {
+  var subject = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : subjects[id];
+  var html = generateEditSubjectUIHTML(id, subject, 'edit');
+  editSubjectPopup.innerHTML = html;
+  var evaluations = Object.keys(subject.evaluations);
+
+  for (var evaluationCount in evaluations) {
+    updateSumWeight(editSubjectPopup, evaluationCount);
+  }
+}
+
+function generateEditSubjectUIHTML(id, subject, popup) {
+  var exams = toNewEval(subject.evaluations);
+  var evaluations = Object.keys(subject.evaluations);
+  var grid = '';
+  var newEvals = '';
+  var newExams = '';
+  var footer = '';
+  var colors = '';
+  var conditions = '';
+  newEvals += "<input style=\"grid-row: 1; grid-column: ".concat(5 + evaluations.length * 1, ";\" class=\" edit-new-evaluation\" data-evaluation=\"").concat(evaluations.length, "\" type=\"text\" name=\"evaluationName\" value=\"\" placeholder=\"NEW\" autocomplete=\"off\" oninput=\"updateEvalName(this.dataset.evaluation, this.value, '").concat(popup, "');\">");
+  var examCount = 0;
+
+  for (var exam in exams) {
+    grid += "\n    <input style=\"grid-row: ".concat(2 + examCount * 1, "; grid-column: 1;\" class=\"\" type=\"text\"   name=\"exam\"       value=\"").concat(exam, "\"                 data-exam=\"").concat(examCount, "\" placeholder=\"NEW\" autocomplete=\"off\" maxlength=\"5\" required>\n    <input style=\"grid-row: ").concat(2 + examCount * 1, "; grid-column: 2;\" class=\"\" type=\"text\"   name=\"examType\"   value=\"").concat(exams[exam].examType, "\" data-exam=\"").concat(examCount, "\" placeholder=\"Parciales\" required>\n    <input style=\"grid-row: ").concat(2 + examCount * 1, "; grid-column: 3;\" class=\"\" type=\"number\" name=\"mark\"       value=\"\"                        data-exam=\"").concat(examCount, "\" placeholder=\"-\" autocomplete=\"off\" min=\"0\" max=\"10\" step=\"0.01\">");
+    newEvals += "<div style=\"grid-row: ".concat(2 + examCount * 1, "; grid-column: ").concat(5 + evaluations.length * 1, ";\" class=\"edit-weight edit-new-evaluation\" data-exam=\"").concat(examCount, "\" data-evaluation=\"").concat(evaluations.length, "\"><input type=\"number\" name=\"weight\" value=\"\" placeholder=\"0\" autocomplete=\"off\" min=\"0\" max=\"100\" step=\"0.0001\"></div>");
+
+    for (var evaluationCount in evaluations) {
+      grid += "<div style=\"grid-row: ".concat(2 + examCount * 1, "; grid-column: ").concat(5 + evaluationCount * 1, ";\" class=\"edit-weight\" data-exam=\"").concat(examCount, "\" data-evaluation=\"").concat(evaluationCount, "\"><input type=\"number\" name=\"weight\" value=\"").concat(exams[exam].weight[evaluations[evaluationCount]] && exams[exam].weight[evaluations[evaluationCount]] != 0 ? round(exams[exam].weight[evaluations[evaluationCount]] * 100, 4) : '', "\" placeholder=\"0\" autocomplete=\"off\" min=\"0\" max=\"100\" step=\"0.0001\"></div>");
+    }
+
+    ++examCount;
+  }
+
+  for (var _evaluationCount in evaluations) {
+    grid += "<input style=\"grid-row: 1; grid-column: ".concat(5 + _evaluationCount * 1, ";\" class=\"edit-evaluationName\" type=\"text\" name=\"evaluationName\" value=\"").concat(evaluations[_evaluationCount], "\" data-evaluation=\"").concat(_evaluationCount, "\" placeholder=\"NEW\" autocomplete=\"off\" required oninput=\"updateEvalName(this.dataset.evaluation, this.value, '").concat(popup, "');\">");
+    newExams += "<div style=\"grid-row: ".concat(2 + examCount * 1, "; grid-column: ").concat(5 + _evaluationCount * 1, ";\" class=\"edit-weight edit-new-exam\" data-exam=\"").concat(examCount, "\" data-evaluation=\"").concat(_evaluationCount, "\"><input type=\"number\" name=\"weight\" value=\"\" placeholder=\"0\" autocomplete=\"off\" min=\"0\" max=\"100\" step=\"0.0001\"></div>");
+    footer += "<span  style=\"grid-row: ".concat(3 + examCount * 1, "; grid-column: ").concat(5 + _evaluationCount * 1, ";\" class=\"edit-total\" data-evaluation=\"").concat(_evaluationCount, "\">0%</span>");
+    conditions += "<label class=\"edit-conditions-label\">".concat(evaluations[_evaluationCount], "</label><input class=\"edit-conditions-input\" type=\"text\" placeholder=\"nombreExamen >= 2\" name=\"condition\" data-evaluation=\"").concat(_evaluationCount, "\" value=\"").concat(subject.evaluations[evaluations[_evaluationCount]].condition || '', "\">");
+  }
+
+  newExams += "\n  <input style=\"grid-row: ".concat(2 + examCount * 1, "; grid-column: 1;\" class=\"edit-new-exam\" type=\"text\"   name=\"exam\"       value=\"\" data-exam=\"").concat(examCount, "\" placeholder=\"NEW\" autocomplete=\"off\" maxlength=\"5\">\n  <input style=\"grid-row: ").concat(2 + examCount * 1, "; grid-column: 2;\" class=\"edit-new-exam\" type=\"text\"   name=\"examType\"   value=\"\" data-exam=\"").concat(examCount, "\" placeholder=\"Parciales\">\n  <input style=\"grid-row: ").concat(2 + examCount * 1, "; grid-column: 3;\" class=\"edit-new-exam\" type=\"number\" name=\"mark\"       value=\"\" data-exam=\"").concat(examCount, "\" placeholder=\"-\" autocomplete=\"off\" min=\"0\" max=\"10\" step=\"0.01\">\n  ");
+  var _arr = [1, 8, 3, 4, 6, 5, 2, 7];
+
+  for (var _i2 = 0; _i2 < _arr.length; _i2++) {
+    var color = _arr[_i2];
+    colors += "\n    <label class=\"scol".concat(color, "\"  for=\"color-bar-").concat(popup, "-elem").concat(color, "\">\n      <input type=\"radio\" name=\"color-bar\" value=\"").concat(color, "\" id=\"color-bar-").concat(popup, "-elem").concat(color, "\" ").concat(color == subject.color ? 'checked' : '', ">\n      <span class=\"edit-color-checkmark\"></span>\n    </label>");
+  }
+
+  var html = "\n  <h2>Informaci\xF3n</h2>\n  <input type=\"hidden\" name=\"id\" id=\"".concat(popup, "-id\" value=\"").concat(id, "\" style=\"display: none;\" hidden>\n  <div class=\"edit-popup-info\">\n    <div>\n      <label for=\"").concat(popup, "-shortName\">Nombre</label>\n      <input type=\"text\" name=\"shortName\" id=\"").concat(popup, "-shortName\" value=\"").concat(subject.shortName, "\" placeholder=\"M2\" required>\n    </div>\n    <div class=\"edit-fullName\">\n      <label for=\"").concat(popup, "-fullName\">Nombre Largo</label>\n      <input type=\"text\" name=\"fullName\" id=\"").concat(popup, "-fullName\" value=\"").concat(subject.fullName ? subject.fullName : '', "\" placeholder=\"Matem\xE1ticas 2\" required>\n    </div>\n  </div>\n  <div class=\"edit-popup-info\">\n    <div>\n      <label for=\"").concat(popup, "-course\">Curso</label>\n      <input type=\"text\" name=\"course\" id=\"").concat(popup, "-course\" value=\"").concat(subject.course ? subject.course : '', "\" placeholder=\"Q1 2019-2020\" required>\n    </div>\n    <div>\n      <label for=\"").concat(popup, "-faculty\">Facultad</label>\n      <input type=\"text\" name=\"faculty\" id=\"").concat(popup, "-faculty\" value=\"").concat(subject.faculty ? subject.faculty : '', "\" placeholder=\"FIB\" required>\n    </div>\n    <div>\n      <label for=\"").concat(popup, "-uni\">Universidad</label>\n      <input type=\"text\" name=\"uni\" id=\"").concat(popup, "-uni\" value=\"").concat(subject.uni ? subject.uni : '', "\" placeholder=\"UPC\" required>\n    </div>\n  </div>\n  <div class=\"color-bar\">\n    ").concat(colors, "\n    <!-- <label class=\"scol0\"  for=\"color-bar-elem0\">\n      <input type=\"radio\" name=\"color-bar\" value=\"0\" id=\"color-bar-elem0\">\n      <span class=\"edit-color-checkmark edit-color-checkmark-random\"></span>\n    </label> -->\n  </div>\n\n  <div class=\"edit-popup-info\">\n    <div>\n      <span>Fecha de creaci\xF3n: <span id=\"").concat(popup, "-creationDate\">").concat(false && subject.creationDate ? subject.creationDate.toLocaleDateString('es-ES') : '--/--/----', "</span></span>\n    </div>\n    <div>\n      <span>Creador: <span id=\"").concat(popup, "-creator\">").concat(subject.creator ? subject.creator : 'Anónimo', "</span></span>\n    </div>\n  </div>\n\n  <h2>Evaluaci\xF3n</h2>\n  <div class=\"scroll\">\n    <div class=\"edit-popup-grid\" onkeyup=\"editUIUpdateGrid(this, event, '").concat(popup, "');\" data-evaluations=\"").concat(evaluations.length, "\" data-exams=\"").concat(examCount, "\">\n      <!-- Header -->\n      <span  style=\"grid-row: 1; grid-column: 1;\" >Nombre</span>\n      <span  style=\"grid-row: 1; grid-column: 2;\" >Categor\xEDa</span>\n      <span  style=\"grid-row: 1; grid-column: 3;\" >Nota</span>\n\n      <!-- Body -->\n      ").concat(grid, "\n      <!-- Divider -->\n      <div style=\"grid-row: 2 / ").concat(2 + examCount, ";\" class=\"grid-separator-evaluation\"></div>\n\n      <!-- new -->\n      ").concat(newEvals, "\n      ").concat(newExams, "\n\n      <!-- Footer -->\n      ").concat(footer, "\n      \n    </div>\n\n    <!-- Conditions -->\n    <h2>Condiciones para aprovar</h2>\n    <div class=\"edit-conditions\">\n      ").concat(conditions, "\n    </div>\n  </div>");
+  return html;
+}
+/* ------------------------------ UI & DATA UPDATE ------------------------------ */
+
+
+function updateEvalName(evaluationN, value, popup) {
+  var label = document.querySelector("#".concat(popup, "-popup-content .edit-conditions-label[data-evaluation='").concat(evaluationN, "']"));
+  if (label) label.textContent = value || '';
+} //Updates, saves and shows the finalMark and necesaryMarks
+
+
+function updateAndDisplayMarks(id) {
+  var confetti = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  updateFinalMark(id, confetti);
+  updateNecesaryMark(id);
+  displayFinalMark(id);
+  displayNecesaryMark(id);
+  congratulate();
+}
+
+function displayNecesaryMark(id) {
+  var card = getCard(id);
+  var barUndone = card.getElementsByClassName('scolN');
+  var inUndone = card.getElementsByClassName('scolN2');
+
+  for (var j = 0; j < barUndone.length; j++) {
+    var mark = '';
+
+    if (subjects[id].necesaryMarks[subjects[id].selectedEvaluation][barUndone[j].dataset.exam] == null) {
+      mark = 'ಥ_ಥ';
+    } else {
+      mark = subjects[id].necesaryMarks[subjects[id].selectedEvaluation][barUndone[j].dataset.exam];
+    }
+
+    barUndone[j].children[0].textContent = mark;
+  }
+
+  for (var _j = 0; _j < inUndone.length; _j++) {
+    var _mark = '';
+
+    if (subjects[id].necesaryMarks[subjects[id].selectedEvaluation][inUndone[_j].dataset.exam] == null) {
+      _mark = 'ಥ_ಥ';
+    } else {
+      _mark = subjects[id].necesaryMarks[subjects[id].selectedEvaluation][inUndone[_j].dataset.exam];
+    }
+
+    inUndone[_j].placeholder = _mark;
+  }
+}
+
+function displayFinalMark(id) {
+  var cardFinalMark = getCard(id).getElementsByClassName('subject-finalMark')[0];
+  cardFinalMark.textContent = subjects[id].finalMark[subjects[id].selectedEvaluation];
+  cardFinalMark.style.color = isPassed(id, subjects[id].selectedEvaluation) ? '#5a9764' : '#b9574c';
+}
+
+function updateNecesaryMark(id) {
+  var evaluation = subjects[id].selectedEvaluation;
+  var identifiers = getConditionIdentifiers(id, evaluation);
+
+  for (var exam in subjects[id].necesaryMarks[evaluation]) {
+    subjects[id].necesaryMarks[evaluation][exam] = undefined;
+  }
+
+  for (var _exam in identifiers.exams) {
+    switch (identifiers.exams[_exam].operator) {
+      case '>=':
+        subjects[id].necesaryMarks[evaluation][_exam] = identifiers.exams[_exam].value;
+        break;
+    }
+  }
+
+  for (var type in identifiers.types) {
+    switch (identifiers.types[type].operator) {
+      case '>=':
+        for (var _exam2 in subjects[id].necesaryMarks[evaluation]) {
+          if (subjects[id].evaluations[evaluation].exams[_exam2].type == type) {
+            if (subjects[id].necesaryMarks[evaluation][_exam2] !== undefined && subjects[id].necesaryMarks[evaluation][_exam2] < identifiers.types[type].value) {
+              subjects[id].necesaryMarks[evaluation][_exam2] = identifiers.types[type].value;
+            }
+          }
+        }
+
+        break;
+    }
+  }
+
+  gradeCalcAllEqual(id, subjects[id].selectedEvaluation);
+  var selectedEvaluationIsBestOption = getBestEval(id) === subjects[id].selectedEvaluation;
+  var card = getCard(id);
+  if (card) card.querySelector('.evaluation-select > img').style.display = selectedEvaluationIsBestOption ? 'none' : 'block';
+}
+
+function getBestEval(id) {
+  var smallestNecesaryMarkEvaluation;
+  var smallestNecesaryMark;
+
+  for (var evaluation in subjects[id].evaluations) {
+    var greatestNecesaryMark = undefined;
+
+    for (var examName in subjects[id].evaluations[evaluation].exams) {
+      if (greatestNecesaryMark == undefined || greatestNecesaryMark < subjects[id].necesaryMarks[evaluation][examName]) {
+        greatestNecesaryMark = subjects[id].necesaryMarks[evaluation][examName];
+      }
+
+      if (smallestNecesaryMark == undefined || smallestNecesaryMark > greatestNecesaryMark) {
+        smallestNecesaryMark = subjects[id].necesaryMarks[evaluation][examName];
+        smallestNecesaryMarkEvaluation = evaluation;
+      }
+    }
+  }
+
+  return smallestNecesaryMarkEvaluation;
+}
+
+function smallestNecessaryMark(id, evaluation) {
+  var result = {};
+
+  for (var exam in subjects[id].necesaryMarks[evaluation]) {
+    if (result.mark === undefined || result.mark < subjects[id].necesaryMarks[evaluation][exam]) {
+      result.exam = exam;
+      result.mark = subjects[id].necesaryMarks[evaluation][exam];
+    }
+  }
+
+  return result;
+} //Saves and updates the value of the finalMark
+
+
+function updateFinalMark(id) {
+  var confetti = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+  for (var evaluation in subjects[id].evaluations) {
+    subjects[id].finalMark[evaluation] = 0;
+
+    for (var exam in subjects[id].evaluations[evaluation].exams) {
+      if (!isUndone(id, exam)) subjects[id].finalMark[evaluation] += subjects[id].grades[exam] * subjects[id].evaluations[evaluation].exams[exam].weight;
+    }
+
+    subjects[id].finalMark[evaluation] = round(subjects[id].finalMark[evaluation]);
+  }
+
+  var nowPassed = isPassed(id);
+  if (confetti && !subjects[id].passed && nowPassed) showConfetti(getCard(id));
+  subjects[id].passed = nowPassed;
+  return subjects[id].finalMark[subjects[id].selectedEvaluation];
+} //Saves the changed mark, updates finalMark and necesaryMarks, and shows the info in the UI
+
+
+function updateMarkFromCardInput(id, exam, mark, input) {
+  var barElem = getBarElem(id, exam);
+
+  if (!isNaN(mark) && mark != '') {
+    subjects[id].passed = isPassed(id);
+    subjects[id].grades[exam] = Number(mark);
+    uploadGrade(id, exam, subjects[id].grades[exam]);
+    barElem.parentElement.className = 'scol' + subjects[id].color;
+    barElem.textContent = input.value;
+    input.className = 'scol' + subjects[id].color;
+  } else {
+    delete subjects[id].grades[exam];
+    uploadGrade(id, exam, undefined);
+    barElem.parentElement.className = 'scolN';
+    input.className = 'scolN2';
+  }
+
+  updateAndDisplayMarks(id);
+  saveSubjectsLocalStorage();
+}
+
+function updateCardGrades(id) {
+  var card = getCard(id);
+
+  if (card) {
+    for (var div in card.getElementsByClassName('subject-bar')[0]) {
+      div.className = 'scolN';
+    }
+
+    for (var exam in subjects[id].evaluations[subjects[id].selectedEvaluation].exams) {
+      var input = getInput(id, exam);
+      input.className = 'scolN2';
+      input.value = '';
+    }
+
+    for (var _exam3 in subjects[id].grades) {
+      var barElem = getBarElem(id, _exam3);
+
+      var _input = getInput(id, _exam3);
+
+      if (barElem && _input) {
+        barElem.textContent = subjects[id].grades[_exam3];
+        barElem.parentElement.className = 'scol' + subjects[id].color;
+        _input.value = subjects[id].grades[_exam3];
+        _input.className = 'scol' + subjects[id].color;
+      } else {
+        console.log("Exam ".concat(_exam3, " of ").concat(subjects[id].shortName, " (").concat(id, ") is not in the card"));
+      }
+    }
+
+    updateAndDisplayMarks(id);
+  } else {
+    createSubjectCardCollapsed(id);
+    updateCardGrades(id);
+  }
+} // updates the selectedEvaluation, saves the subjects and displays the new selectedEvaluation
+
+
+function setSelectedEvaluation(id) {
+  var evaluation = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : subjects[id].selectedEvaluation;
+  subjects[id].selectedEvaluation = evaluation;
+  saveSubjectsLocalStorage();
+  var card = getCard(id);
+  card.getElementsByClassName('subject-bar')[0].innerHTML = generateBar(id);
+  card.getElementsByClassName('grades-input')[0].innerHTML = generateInputs(id) + generateEvaluations(id, evaluation);
+  updateHeigth(card.getElementsByClassName('grades-input')[0]);
+  updateAndDisplayMarks(id);
+} // shoot confeti in that element's left down corner
+
+
+function showConfetti(elem, conf) {
+  if (conf == undefined) {
+    conf = {
+      angle: random(60, 70),
+      spread: random(40, 50),
+      startVelocity: random(60, 90),
+      elementCount: random(30, 60),
+      decay: 0.8,
+      colors: ['#E68F17', '#FAB005', '#FA5252', '#E64980', '#BE4BDB', '#0B7285', '#15AABF', '#EE1233', '#40C057']
+    };
+  }
+
+  window.confetti(elem, conf);
+} // returns the card DOM element with that id
+
+
+function getCard(id) {
+  return document.getElementById('card-' + id);
+} // returns the input DOM element of the card from the subject id and exam exam
+
+
+function getInput(id, exam) {
+  return document.getElementById('in-' + id + exam);
+} // returns the card bar DOM element of the card from the subject id and exam exam
+
+
+function getBarElem(id, exam) {
+  return document.getElementById('bar-' + id + exam);
+}
+/* ------------------------------ MATH ------------------------------ */
+
+
+function gradeCalcAllEqual(id, evaluation) {
+  var sumUndoneExams = 0;
+  var exams = [];
+  var expectedMark = 0;
+
+  for (var exam in subjects[id].evaluations[evaluation].exams) {
+    if (isUndone(id, exam)) {
+      if (subjects[id].necesaryMarks[evaluation][exam] == undefined) {
+        sumUndoneExams += subjects[id].evaluations[evaluation].exams[exam].weight;
+        exams.push(exam);
+      } else {
+        expectedMark += subjects[id].evaluations[evaluation].exams[exam].weight * subjects[id].necesaryMarks[evaluation][exam];
+      }
+    } else {
+      expectedMark += subjects[id].evaluations[evaluation].exams[exam].weight * subjects[id].grades[exam];
+    }
+  }
+
+  var passMark = subjects[id].evaluations[evaluation].passMark || 5;
+  var necesaryMark = (passMark - expectedMark) / sumUndoneExams;
+  var smallestNecesaryMark = smallestNecessaryMark(id, evaluation);
+
+  if (smallestNecesaryMark.mark != undefined && smallestNecesaryMark.mark < necesaryMark) {
+    subjects[id].necesaryMarks[evaluation][smallestNecesaryMark.exam] = undefined;
+    gradeCalcAllEqual(id, evaluation);
+  } else {
+    var canPass = calcCondition(id, evaluation, false);
+
+    for (var _exam4 in subjects[id].evaluations[evaluation].exams) {
+      if (!subjects[id].necesaryMarks[evaluation][_exam4]) {
+        if (isUndone(id, _exam4)) {
+          if (canPass === false) {
+            subjects[id].necesaryMarks[evaluation][_exam4] = null;
+          } else {
+            subjects[id].necesaryMarks[evaluation][_exam4] = Math.max(0, round(necesaryMark));
+          }
+        } else {
+          subjects[id].necesaryMarks[evaluation][_exam4] = subjects[id].grades[_exam4];
+        }
+      }
+    }
+  }
+} //returns n rounded to d decimals (2)
+
+
+function round(n) {
+  var d = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
+  return isNaN(n) || n === '' || n == undefined ? undefined : Math.floor(Math.round(n * Math.pow(10, d))) / Math.pow(10, d);
+} // returns a random number from smallest to biggest
+
+
+function random(smallest, biggest) {
+  return Math.floor(Math.random() * (biggest - smallest)) + smallest;
+}
+
+function congratulate() {
+  if (hasPassedEverything()) {
+    document.getElementById('congratulations-img').style.display = 'block';
+  } else {
+    document.getElementById('congratulations-img').style.display = 'none';
+  }
+} // returns true if all subjects are passed in each selectedEvaluation
+
+
+function hasPassedEverything() {
+  if (isEmpty(subjects)) return false;
+
+  for (var id in subjects) {
+    if (!isPassed(id)) return false;
+  }
+
+  return true;
+} // returns true if the subject with that id has a finalMark greater than mark (5) in the evaluation (selectedEvaluation)
+
+
+function isPassed(id) {
+  var evaluation = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : subjects[id].selectedEvaluation;
+  return subjects[id].finalMark[evaluation] >= (subjects[id].evaluations[evaluation].passMark || 5) && calcCondition(id, evaluation);
+}
+
+function getExamTypesGrades(id, evaluation) {
+  var types = {};
+
+  for (var examName in subjects[id].evaluations[evaluation].exams) {
+    var exam = subjects[id].evaluations[evaluation].exams[examName];
+    if (!types[exam.type]) types[exam.type] = 0;
+    types[exam.type] += exam.weight * (subjects[id].grades[examName] || 0);
+  }
+
+  return types;
+}
+
+function getConditionIdentifiers(id, evaluation) {
+  if (!subjects[id].evaluations[evaluation].condition) return true;
+  var tree = jsep(subjects[id].evaluations[evaluation].condition);
+  var identifiers = {
+    exams: {},
+    evaluations: {},
+    types: {}
+  };
+  var types = Object.keys(getExamTypesGrades(id, evaluation));
+  findIdentifiersTree(tree, identifiers, types, id, evaluation);
+  return identifiers;
+}
+
+function findIdentifiersTree(tree, identifiers, types, id, evaluation) {
+  switch (tree.type) {
+    case 'LogicalExpression':
+    case 'BinaryExpression':
+      if (tree["left"].type == 'Identifier' && tree["right"].type == 'Literal') {
+        identifiers[identifierCategory(tree["left"].name, id, evaluation, types)][tree["left"].name] = {
+          value: tree["right"].value,
+          operator: tree.operator
+        };
+      } else {
+        findIdentifiersTree(tree["left"], identifiers, types, id, evaluation);
+        findIdentifiersTree(tree["right"], identifiers, types, id, evaluation);
+      }
+
+      break;
+  }
+}
+
+function identifierCategory(identifier, id, evaluation) {
+  var types = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+  if (Object.keys(subjects[id].evaluations[evaluation].exams).includes(identifier)) return 'exams';
+  if (Object.keys(subjects[id].evaluations).includes(identifier)) return 'evaluations';
+  if (types == undefined) types = Object.keys(getExamTypesGrades(id, evaluation));
+  if (types.includes(identifier)) return 'types';
+}
+
+function calcCondition(id, evaluation) {
+  var now = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  if (!subjects[id].evaluations[evaluation].condition) return true;
+  var tree = jsep(subjects[id].evaluations[evaluation].condition);
+
+  var values = _objectSpread({}, subjects[id].grades, subjects[id].finalMark, getExamTypesGrades(id, evaluation));
+
+  return evaluationTree(tree, values, now);
+}
+
+function evaluationTree(tree, values, now) {
+  switch (tree.type) {
+    case 'LogicalExpression':
+      switch (tree.operator) {
+        case '&&':
+          return evaluationTree(tree["left"], values, now) && evaluationTree(tree["right"], values, now);
+          break;
+
+        default:
+          return null;
+          break;
+      }
+
+      break;
+
+    case 'BinaryExpression':
+      switch (tree.operator) {
+        case '>=':
+          if (tree["left"].type != 'Identifier' || tree["right"].type != 'Literal') {
+            return null;
+          } else {
+            if (!now && values[tree["left"].name] == undefined) return true;else return (values[tree["left"].name] || 0) >= tree["right"].value;
+          }
+
+          break;
+
+        case '<':
+          if (tree["left"].type != 'Identifier' || tree["right"].type != 'Literal' || identifierCategory(tree["left"].name) != 'evaluations') {
+            return null;
+          } else {
+            if (!now && values[tree["left"].name] == undefined) return true;else return (values[tree["left"].name] || 0) < tree["lerightft"].value;
+          }
+
+          break;
+
+        default:
+          return null;
+          break;
+      }
+
+      break;
+
+    case 'Literal':
+      return tree.value;
+      break;
+
+    case 'Identifier':
+      return values[tree.name] || 0;
+      break;
+
+    default:
+      return null;
+      break;
+  }
+}
+/* ------------------------------ UI MANIPULATION ------------------------------ */
+//Expands or collapses the card
+
+
+function toggleExpandCard(event, card) {
+  var inputs = card.getElementsByClassName('grades-input')[0];
+  var bar = card.getElementsByClassName('subject-bar')[0];
+
+  if (!['INPUT', 'SELECT', 'OPTION', 'BUTTON', 'IMG'].includes(event.target.tagName)) {
+    if (bar.contains(event.target)) {
+      inputs.classList.remove('hidden');
+    } else {
+      inputs.classList.toggle('hidden');
+    }
+
+    updateHeigth(inputs);
+  }
+}
+
+function updateHeigth(elem) {
+  elem.style.height = (elem.classList.contains('hidden') ? 0 : elem.scrollHeight) + 'px';
+} //Puts the cursor and selects the content of the input
+
+
+function selectInput(idInput) {
+  document.getElementById(idInput).select();
+}
+
+function appendElement(parent, str) {
+  var div = document.createElement('div');
+  div.innerHTML = str.trim();
+  var element = div.firstChild;
+  parent.appendChild(element);
+  return element;
+}
+/* ------------------------------ Cards Remove animation ------------------------------ */
+
+
+var cards;
+updateCards();
+var cardsOldInfo = {};
+var cardsNewInfo = cardsOldInfo;
+
+function removeCard(card) {
+  cardsOldInfo = getCardsInfo();
+  card.parentNode.removeChild(card);
+  cardsNewInfo = getCardsInfo();
+  moveCards();
+}
+
+function getCardsInfo() {
+  updateCards();
+  var cardsInfo = {};
+  cards.forEach(function (card) {
+    var rect = card.getBoundingClientRect();
+    cardsInfo[card.id] = {
+      "x": rect.left,
+      "y": rect.top,
+      "width": rect.right - rect.left
+    };
+  });
+  return cardsInfo;
+}
+
+function moveCards() {
+  updateCards();
+  cards.forEach(function (card) {
+    // console.log(card.id);
+    // console.log(cardsOldInfo[card.id]);
+    // console.log(cardsNewInfo[card.id]);
+    card.animate([{
+      transform: "translate(".concat(cardsOldInfo[card.id].x - cardsNewInfo[card.id].x, "px, ").concat(cardsOldInfo[card.id].y - cardsNewInfo[card.id].y, "px) scaleX(").concat(cardsOldInfo[card.id].width / cardsNewInfo[card.id].width, ")")
+    }, {
+      transform: 'none'
+    }], {
+      duration: 250,
+      easing: 'ease-out'
+    });
+  });
+}
+
+function updateCards() {
+  cards = document.querySelectorAll('.subject-card');
+}
+/* ------------------------------ USEFUL STUF ------------------------------ */
+//Returns if the exam is undone
+
+
+function isUndone(id, exam) {
+  return subjects[id].grades[exam] === undefined;
+}
+
+function isEmpty(obj) {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) return false;
+  }
+
+  return true;
+}
+
+function showToast(message, action, code) {
+  var time = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 8000;
+  toast.style.display = 'none'; // setCSSvar('toastTime', Math.max(0, (time-3000) +'ms'));
+
+  toast.style.animation = "goUp 500ms cubic-bezier(0.215, 0.61, 0.355, 1), fadeOut ".concat(Math.max(0, time - 3000), "ms 2.5s cubic-bezier(1, 0, 1, 1), opaque 2.5s");
+  toast.offsetHeight;
+  toast.style.display = 'flex';
+  toast.firstChild.innerHTML = "<p>".concat(message, "</p>");
+  if (action && code) toast.firstChild.innerHTML += "<button onclick=\"".concat(code, "\">").concat(action, "</button>");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () {
+    toast.style.display = 'none';
+  }, time);
+} // function setCSSvar(variable, value) {
+//   let root = document.documentElement;
+//   root.style.setProperty('--'+variable, value);
+// }
+
+
+function showLoader(message, position) {
+  var loader = document.getElementById(position + '-loader');
+  loader.lastElementChild.textContent = message;
+  loader.style.display = 'block';
+}
+
+function hideLoader(position) {
+  document.getElementById(position + '-loader').style.display = 'none';
+}
+
+function getSubjectsLocalStorage() {
+  return JSON.parse(localStorage.getItem("subjects")) || {};
+}
+
+function saveSubjectsLocalStorage() {
+  localStorage.setItem("subjects", JSON.stringify(subjects || {}));
+  return subjects;
+} // function isValidJSON(str) {
+//   let  json = undefined;
+//   try {json = JSON.parse(str);} catch (e){console.error(e);}
+//   return json;
+// }
+
+
+function toNewEvalNeeeeeeeeew(evaluations) {
+  var evaluationNew = {};
+
+  for (var evaluation in evaluations) {
+    if (evaluations[evaluation].exams) return evaluations;
+    evaluationNew[evaluation] = {};
+    evaluationNew[evaluation].condition = '';
+    evaluationNew[evaluation].passMark = 5;
+    evaluationNew[evaluation].exams = {};
+
+    for (var examType in evaluations[evaluation]) {
+      for (var exam in evaluations[evaluation][examType]) {
+        evaluationNew[evaluation].exams[exam] = {};
+        evaluationNew[evaluation].exams[exam].weight = evaluations[evaluation][examType][exam];
+        evaluationNew[evaluation].exams[exam].type = examType;
+      }
+    }
+  }
+
+  return evaluationNew;
+}
+/* ------------------------------ EDITOR ------------------------------ */
+// function showSubjectInfo(id,placeholder=JSON.stringify(subjects[id].evaluation)) {
+//   let json = prompt(`Editar evaluación de ${subjects[id].shortName}: \n${JSON.stringify(subjects[id].evaluation,null, '    ')}`,placeholder);
+//   if (json != placeholder) {
+//     let newEval = isValidJSON(json);
+//     if (newEval) {
+//       subjects[id].evaluation = newEval;
+//       setSelectedEvaluation(id);
+//       uploadEvaluation(id,newEval);
+//       updateCardGrades(id);
+//     }else{
+//       if(json) showToast('JSON Incorrecto','Reintentar',`showSubjectInfo('${id}','${json}');`)
+//     }
+//   }
+// }
+
+
+function toNewEval(evaluations) {
+  var newEval = {};
+
+  for (var evaluation in evaluations) {
+    for (var exam in evaluations[evaluation].exams) {
+      if (!newEval[exam]) newEval[exam] = {};
+      if (!newEval[exam].weight) newEval[exam].weight = {};
+      newEval[exam].weight[evaluation] = evaluations[evaluation].exams[exam].weight;
+      newEval[exam].mark = evaluations[evaluation].exams[exam].mark;
+      newEval[exam].examType = evaluations[evaluation].exams[exam].type;
+    }
+  }
+
+  return newEval;
+}
+
+function updateSumWeight(grid, n) {
+  var total = 0;
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = grid.querySelectorAll(".edit-weight[data-evaluation='".concat(n, "'] > input"))[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var element = _step.value;
+      total += element.value * 1;
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return != null) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  grid.querySelector(".edit-total[data-evaluation='".concat(n, "']")).textContent = round(total, 4) + '%';
+  return total;
+} // Adds or removes exams or evaluation input elements
+
+
+function editUIUpdateGrid(grid, e, popup) {
+  var input = e.target;
+  var elem = input.parentNode == grid ? input : input.parentNode;
+  var conditionsElem = grid.parentNode.lastElementChild;
+  var conditions = ''; // if input is filled
+
+  if (input.value) {
+    // if is last evaluation --> add another column
+    if (parseInt(elem.dataset.evaluation) == parseInt(grid.dataset.evaluations)) {
+      ++grid.dataset.evaluations;
+      appendElement(grid, "<input style=\"grid-row: 1; grid-column: ".concat(5 + parseInt(grid.dataset.evaluations), ";\" class=\"edit-new-evaluation\" data-evaluation=\"").concat(grid.dataset.evaluations, "\" type=\"text\" name=\"evaluationName\" value=\"\" placeholder=\"NEW\" autocomplete=\"off\" oninput=\"updateEvalName(this.dataset.evaluation, this.value, '").concat(popup, "');\">"));
+
+      for (var i = 0; i < parseInt(grid.dataset.exams); i++) {
+        editGridFadeOrUnfade(grid, appendElement(grid, "<div style=\"grid-row: ".concat(2 + i * 1, "; grid-column: ").concat(5 + parseInt(grid.dataset.evaluations), ";\" class=\"edit-weight edit-new-evaluation\" data-exam=\"").concat(i, "\" data-evaluation=\"").concat(grid.dataset.evaluations, "\" ><input type=\"number\" name=\"weight\" value=\"\" placeholder=\"0\" autocomplete=\"off\" min=\"0\" max=\"100\" step=\"0.0001\"></div>")), ['exam']);
+      }
+
+      appendElement(grid, "<div style=\"grid-row: ".concat(2 + parseInt(grid.dataset.exams), "; grid-column: ").concat(4 + parseInt(grid.dataset.evaluations), ";\" class=\"edit-weight edit-new-exam\" data-exam=\"").concat(grid.dataset.exams, "\" data-evaluation=\"").concat(grid.dataset.evaluations - 1, "\" ><input type=\"number\" name=\"weight\" value=\"\" placeholder=\"0\" autocomplete=\"off\" min=\"0\" max=\"100\" step=\"0.0001\"></div>"));
+      appendElement(grid, "<span style=\"grid-row: ".concat(3 + parseInt(grid.dataset.exams), "; grid-column: ").concat(4 + parseInt(grid.dataset.evaluations), ";\" class=\"edit-total\" data-evaluation=\"").concat(-1 + parseInt(grid.dataset.evaluations), "\">0%</span>"));
+      appendElement(conditionsElem, "<label class=\"edit-conditions-label\" data-evaluation=\"".concat(parseInt(grid.dataset.evaluations) - 1, "\"></label>"));
+      appendElement(conditionsElem, "<input class=\"edit-conditions-input\" type=\"text\" placeholder=\"nombreExamen >= 2\" name=\"condition\" data-evaluation=\"".concat(parseInt(grid.dataset.evaluations) - 1, "\">"));
+      if (input.name = 'evaluationName') updateEvalName(parseInt(grid.dataset.evaluations) - 1, input.value, popup); //if is last exam --> add another row
+    } else if (parseInt(elem.dataset.exam) == parseInt(grid.dataset.exams)) {
+      ++grid.dataset.exams;
+      appendElement(grid, "<input style=\"grid-row: ".concat(2 + parseInt(grid.dataset.exams), "; grid-column: 1;\" class=\"edit-new-exam\" type=\"text\"   name=\"exam\"       value=\"\" data-exam=\"").concat(grid.dataset.exams, "\" placeholder=\"NEW\" autocomplete=\"off\" maxlength=\"5\">"));
+      appendElement(grid, "<input style=\"grid-row: ".concat(2 + parseInt(grid.dataset.exams), "; grid-column: 2;\" class=\"edit-new-exam\" type=\"text\"   name=\"examType\"   value=\"\" data-exam=\"").concat(grid.dataset.exams, "\" placeholder=\"Parciales\">"));
+      appendElement(grid, "<input style=\"grid-row: ".concat(2 + parseInt(grid.dataset.exams), "; grid-column: 3;\" class=\"edit-new-exam\" type=\"number\" name=\"mark\"       value=\"\" data-exam=\"").concat(grid.dataset.exams, "\" placeholder=\"-\" autocomplete=\"off\" min=\"0\" max=\"10\" step=\"0.01\">"));
+
+      for (var _i3 = 0; _i3 < grid.dataset.evaluations; _i3++) {
+        editGridFadeOrUnfade(grid, appendElement(grid, "<div style=\"grid-row: ".concat(2 + parseInt(grid.dataset.exams), "; grid-column: ").concat(5 + _i3 * 1, ";\" class=\"edit-weight edit-new-exam\" data-exam=\"").concat(grid.dataset.exams, "\" data-evaluation=\"").concat(_i3, "\"><input type=\"number\" name=\"weight\" value=\"\" placeholder=\"0\" autocomplete=\"off\" min=\"0\" max=\"100\" step=\"0.0001\"></div>")), ['exam']);
+      }
+
+      appendElement(grid, "<div style=\"grid-row: ".concat(1 + parseInt(grid.dataset.exams), "; grid-column: ").concat(5 + parseInt(grid.dataset.evaluations), ";\" class=\"edit-weight edit-new-evaluation\" data-exam=\"").concat(-1 + parseInt(grid.dataset.exams), "\" data-evaluation=\"").concat(grid.dataset.evaluations, "\" ><input type=\"number\" name=\"weight\" value=\"\" placeholder=\"0\" autocomplete=\"off\" min=\"0\" max=\"100\" step=\"0.0001\"></div>"));
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = grid.querySelectorAll('.edit-total')[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var element = _step2.value;
+          element.style.gridRow = 3 + parseInt(grid.dataset.exams);
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+    } // if input is empty
+
+  } else {// add on blur event to delete
+    }
+
+  editGridFadeOrUnfade(grid, elem);
+
+  if (elem.classList.contains('edit-weight') && !elem.classList.contains('edit-new-evaluation') && !elem.classList.contains('edit-new-exam') && elem.value != '') {
+    updateSumWeight(grid, elem.dataset.evaluation);
+  }
+}
+
+function editGridFadeOrUnfade(grid, element) {
+  var check = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ['exam', 'evaluation'];
+  var _iteratorNormalCompletion3 = true;
+  var _didIteratorError3 = false;
+  var _iteratorError3 = undefined;
+
+  try {
+    for (var _iterator3 = check[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+      var type = _step3.value;
+
+      if (element.dataset[type] != undefined && parseInt(element.dataset[type]) < parseInt(grid.dataset[type + 's'])) {
+        if (editGridIsEmpty(grid, type, parseInt(element.dataset[type]))) {
+          editGridFade(grid, type, parseInt(element.dataset[type]));
+        } else {
+          editGridUnfade(grid, type, parseInt(element.dataset[type]));
+        }
+      }
+    }
+  } catch (err) {
+    _didIteratorError3 = true;
+    _iteratorError3 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+        _iterator3.return();
+      }
+    } finally {
+      if (_didIteratorError3) {
+        throw _iteratorError3;
+      }
+    }
+  }
+
+  grid.querySelector('.grid-separator-evaluation').style.gridRow = "2 / ".concat(2 + parseInt(grid.dataset.exams));
+}
+
+function editGridUnfade(grid, type, n) {
+  var _iteratorNormalCompletion4 = true;
+  var _didIteratorError4 = false;
+  var _iteratorError4 = undefined;
+
+  try {
+    for (var _iterator4 = grid.querySelectorAll("*[data-".concat(type, "='").concat(n, "'"))[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+      var element = _step4.value;
+
+      if ((element.dataset.evaluation == undefined || parseInt(element.dataset.evaluation) < parseInt(grid.dataset.evaluations)) && (element.dataset.exam == undefined || parseInt(element.dataset.exam) < parseInt(grid.dataset.exams))) {
+        element.classList.remove("edit-new-exam");
+        element.classList.remove("edit-new-evaluation");
+        if (['exam', 'examType', 'evaluationName'].includes(element.name)) element.required = true;
+      }
+    }
+  } catch (err) {
+    _didIteratorError4 = true;
+    _iteratorError4 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
+        _iterator4.return();
+      }
+    } finally {
+      if (_didIteratorError4) {
+        throw _iteratorError4;
+      }
+    }
+  }
+}
+
+function editGridFade(grid, type, n) {
+  var removed = false;
+  var _iteratorNormalCompletion5 = true;
+  var _didIteratorError5 = false;
+  var _iteratorError5 = undefined;
+
+  try {
+    for (var _iterator5 = grid.querySelectorAll("*[data-".concat(type, "]"))[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+      var element = _step5.value;
+
+      if (parseInt(element.dataset[type]) == n) {
+        element.classList.add("edit-new-".concat(type));
+        element.required = false;
+        element.parentNode.removeChild(element);
+        removed = true;
+      } else if (parseInt(element.dataset[type]) > n) {
+        element.dataset[type] = parseInt(element.dataset[type]) - 1;
+
+        switch (type) {
+          case 'evaluation':
+            element.style.gridColumn = "".concat(parseInt(element.dataset[type]) + 5, " / auto");
+            break;
+
+          case 'exam':
+            element.style.gridRow = "".concat(parseInt(element.dataset[type]) + 2, " / auto");
+            break;
+        }
+      }
+    }
+  } catch (err) {
+    _didIteratorError5 = true;
+    _iteratorError5 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
+        _iterator5.return();
+      }
+    } finally {
+      if (_didIteratorError5) {
+        throw _iteratorError5;
+      }
+    }
+  }
+
+  var conditionsElem = grid.parentNode.lastElementChild;
+  var _iteratorNormalCompletion6 = true;
+  var _didIteratorError6 = false;
+  var _iteratorError6 = undefined;
+
+  try {
+    for (var _iterator6 = conditionsElem.querySelectorAll("*[data-".concat(type, "]"))[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+      var _element = _step6.value;
+
+      if (parseInt(_element.dataset[type]) == n) {
+        _element.classList.add("edit-new-".concat(type));
+
+        _element.parentNode.removeChild(_element);
+      } else if (parseInt(_element.dataset[type]) > n) {
+        _element.dataset[type] = parseInt(_element.dataset[type]) - 1;
+      }
+    }
+  } catch (err) {
+    _didIteratorError6 = true;
+    _iteratorError6 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion6 && _iterator6.return != null) {
+        _iterator6.return();
+      }
+    } finally {
+      if (_didIteratorError6) {
+        throw _iteratorError6;
+      }
+    }
+  }
+
+  if (removed) grid.dataset[type + 's'] = parseInt(grid.dataset[type + 's']) - 1;
+}
+
+function editGridIsEmpty(grid, type, n) {
+  var _iteratorNormalCompletion7 = true;
+  var _didIteratorError7 = false;
+  var _iteratorError7 = undefined;
+
+  try {
+    for (var _iterator7 = grid.querySelectorAll("input[data-".concat(type, "='").concat(n, "'], div[data-").concat(type, "='").concat(n, "'] > input"))[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+      var element = _step7.value;
+      if (element.value) return false;
+    }
+  } catch (err) {
+    _didIteratorError7 = true;
+    _iteratorError7 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion7 && _iterator7.return != null) {
+        _iterator7.return();
+      }
+    } finally {
+      if (_didIteratorError7) {
+        throw _iteratorError7;
+      }
+    }
+  }
+
+  return true;
+}
+
+function saveEditSubject() {
+  var newSubject = readSubjectFromPopup(editSubjectPopup);
+  var id = newSubject.id;
+  subjects[id] = completeSubject(subjects[id], newSubject);
+  uploadEvaluation(id, newSubject.evaluations);
+  updateSubjectCardInfo(id);
+  saveSubjectsLocalStorage();
+  hideLoader('dashboard');
+}
+
+function readSubjectFromPopup(popup) {
+  var id = popup.querySelector('input[name="id"]').value;
+  var newEval = {};
+  var grid = popup.querySelector('.edit-popup-grid');
+
+  for (var evaluationN = 0; evaluationN < parseInt(grid.dataset['evaluations']); evaluationN++) {
+    var evaluationNameElem = grid.querySelector("input[name='evaluationName'][data-evaluation='".concat(evaluationN, "']"));
+
+    if (evaluationNameElem) {
+      var evaluation = evaluationNameElem.value;
+
+      if (evaluation) {
+        for (var examN = 0; examN < parseInt(grid.dataset['exams']); examN++) {
+          var exam = grid.querySelector("input[name='exam'][data-exam='".concat(examN, "']")).value;
+          var examType = grid.querySelector("input[name='examType'][data-exam='".concat(examN, "']")).value;
+          var weight = grid.querySelector("div[data-exam='".concat(examN, "'][data-evaluation='").concat(evaluationN, "'] > input[name='weight']")).value / 100;
+
+          if (exam && examType && weight) {
+            if (!newEval[evaluation]) newEval[evaluation] = {};
+            if (!newEval[evaluation].exams) newEval[evaluation].exams = {};
+            if (!newEval[evaluation].exams[exam]) newEval[evaluation].exams[exam] = {};
+            newEval[evaluation].exams[exam].weight = weight;
+            newEval[evaluation].exams[exam].type = examType;
+          }
+        }
+
+        var condition = popup.querySelector("input[name='condition'][data-evaluation='".concat(evaluationN, "']")).value;
+
+        if (condition) {
+          // if(!calcCondition(...)) {stop edition} // TODO: check if condition is valid
+          newEval[evaluation].condition = condition;
+        }
+      }
+    }
+  }
+
+  console.log(newEval);
+  return {
+    id: id,
+    shortName: popup.querySelector('input[name="shortName"]').value,
+    fullName: popup.querySelector('input[name="fullName"]').value,
+    course: popup.querySelector('input[name="course"]').value,
+    faculty: popup.querySelector('input[name="faculty"]').value,
+    uni: popup.querySelector('input[name="uni"]').value,
+    color: popup.querySelector('input[name="color-bar"]:checked').value,
+    evaluations: newEval
+  };
+}
+
+function saveViewSubject() {
+  var newSubject = readSubjectFromPopup(viewSubjectPopup);
+  var id = newSubject.id;
+  subjectsToAdd[id] = newSubject;
+}
+
+function saveNewSubject() {
+  return _saveNewSubject.apply(this, arguments);
+}
+
+function _saveNewSubject() {
+  _saveNewSubject = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee() {
+    var newSubject, id;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            newSubject = readSubjectFromPopup(newSubjectPopup);
+            delete newSubject.id;
+            _context.next = 4;
+            return uploadSubject(newSubject);
+
+          case 4:
+            id = _context.sent;
+            addSubject(id, newSubject);
+            router.navigate("/");
+
+          case 7:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _saveNewSubject.apply(this, arguments);
+}
+
+function deleteSubject(id) {
+  removedSubject = subjects[id];
+  removedSubjectId = id;
+  delete subjects[id];
+  saveSubjectsLocalStorage();
+
+  if (!isAnonymous) {
+    var obj = {};
+    obj['subjects.' + id] = firebase.firestore.FieldValue.delete();
+    userDB.update(obj);
+  }
+
+  removeCard(getCard(id));
+  showToast("Has borrado <b>".concat(removedSubject.shortName, "</b>"), 'Deshacer', 'undoRemoveSubject();');
+  if (isEmpty(subjects)) showTutorial();
+  congratulate();
+}
+
+function undoRemoveSubject() {
+  var id = removedSubjectId;
+  subjects[id] = removedSubject;
+  createSubjectCardCollapsed(id);
+  saveSubjectsLocalStorage();
+
+  if (!isAnonymous) {
+    var obj = {};
+    obj['subjects.' + id + '.grades'] = subjects[id].grades;
+    userDB.update(obj);
+  }
+
+  clearTimeout(toastTimer);
+  document.getElementById('toast').style.display = 'none';
+}
+/* ------------------------------ TUTORIAL ------------------------------ */
+
+
+function hideTutorial() {
+  document.getElementById('tutorial').style.display = 'none';
+  document.getElementById('add-button-topbar').classList.remove('focus-animation-loop');
+}
+
+function showTutorial() {
+  document.getElementById('tutorial').style.display = 'block';
+}
+/* ------------------------------ FIREBASE ------------------------------ */
+
+
+var provider = new firebase.auth.GoogleAuthProvider();
+provider.setCustomParameters({
+  prompt: 'select_account'
+});
+provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+firebase.auth().useDeviceLanguage();
+firebase.auth().getRedirectResult().catch(function (error) {
+  console.error(error);
+});
+firebase.auth().onAuthStateChanged(function (user) {
+  var bntLogin = document.getElementById('loginButton');
+
+  if (user) {
+    // User is signed in.
+    displayName = user.displayName;
+    photoURL = user.photoURL;
+    isAnonymous = user.isAnonymous;
+    uid = user.uid;
+    console.info("Signed in as ".concat(displayName, " whith ID: ").concat(uid));
+    bntLogin.textContent = 'Cerrar sesión';
+    bntLogin.classList.add('btn-red');
+    bntLogin.classList.remove('btn-green');
+
+    bntLogin.onclick = function () {
+      logoutGoogle();
+      window.history.back();
+    }; //showToast(`Bienvenido de nuevo <b>${displayName}</b> 😊`);
+
+
+    showLoader('Buscando cambios', 'dashboard');
+    userDB = db.collection('users').doc(uid);
+    getAndDisplayUserSubjects();
+  } else {
+    // User is signed out.
+    hideLoader('dashboard');
+    displayName = 'Anónimo';
+    photoURL = 'media/profile-pic.jpg';
+    isAnonymous = true;
+    uid = 0;
+    userDB = null;
+    console.info('Signed out');
+    bntLogin.textContent = 'Iniciar sesión';
+    bntLogin.classList.remove('btn-red');
+    bntLogin.classList.add('btn-green');
+
+    bntLogin.onclick = function () {
+      loginGoogle();
+      window.history.back();
+    };
+
+    showToast('Guarda tus notas en la nube', 'Iniciar sesión', 'loginGoogle();');
+  }
+
+  document.getElementById('user-container').children[1].children[0].src = photoURL;
+  document.getElementById('profile-topbar').src = isAnonymous ? 'media/user-circle.svg' : photoURL;
+  document.getElementById('user-container').children[1].children[1].textContent = displayName;
+});
+
+function loginGoogle() {
+  showLoader('Redireccionando', 'login');
+  firebase.auth().signInWithRedirect(provider);
+  hideLoader('login');
+}
+
+function logoutGoogle() {
+  firebase.auth().signOut();
+} // //for testing
+// function createSubjectTesting() {
+//   let data = document.getElementById('create-subject-text').value;
+//   if (data != undefined || data != '') {
+//     console.log('Uploading subject');
+//     uploadSubject(JSON.parse(data));
+//   }else{
+//     console.error('No subject to upload');
+//   }
+// }
+
+
+function uploadSubject(subject) {
+  // TODO: add sanitise as cloud function
+  if (subject != undefined && subject != null && subject != '' && subject != {} && subject != []) {
+    return subjectsDB.add(_objectSpread({
+      creator: displayName,
+      creatorId: uid,
+      creationDate: new Date()
+    }, subject)).then(function (doc) {
+      console.log("Created ".concat(subject.shortName, " with id ").concat(doc.id));
+      return doc.id;
+    }).catch(function (error) {
+      console.error("Error creating subject ", error);
+    });
+  }
+} // EXAMPLE
+// userDB.where("state", "==", "CA")
+//     .onSnapshot(function(snapshot) {
+//         snapshot.docChanges.forEach(function(change) {
+//             if (change.type === "added") {
+//                 console.log("New city: ", change.doc.data());
+//             }
+//             if (change.type === "modified") {
+//                 console.log("Modified city: ", change.doc.data());
+//             }
+//             if (change.type === "removed") {
+//                 console.log("Removed city: ", change.doc.data());
+//             }
+//         });
+//     });
+
+
+function uploadGrade(id, exam, mark) {
+  uploadToUserDB("subjects.".concat(id, ".grades.").concat(exam), mark);
+}
+
+function uploadEvaluation(id, evaluation) {
+  uploadToUserDB("subjects.".concat(id, ".evaluations"), evaluation);
+}
+
+function uploadColor(id, color) {
+  uploadToUserDB("subjects.".concat(id, ".color"), color);
+}
+
+function uploadVersion(id, version) {
+  uploadToUserDB("subjects.".concat(id, ".version"), version);
+}
+
+function uploadToUserDB(ref, value) {
+  uploadToDB(userDB, ref, value);
+}
+
+function uploadToSubjectsDB(id, ref, value) {
+  uploadToDB(subjectsDB.doc(id), ref, value);
+}
+
+function uploadToDB(db, ref, value) {
+  if (!isAnonymous) {
+    var obj = {};
+
+    if (ref) {
+      if (value != undefined && value != null && value != '' && value != {} && value != []) {
+        obj[ref] = value;
+      } else {
+        obj[ref] = firebase.firestore.FieldValue.delete();
+      }
+    } else {
+      obj = value;
+    }
+
+    db.update(obj);
+  }
+} // async function getSubjectFromDB(id) {
+//   return await subjectsDB.doc(id).get().then((doc) => {
+//     if (doc.exists) return doc.data();
+//   });
+// }
+
+
+function getAndDisplayUserSubjects() {
+  if (isAnonymous) {
+    console.warn('To get user info you need to sign in');
+    showToast('Guarda tus notas en la nube', 'Iniciar sesión', 'loginGoogle();');
+    hideLoader('dashboard');
+  } else {
+    showLoader('Descargando asignaturas', 'dashboard');
+    userDB.get().then(function (doc) {
+      if (doc.exists) {
+        (function () {
+          var userInfo = doc.data();
+
+          var _loop = function _loop(id) {
+            subjectsDB.doc(id).get().then(function (doc) {
+              if (doc.exists) {
+                var subjectInfo = doc.data();
+                if (!subjects[id]) subjects[id] = {};
+                if (!userInfo.subjects[id]) userInfo.subjects[id] = {};
+                subjects[id] = completeSubject(subjectInfo, subjects[id], userInfo.subjects[id], {
+                  grades: !subjects[id].grades && !userInfo.subjects[id].grades ? subjectInfo.grades : Object.assign({}, subjects[id].grades, userInfo.subjects[id].grades)
+                });
+                updateFinalMark(id);
+                updateNecesaryMark(id);
+                updateCardGrades(id);
+                saveSubjectsLocalStorage();
+                console.info("Loaded subject: ".concat(subjects[id].shortName, " - ").concat(id));
+              } else {
+                console.error("Subject ".concat(id, " dosen't exists"));
+              }
+            }).catch(function (error) {
+              console.error("Error getting subject info:", error);
+            });
+          };
+
+          for (var id in userInfo.subjects) {
+            _loop(id);
+          }
+
+          console.info("User has ".concat(userInfo.subjects.length, " saved subjects"));
+        })();
+      } else {
+        userDB.set({});
+        console.error("User ".concat(uid, " dosen't exists"));
+      }
+
+      hideLoader('dashboard');
+    }).catch(function (error) {
+      console.error("Error getting user info:", error);
+      hideLoader('dashboard');
+    });
+  }
+}
+
+function getSubjectsAllDB() {
+  return subjectsDB.get();
+}
+
+function searchSubjects() {
+  var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  query = query.trim();
+
+  if (query) {
+    index.search(query).then(function (responses) {
+      console.log("Results for ".concat(query, ":"), responses.hits);
+      searchResultsSubject.innerHTML = responses.hits.reduce(function (total, elem) {
+        return total + generateSearchResultSubject(elem._highlightResult, elem.objectID);
+      }, '');
+    });
+  } else {
+    searchResultsSubject.innerHTML = '';
+  }
+}
+
+function generateSearchResultSubject(match, id) {
+  return "<li onclick=\"addToSubjectsToAdd('".concat(id, "', this.querySelector('input[name=\\'id\\']').checked);\" class=\"searchResult\">\n            <label for=\"checkbox-").concat(id, "\">\n              <input style=\"display: none;\" type=\"checkbox\" value=\"").concat(id, "\" name=\"id\" id=\"checkbox-").concat(id, "\" ").concat(subjects[id] || subjectsToAdd[id] ? 'checked' : '', " ").concat(subjects[id] ? 'disabled' : '', ">\n              <div class=\"searchResultCheck\" for=\"checkbox-").concat(id, "\"></div>\n            </label>\n            <label class=\"searchResultTitle\" for=\"checkbox-").concat(id, "\">\n              <span class=\"searchResultRow1\">").concat(match.shortName.value, " - ").concat(match.fullName.value, "</span><br>\n              <span class=\"searchResultRow2\">").concat(match.faculty.value, " ").concat(match.uni.value, " - ").concat(match.course.value, "</span>\n            </label>\n            ").concat(subjects[id] ? '<!-- ' : '', "<div class=\"searchResultAction\" onclick=\"this.parentElement.querySelector('input[name=\\'id\\']').checked = true; showViewSubject('").concat(id, "');\"><img src=\"media/discount.svg\"></div>").concat(subjects[id] ? ' --> ' : '', "\n          </li>");
+}
+/* ------------------------------ PWA install ------------------------------ */
+
+
+var deferredPrompt;
+window.addEventListener('beforeinstallprompt', function (e) {
+  console.log('App can be installed'); // e.preventDefault();
+
+  deferredPrompt = e;
+  setTimeout(function () {
+    showToast('Usa GradeCalc offline', 'Instalar', 'install();');
+  }, 10000);
+  return false;
+});
+
+function install() {
+  if (deferredPrompt !== undefined) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function (choiceResult) {
+      if (choiceResult.outcome == 'dismissed') {// console.log('User cancelled home screen install');
+      } else {// console.log('User added to home screen');
+        }
+
+      deferredPrompt = null;
+    });
+  }
+}

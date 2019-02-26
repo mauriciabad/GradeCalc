@@ -14,7 +14,7 @@ gulp.task('css', () =>
     }))
     .pipe(cleanCSS({compatibility: 'ie8'}))
     .pipe(rename(function (path) {
-      path.basename += "-min";
+      path.basename = "style-min";
     }))
     .pipe(gulp.dest('./'))
 );
@@ -25,5 +25,8 @@ gulp.task('js', () =>
       presets: ['@babel/env']
     }))
     .pipe(minify())
+    .pipe(rename(function (path) {
+      path.basename = "script-min";
+    }))
     .pipe(gulp.dest('./'))
 );
