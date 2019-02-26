@@ -332,7 +332,6 @@ function addToSubjectsToAdd(id, checked) {
   } else {
     delete subjectsToAdd[id];
   }
-  
 }
 
 //Adds the subjects selected in the popup
@@ -410,7 +409,7 @@ function completeSubject(...subjects) {
 }
 
 function clearNewSubjectUI() {
-  let html = generateEditSubjectUIHTML('new', completeSubject({creator: displayName, creationDate: new Date()}), 'new');
+  let html = generateEditSubjectUIHTML('new', completeSubject({creator: displayName, creationDate: {seconds: Math.floor(Date.now()/1000), nanoseconds: 0}}), 'new');
   
   newSubjectPopup.innerHTML = html;
 }
@@ -518,7 +517,7 @@ function generateEditSubjectUIHTML(id, subject, popup) {
 
   <div class="edit-popup-info">
     <div>
-      <span>Fecha de creación: <span id="${popup}-creationDate">${false && subject.creationDate ? subject.creationDate.toLocaleDateString('es-ES') : '--/--/----'}</span></span>
+      <span>Fecha de creación: <span id="${popup}-creationDate">${subject.creationDate ? new Date(subject.creationDate.seconds * 1000).toLocaleDateString('es-ES') : '--/--/----'}</span></span>
     </div>
     <div>
       <span>Creador: <span id="${popup}-creator">${subject.creator ? subject.creator : 'Anónimo'}</span></span>
