@@ -188,7 +188,7 @@ function loadData() {
   console.info('Subjects loaded from localStorage');
 
   for (const id in subjects) {
-    autoUpdate(id); // TODO: remove, this is only a fix for DBD
+    autoUpdate(id); 
     createSubjectCardCollapsed(id);
   }
   hideLoader('dashboard');
@@ -201,16 +201,20 @@ function autoUpdate(id) {
     uploadEvaluation(id, subjects[id].evaluations);
     saveSubjectsLocalStorage();
   }
+  if(Object.keys(subjects[id].evaluations).length == 0){
+    delete subjects[id];
+    saveSubjectsLocalStorage();
+  }
   if (subjects[id].necesaryMark != undefined || subjects[id].necesaryMarks == undefined) {
+    delete subjects[id].necesaryMark;
+    subjects[id].necesaryMarks = {};
     for (const evaluation in subjects[id].evaluations) {
-      if(!subjects[id].necesaryMarks[evaluation]) {
-        subjects[id].necesaryMarks[evaluation] = {};
-        for (const examName in subjects[id].evaluations[evaluation].exams) { 
-          subjects[id].necesaryMarks[evaluation][examName] = subjects[id].evaluations[evaluation].passMark;
-        }
+      subjects[id].necesaryMarks[evaluation] = {};
+      for (const examName in subjects[id].evaluations[evaluation].exams) { 
+        subjects[id].necesaryMarks[evaluation][examName] = subjects[id].evaluations[evaluation].passMark;
       }
     }
-    delete subjects[id].necesaryMark;
+    updateNecesaryMark(id);
     saveSubjectsLocalStorage();
   }
 }
@@ -1082,18 +1086,18 @@ function saveSubjectsLocalStorage() {
 //   return json;
 // }
 
-function toNewEvalNeeeeeeeeew(evaluation) {
+function toNewEvalNeeeeeeeeew(evaluations) {
   var evaluationNew = {};
-  for (let evaluation in evaluation) {
-    if(evaluation[evaluation].exams) return evaluation;
+  for (let evaluation in evaluations) {
+    if(evaluations[evaluation].exams) return evaluations;
     evaluationNew[evaluation] = {};
-    // evaluationNew[evaluation].condition = '';
+    evaluationNew[evaluation].condition = '';
     evaluationNew[evaluation].passMark = 5;
     evaluationNew[evaluation].exams = {};
-    for (let examType in evaluation[evaluation]) {
-      for (let exam in evaluation[evaluation][examType]) {
+    for (let examType in evaluations[evaluation]) {
+      for (let exam in evaluations[evaluation][examType]) {
         evaluationNew[evaluation].exams[exam] = {};
-        evaluationNew[evaluation].exams[exam].weight = evaluation[evaluation][examType][exam];
+        evaluationNew[evaluation].exams[exam].weight = evaluations[evaluation][examType][exam];
         evaluationNew[evaluation].exams[exam].type = examType;
       }
     }
