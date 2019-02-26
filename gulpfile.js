@@ -21,7 +21,8 @@ gulp.task('css', () =>
 gulp.task('js', () =>
   gulp.src('script.js')
     .pipe(babel({
-      plugins: ['@babel/transform-runtime']
+      plugins: ['@babel/transform-runtime'],
+      presets: ['@babel/env']
   }))
     .pipe(minify())
     .pipe(rename((path) => {
