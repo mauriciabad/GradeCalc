@@ -390,7 +390,7 @@ function completeSubject(...subjects) {
     },
     ...subjects
   );
-  delete id;
+  delete subject.id;
   delete subject.evaluation; // TODO: remove this if all subjects have last evaluation structure
   if (!subject.selectedEvaluation || !Object.keys(subject.evaluations).includes(subject.selectedEvaluation)) subject.selectedEvaluation = Object.keys(subject.evaluations)[0] || '';
     for (const evaluation in subject.evaluations) {
