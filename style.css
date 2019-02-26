@@ -436,17 +436,17 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 .grades-input input{
   flex-grow: 1;
 }
-.eval-select{
+.evaluation-select{
   border-top: solid thin #bbb;
   justify-content: center !important;
   align-items: center;
   margin-top: 1em;
   padding-top: 1em;
 }
-.eval-select span{
+.evaluation-select span{
   margin-right: 0.5em;
 }
-.eval-select img{
+.evaluation-select img{
   height: 1em;
   margin-left: 0.5em;
 }
@@ -961,14 +961,14 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   pointer-events: none;
 }
 .edit-weight input { padding-right: 1em;   min-width: 3em; }
-.grid-separator-eval{
+.grid-separator-evaluation{
   background-color: #bbb;
   grid-column: 4;
   grid-row: 2 / -1;
   border-radius: 10px;
   height: 100%;
 }
-.edit-new-exam, .edit-new-eval{
+.edit-new-exam, .edit-new-evaluation{
   opacity: 0.3333;
   border: none !important;
 }
@@ -993,7 +993,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   padding: 0.5em 0;
   padding-left: 0.15em;
 }
-.edit-add-eval{
+.edit-add-evaluation{
   grid-row: 2/-1;
   grid-column: -2;
   padding: 0 0.5em 0 0.45em;
