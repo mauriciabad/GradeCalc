@@ -21,6 +21,7 @@
   "homepage": "https://github.com/mauriciabad/GradeCalc#readme",
   "devDependencies": {
     "@babel/core": "^7.3.4",
+    "@babel/plugin-transform-runtime": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
@@ -39,6 +40,7 @@
     "run-sequence": "^2.2.1"
   },
   "dependencies": {
+    "@babel/runtime": "^7.3.4",
     "gulp-cssnano": "^2.1.3"
   }
 }

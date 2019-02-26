@@ -21,8 +21,8 @@ gulp.task('css', () =>
 gulp.task('js', () =>
   gulp.src('script.js')
     .pipe(babel({
-      presets: ['@babel/env']
-    }))
+      plugins: ['@babel/transform-runtime']
+  }))
     .pipe(minify())
     .pipe(rename((path) => {
       path.basename = "script-min";
