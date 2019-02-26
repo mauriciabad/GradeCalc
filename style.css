@@ -1024,12 +1024,14 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 }
 /* ----------------- Popup -------------------*/
 .popup{
-  position: absolute;
-  z-index: 10;
+  width: 100vw;
+  min-height: 100vh;
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1038,39 +1040,45 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 .popup-content{
   z-index: 2;
   position: relative;
-  padding: 4em 1.5em 6em;
-  background-color: #fff;
-  min-height: 100vh;
   width: 100%;
-  overflow: scroll;
-  scroll-behavior: smooth;
+  max-width: 25em;
+  margin: 0.5em;
+  margin-top: 2.5em;
+  padding: 1.5em 1.5em 2.5em;
+  border-radius: 0.3em;
+  background-color: #fefefe;
+  box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
+  min-height: auto;
+  overflow: visible;
+  max-height: calc(100vh - 6em);
 }
-/* .popup > div:first-child{
-  position: fixed;
-  z-index: 3;
-  top: 0.5em;
-  left: 0.5em;
-  width: 3em;
-  height: 3em;
-  cursor: pointer;
-  background-color: #fff;
-  box-shadow: 0 0.15em 1.25em rgba(0, 0, 0, 0.5);
-  background-color: #4b9ee2;
-  border-radius: 50%;
-} */
-.top-bar-popup{
-  position: fixed;
-  padding: 0.2em;
+.top-bar-popup::before{
+  content: '';
+  display: block;
+  position: absolute;
   top: 0;
   left: 0;
-  background-color: #1b9f64;
-  color: #fff;
+  right: 0;
+  height: 4em;
+  z-index: -1;
+  background-image: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0));
+  box-shadow: none;
+  border-radius: none;
+}
+.top-bar-popup{
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
   width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  box-shadow: none;
+  z-index: 0;
+  color: #fff;
+  padding: 0.2em;
   text-align: center;
-  box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
-  height: 1.75em;
   user-select: none;
-  z-index: 3;
   font-weight: normal;
   font-size: 1.75em;
 }
@@ -1080,19 +1088,9 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   position: absolute;
   left: 0.25em;
 }
-/* .popup > div:first-child::before{
-  content: "";
-  position: absolute;
-  left: 1em;
-  top: 1.25em;
-  height: 1em;
-  width: 1em;
-  border-top: solid 0.3em #fff;
-  border-left: solid 0.3em #fff;
-  transform-origin: 25% 25%;
-  transform: rotate(-45deg);
-} */
 .popup-main-button{
+  position: absolute;
+  bottom: -1.5em;
   display: block;
   padding: 1em 1.35em 1em 1.5em;
   font-weight: bold;
@@ -1104,78 +1102,61 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   letter-spacing: 0.15em;
   text-transform: uppercase;
   border-radius: 10em;
-  position: fixed;
   z-index: 5;
   right: 2em;
-  bottom: 1.5em;
   border: none;
 }
-@media(min-width: 600px){
-  .popup{
-    width: 100vw;
-    min-height: 100vh;
-    position: fixed !important;
-    top: 0;
-    left: 0;
-  }
-  .popup-content{
-    max-width: 25em;
-    margin: 0.5em;
-    margin-top: 2.5em;
-    padding: 1.5em;
-    padding-bottom: 2.5em;
-    border-radius: 0.3em;
-    background-color: #fefefe;
-    box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
-    min-height: auto;
-    overflow: visible;
-  }
-  .popup > div:first-child::before{
-    content: '';
-    display: block;
+.popup-content > div, .popup-content > form{
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: calc(100vh - 6em);
+  padding: 1.5em;
+  margin: -1.5em;
+}
+.edit-popup{
+  max-width: 40em;
+}
+.add-popup{
+  max-width: 30em;
+}
+@media(max-width: 600px){
+  .popup:not(.popup-small){
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4em;
-    z-index: -1;
-    background-image: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0));
-    box-shadow: none;
-    border-radius: none;
   }
-  .popup > div:first-child{
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.3);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    box-shadow: none;
-    border-radius: 0;
-    z-index: 0;
-  }
-  .popup-main-button{
-    position: absolute;
-    bottom: -1.5em;
-  }
-  .popup-content > div, .popup-content > form{
+  .popup:not(.popup-small) .popup-content{
+    overflow: scroll;
     scroll-behavior: smooth;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    max-height: calc(100vh - 6em);
-    margin: -1.5em;
-    padding: inherit;
+    padding: 4em 1.5em 6em;
+    min-height: 100vh;
+    max-height: none;
+    margin: 0;
+    border-radius: 0;
+  }
+  .popup:not(.popup-small) .popup-content > div{
+    max-height: none;
+    margin: 0;
+    padding: 0;
+  }
+  .popup:not(.popup-small) .top-bar-popup{
+    position: fixed;
+    background-color: #1b9f64;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
+    height: 1.75em;
+    z-index: 3;
+  }
+  .popup:not(.popup-small) .top-bar-popup::before{
+    display: none;
+  }
+  .popup:not(.popup-small) .popup-main-button{
+    position: fixed;
+    bottom: 1.5em;
   }
   .edit-popup{
-    max-width: 40em;
+    max-width: none;
   }
   .add-popup{
-    max-width: 30em;
-  }
-  .popup-content{
-    max-height: calc(100vh - 6em);
+    max-width: none;
   }
 }
 .popup h2{
@@ -1195,30 +1176,6 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 }
 .popup li{
   text-align: left;
-}
-.popup-small{
-  width: 100vw;
-  min-height: 100vh;
-  position: fixed !important;
-  top: 0;
-  left: 0;
-}
-.popup-small > div:first-child::before{
-  content: none;
-  display: none;
-}
-.popup-small > div:first-child{
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.3);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  box-shadow: none;
-  border-radius: 0;
-  z-index: 0;
 }
 .add-popup{
   text-align: center;
