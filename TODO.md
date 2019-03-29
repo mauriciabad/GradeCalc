@@ -7,6 +7,7 @@
 - (future) Popup iOS cuts on scroll
 - (future) examName && typeName && evalName must be diferent
 - (future) check if condition is valid
+- (furure) do google login with a div (like BitBucket or Medium)
 - Conditions Types and evaluations and &&
 - new subject ask for required inputs
 - add my subject to firebase when added
