@@ -11,7 +11,9 @@
 - Conditions Types and evaluations and &&
 - new subject ask for required inputs
 - add my subject to firebase when added
+- change ui when there are no search results, with a create button
 - fix: some atributes in create subject are set to string, not an int
 - fix: quan borres una assignatura no es treu dels dispositius sincronitzats
 - fix: user popup android
 - fix: edit grid separatos disapeared
+
