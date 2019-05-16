@@ -230,7 +230,7 @@ function updateSubjectCardInfo(id) {
   <img src="media/trash.svg" alt="x" aria-label="Delete subject">
 </button>
 <button onclick="showEditSubject('${id}')" class="subject-card-info">
-  <img src="media/discount.svg" alt="%" aria-label="Show subject information">
+  <img src="media/edit.svg" alt="%" aria-label="Show subject information">
 </button>
 <h2>${subjects[id].shortName}</h2>
 <p class="subject-finalMark" style="color: ${isPassed(id,subjects[id].selectedEvaluation) ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
@@ -251,7 +251,7 @@ function createSubjectCardCollapsed(id) {
   <img src="media/trash.svg" alt="x" aria-label="Delete subject">
 </button>
 <button onclick="showEditSubject('${id}')" class="subject-card-info">
-  <img src="media/discount.svg" alt="%" aria-label="Show subject information">
+  <img src="media/edit.svg" alt="%" aria-label="Show subject information">
 </button>
 <h2>${subjects[id].shortName}</h2>
 <p class="subject-finalMark" style="color: ${isPassed(id,subjects[id].selectedEvaluation) ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
@@ -1663,7 +1663,7 @@ function generateSearchResultSubject(match, id) {
               <span class="searchResultRow1">${match.shortName.value} - ${match.fullName.value}</span><br>
               <span class="searchResultRow2">${match.faculty.value} ${match.uni.value} - ${match.course.value}</span>
             </label>
-            ${(subjects[id]) ? '<!-- ' : ''}<div class="searchResultAction" onclick="this.parentElement.querySelector('input[name=\\'id\\']').checked = true; showViewSubject('${id}');"><img src="media/discount.svg"></div>${(subjects[id]) ? ' --> ' : ''}
+            ${(subjects[id]) ? '<!-- ' : ''}<div class="searchResultAction" onclick="this.parentElement.querySelector('input[name=\\'id\\']').checked = true; showViewSubject('${id}');"><img src="media/edit.svg"></div>${(subjects[id]) ? ' --> ' : ''}
           </li>`;
 }
 
