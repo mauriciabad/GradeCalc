@@ -13,3 +13,9 @@ GradeCalc is a progressive web app for students, it's main porpouse is calculati
 - Works offline.
 - Add to homescreen (Android)
 - Solves complex evaluation formulas
+
+## How to build
+
+```bash
+npm i
+```

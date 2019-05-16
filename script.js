@@ -3,6 +3,9 @@ var dashboard = document.getElementById('dashboard');
 var editSubjectPopup = document.getElementById('edit-popup-content');
 var viewSubjectPopup = document.getElementById('view-popup-content');
 var newSubjectPopup = document.getElementById('new-popup-content');
+var frozenLayer = document.getElementById('frozen-layer');
+var frozenLayerMessage = document.getElementById('frozen-layer-message');
+var frozenLayerWarning = document.getElementById('frozen-layer-warning');
 var topbar = document.getElementById('top-bar');
 var currentScreen = document.getElementsByClassName('screen')[0];
 var searchResultContainer = document.getElementById('subjects-search-results');
@@ -1144,6 +1147,26 @@ function updateSumWeight(grid, n) {
   return total;
 }
 
+function freeze(message="", maxTime=10) {
+  frozenLayerMessage = message;
+  frozenLayer.style.display = "flex";
+  frozenLayer.style.opacity = 1;
+
+  frozenLayerWarning.style.display = "none";
+  frozenWarningTimeout = setTimeout(() => {
+    frozenLayerWarning.style.display = "inline-block";
+  }, maxTime*1000);
+}
+
+function unfreeze(){
+  frozenLayerMessage = "Cargando...";
+  frozenLayer.style.display = "none";
+  frozenLayer.style.opacity = 0;
+
+  clearTimeout(frozenWarningTimeout);
+  frozenLayerWarning.style.display = "none";
+}
+
 // Adds or removes exams or evaluation input elements
 function editUIUpdateGrid(grid, e, popup) {
   const input = e.target;
@@ -1332,10 +1355,15 @@ async function saveNewSubject() {
   let newSubject = readSubjectFromPopup(newSubjectPopup);
   delete newSubject.id;
 
-  let id = await uploadSubject(newSubject);
-
-  addSubject(id, newSubject);
-  router.navigate(`/`);
+  if(isValidSubjectFromPopup(newSubject)){
+    freeze(`Creando asignatura`, 10);
+    let id = await uploadSubject(newSubject);
+    unfreeze();
+    
+    if(!id) showToast('Error al subir')
+    addSubject(id, newSubject);
+    router.navigate(`/`);
+  }
 }
 
 function deleteSubject(id) {
@@ -1464,8 +1492,21 @@ function uploadSubject(subject) { // TODO: add sanitise as cloud function
       })
       .catch((error) => {
         console.error("Error creating subject ", error);
+        return false;
       });
   }
+}
+
+function isValidSubjectFromPopup(subject) {
+  if(!subject.shortName) showToast(`Nombre Corto incorrecto`);
+  else if(!subject.fullName) showToast(`Nombre Largo incorrecto`);
+  else if(!subject.course) showToast(`Curso incorrecto`);
+  else if(!subject.faculty) showToast(`Facultad incorrecta`);
+  else if(!subject.uni) showToast(`Universidad incorrecta`);
+  else if(!subject.color) showToast(`Color incorrecto`);
+  else if(!subject.evaluations || subject.evaluations == {}) showToast(`Avaluatión incorrecta`);
+  else return true;
+  return false;
 }
 
 // EXAMPLE
@@ -1485,27 +1526,27 @@ function uploadSubject(subject) { // TODO: add sanitise as cloud function
 //     });
 
 function uploadGrade(id, exam, mark) {
-  uploadToUserDB(`subjects.${id}.grades.${exam}`, mark);
+  return uploadToUserDB(`subjects.${id}.grades.${exam}`, mark);
 }
 
 function uploadEvaluation(id, evaluation) {
-  uploadToUserDB(`subjects.${id}.evaluations`, evaluation);
+  return uploadToUserDB(`subjects.${id}.evaluations`, evaluation);
 }
 
 function uploadColor(id, color) {
-  uploadToUserDB(`subjects.${id}.color`, color);
+  return uploadToUserDB(`subjects.${id}.color`, color);
 }
 
 function uploadVersion(id, version) {
-  uploadToUserDB(`subjects.${id}.version`, version);
+  return uploadToUserDB(`subjects.${id}.version`, version);
 }
 
 function uploadToUserDB(ref, value) {
-  uploadToDB(userDB, ref, value);
+  return uploadToDB(userDB, ref, value);
 }
 
 function uploadToSubjectsDB(id, ref, value) {
-  uploadToDB(subjectsDB.doc(id), ref, value);
+  return uploadToDB(subjectsDB.doc(id), ref, value);
 }
 
 function uploadToDB(db, ref, value) {
@@ -1520,7 +1561,7 @@ function uploadToDB(db, ref, value) {
     } else {
       obj = value;
     }
-    db.update(obj);
+    return db.update(obj);
   }
 }
 

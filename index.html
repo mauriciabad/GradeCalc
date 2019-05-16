@@ -7,7 +7,7 @@
   <title>Grade Calc</title>
   <meta name="description" content="GradeCalc es aplicación web para calcular la nota que necesitas en cada examen para aprobar una asignatura. Originalmente hecha para la FIB, Facultad de Informàtica de Barcelona">
   <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,700" rel="stylesheet">
-  <link href="style-min.css" rel="stylesheet" type="text/css">
+  <link href="style.css" rel="stylesheet" type="text/css">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="manifest" href="site.webmanifest">
 
@@ -96,7 +96,7 @@
         <!-- <h3>Resultados</h3> -->
         <ul id="subjects-search-results" class="subjects-search-results"></ul>
         
-        <div style="display: none;">
+        <div>
           <h2>Crear</h2>
           <p>¿No la encuentras o ninguna está bien?</p>
           <button id="subject-start-creator" onclick="showNewSubject();">Crear</button>
@@ -150,6 +150,18 @@
       <button class="popup-main-button" id="loginButton" onclick="loginGoogle(); window.history.back();">Iniciar sesión</button>
     </div>
   </div>
+
+  <div id="frozen-layer" class="frozen-layer" style="display: none;">
+    <div class="sk-folding-cube frozen-layer__spinner">
+      <div class="sk-cube1 sk-cube"></div>
+      <div class="sk-cube2 sk-cube"></div>
+      <div class="sk-cube4 sk-cube"></div>
+      <div class="sk-cube3 sk-cube"></div>
+    </div>
+    <span id="frozen-layer-message" class="frozen-layer__message">Cargando...</span>
+    <span id="frozen-layer-warning" class="frozen-layer__warning">Está tardando más de lo esperado...</span>
+  </div>
+
   <div id="toast" style="display: none;"><div><p>Has borrado <b>NADA</b></p><button onclick="undoRemoveSubject();">Deshacer</button></div></div>
 
   <script>
