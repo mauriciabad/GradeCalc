@@ -3,13 +3,14 @@ var dashboard = document.getElementById('dashboard');
 var editSubjectPopup = document.getElementById('edit-popup-content');
 var viewSubjectPopup = document.getElementById('view-popup-content');
 var newSubjectPopup = document.getElementById('new-popup-content');
+var topbar = document.getElementById('top-bar');
+var currentScreen = document.getElementsByClassName('screen')[0];
+var searchCreateDiv = document.getElementById('subjects-search-create-div');
+var searchResultsSubject = document.getElementById('subjects-search-results');
+var searchResultsNone = document.getElementById('subjects-search-none');
 var frozenLayer = document.getElementById('frozen-layer');
 var frozenLayerMessage = document.getElementById('frozen-layer-message');
 var frozenLayerWarning = document.getElementById('frozen-layer-warning');
-var topbar = document.getElementById('top-bar');
-var currentScreen = document.getElementsByClassName('screen')[0];
-var searchResultContainer = document.getElementById('subjects-search-results');
-var searchResultsSubject = document.getElementById('subjects-search-results');
 
 var allPopups = [
   'user-container',
@@ -1629,14 +1630,23 @@ function getSubjectsAllDB() {
 
 function searchSubjects(query = '') {
   query = query.trim()
-  if(query){
+  if(query != ''){
     index.search(query)
-    .then((responses) => {
-      console.log(`Results for ${query}:`, responses.hits);
-      searchResultsSubject.innerHTML = responses.hits.reduce((total, elem) => total + generateSearchResultSubject(elem._highlightResult, elem.objectID), '');
-    });
+      .then((responses) => {
+        console.log(`Results for ${query}:`, responses.hits);
+        searchResultsSubject.innerHTML = responses.hits.reduce((total, elem) => total + generateSearchResultSubject(elem._highlightResult, elem.objectID), '');
+        
+        if(responses.nbHits == 0) {
+          searchCreateDiv.style.display = 'block';
+          searchResultsNone.style.display = 'block';
+        }else{
+          searchCreateDiv.style.display = 'none';
+          searchResultsNone.style.display = 'none';
+        }
+      });
   }else{
     searchResultsSubject.innerHTML = '';
+    searchCreateDiv.style.display = 'block';
   }
 }
 
