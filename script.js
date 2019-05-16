@@ -1435,7 +1435,6 @@ firebase.auth().onAuthStateChanged(function (user) {
     bntLogin.classList.add('btn-red');
     bntLogin.classList.remove('btn-green');
     bntLogin.onclick = function () { logoutGoogle(); window.history.back(); };
-    searchCreateDiv.style.display = 'block';
 
     //showToast(`Bienvenido de nuevo <b>${displayName}</b> 😊`);
 
@@ -1456,7 +1455,6 @@ firebase.auth().onAuthStateChanged(function (user) {
     bntLogin.classList.remove('btn-red');
     bntLogin.classList.add('btn-green');
     bntLogin.onclick = function () { loginGoogle(); window.history.back(); };
-    searchCreateDiv.style.display = 'none';
     showToast('Guarda tus notas en la nube', 'Iniciar sesión', 'loginGoogle();');
   }
   document.getElementById('user-container').children[1].children[0].src = photoURL;
@@ -1487,7 +1485,7 @@ function logoutGoogle() {
 // }
 
 function uploadSubject(subject) { // TODO: add sanitise as cloud function
-  if (subject != undefined && subject != null && subject != '' && subject != {} && subject != []) {
+  if (uid && subject != undefined && subject != null && subject != '' && subject != {} && subject != []) {
     return subjectsDB.add({creator: displayName, creatorId: uid, creationDate: new Date(), ...subject})
       .then((doc) => {
         console.log(`Created ${subject.shortName} with id ${doc.id}`);
@@ -1639,17 +1637,16 @@ function searchSubjects(query = '') {
         searchResultsSubject.innerHTML = responses.hits.reduce((total, elem) => total + generateSearchResultSubject(elem._highlightResult, elem.objectID), '');
         
         if(responses.nbHits == 0) {
-          if(uid) searchCreateDiv.style.display = 'block';
+          searchCreateDiv.style.display = 'block';
           searchResultsNone.style.display = 'block';
         }else{
-          if(uid) searchCreateDiv.style.display = 'none';
+          searchCreateDiv.style.display = 'none';
           searchResultsNone.style.display = 'none';
         }
       });
   }else{
     searchResultsSubject.innerHTML = '';
-    if(uid) searchCreateDiv.style.display = 'block';
-    else searchCreateDiv.style.display = 'none';
+    searchCreateDiv.style.display = 'block';
   }
 }
 
