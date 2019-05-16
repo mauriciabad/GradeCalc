@@ -1,7 +1,5 @@
-- (future) Use heroku cronjob to add new subjects (where date >= lastUpdate) to algolia
 - (future) Cloud funtion to delete old subjects and users
 - (future) Cloud function to sanitize subjects and upload them
-- (future) you must be logged in to create subjects
 - (future) Add subjects from 1st course and 3rd
 - (future) Cargando asignaturas is always on in iOS
 - (future) Popup iOS cuts on scroll
@@ -9,12 +7,9 @@
 - (future) check if condition is valid
 - (furure) do google login with a div (like BitBucket or Medium)
 - Conditions Types and evaluations and &&
-- new subject ask for required inputs
-- add my subject to firebase when added
-- change ui when there are no search results, with a create button
+- new subject ask for required inputs (evaluation and conditions)
 - understand why people adds subjetcs without evaluation
 - fix: some atributes in create subject are set to string, not an int
-- fix: quan borres una assignatura no es treu dels dispositius sincronitzats
+- fix: when you delete a subject it's not deleted in other sync devices
 - fix: user popup android
-- fix: edit grid separatos disapeared
-
+- fix: in the search input, when text is removed with the x, the results still appear
