@@ -534,7 +534,8 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   padding: 0.5em 0;
 }
 .searchResultAction:hover{
-  transform: scale(1.2);
+  transform: scale(1.2) rotate(15deg);
+  opacity: 0.5;
 }
 .searchResultAction{
   padding: 1em;
@@ -543,7 +544,8 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   box-sizing: content-box;
   cursor: pointer;
   flex-shrink: 0;
-  transition: transform 150ms var(--easing-bounce);
+  opacity: 0.25;
+  transition: transform 200ms var(--easing-bounce), opacity 200ms var(--easing-bounce);
 }
 .searchResultAction > img{
   width: 100%;
