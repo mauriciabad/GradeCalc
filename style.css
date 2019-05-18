@@ -948,10 +948,6 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   display: none;
 }
 /* --------- Evaluation ---------- */
-.scroll{
-  overflow: scroll;
-  scroll-behavior: smooth;
-}
 .edit-popup-grid{
   display: grid;
   grid-template: min-content
@@ -960,6 +956,8 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   grid-auto-columns: 2fr;
   grid-auto-rows: min-content;
   align-items: end;
+  overflow: scroll;
+  scroll-behavior: smooth;
 }
 .edit-popup-grid input { width: 100%; }
 .edit-popup-grid > * { transition: opacity 200ms ease-out; }
