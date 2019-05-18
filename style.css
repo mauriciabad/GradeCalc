@@ -956,7 +956,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   grid-auto-columns: 2fr;
   grid-auto-rows: min-content;
   align-items: end;
-  overflow: scroll;
+  overflow: auto;
   scroll-behavior: smooth;
 }
 .edit-popup-grid input { width: 100%; }
@@ -1137,7 +1137,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
     position: absolute;
   }
   .popup:not(.popup-small) .popup-content{
-    overflow: scroll;
+    overflow: auto;
     scroll-behavior: smooth;
     padding: 4em 1.5em 6em;
     min-height: 100vh;

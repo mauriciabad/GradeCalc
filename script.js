@@ -529,32 +529,30 @@ function generateEditSubjectUIHTML(id, subject, popup) {
   </div>
 
   <h2>Evaluación</h2>
-  <div class="scroll">
-    <div class="edit-popup-grid" onkeyup="editUIUpdateGrid(this, event, '${popup}');" data-evaluations="${evaluations.length}" data-exams="${examCount}">
-      <!-- Header -->
-      <span  style="grid-row: 1; grid-column: 1;" >Nombre</span>
-      <span  style="grid-row: 1; grid-column: 2;" >Categoría</span>
-      <span  style="grid-row: 1; grid-column: 3;" >Nota</span>
+  <div class="edit-popup-grid" onkeyup="editUIUpdateGrid(this, event, '${popup}');" data-evaluations="${evaluations.length}" data-exams="${examCount}">
+    <!-- Header -->
+    <span  style="grid-row: 1; grid-column: 1;" >Nombre</span>
+    <span  style="grid-row: 1; grid-column: 2;" >Categoría</span>
+    <span  style="grid-row: 1; grid-column: 3;" >Nota</span>
 
-      <!-- Body -->
-      ${grid}
-      <!-- Divider -->
-      <div style="grid-row: 2 / ${2 + examCount};" class="grid-separator-evaluation"></div>
+    <!-- Body -->
+    ${grid}
+    <!-- Divider -->
+    <div style="grid-row: 2 / ${2 + examCount};" class="grid-separator-evaluation"></div>
 
-      <!-- new -->
-      ${newEvals}
-      ${newExams}
+    <!-- new -->
+    ${newEvals}
+    ${newExams}
 
-      <!-- Footer -->
-      ${footer}
-      
-    </div>
+    <!-- Footer -->
+    ${footer}
+    
+  </div>
 
-    <!-- Conditions -->
-    <h2>Condiciones para aprovar</h2>
-    <div class="edit-conditions">
-      ${conditions}
-    </div>
+  <!-- Conditions -->
+  <h2>Condiciones para aprovar</h2>
+  <div class="edit-conditions">
+    ${conditions}
   </div>`;
 
   return html;
