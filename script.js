@@ -105,7 +105,7 @@ var setPageSubjectView = (params) => {
     }
   }).catch((error) => {
     window.history.back();
-    console.error("Error getting subject info:", error);
+    console.error(`Error getting subject (${id}) info:`, error);
   });
 }
 
@@ -242,25 +242,27 @@ function updateSubjectCardInfo(id) {
 
 //Creates the subject card and appends it to the dashboard
 function createSubjectCardCollapsed(id) {
-  var card = document.createElement('div');
-  card.id = 'card-' + id;
-  card.className = 'subject-card';
-  card.onclick = function (event) { toggleExpandCard(event, this); };
-  card.innerHTML =
-    `<button onclick="deleteSubject('${id}')" class="subject-card-remove">
-  <img src="media/trash.svg" alt="x" aria-label="Delete subject">
-</button>
-<button onclick="showEditSubject('${id}')" class="subject-card-info">
-  <img src="media/edit.svg" alt="%" aria-label="Show subject information">
-</button>
-<h2>${subjects[id].shortName}</h2>
-<p class="subject-finalMark" style="color: ${isPassed(id,subjects[id].selectedEvaluation) ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
-<div class="subject-bar">${generateBar(id)}</div>
-<div class="grades-input hidden" style="height: 0px;">${generateInputs(id) + generateEvaluations(id)}</div>`;
+  if(!document.getElementById('card-' + id)){
+    var card = document.createElement('div');
+    card.id = 'card-' + id;
+    card.className = 'subject-card';
+    card.onclick = function (event) { toggleExpandCard(event, this); };
+    card.innerHTML =
+      ` <button onclick="deleteSubject('${id}')" class="subject-card-remove">
+          <img src="media/trash.svg" alt="x" aria-label="Delete subject">
+        </button>
+        <button onclick="showEditSubject('${id}')" class="subject-card-info">
+          <img src="media/edit.svg" alt="%" aria-label="Show subject information">
+        </button>
+        <h2>${subjects[id].shortName}</h2>
+        <p class="subject-finalMark" style="color: ${isPassed(id,subjects[id].selectedEvaluation) ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
+        <div class="subject-bar">${generateBar(id)}</div>
+        <div class="grades-input hidden" style="height: 0px;">${generateInputs(id) + generateEvaluations(id)}</div>`;
 
-  dashboard.appendChild(card);
-  updateAndDisplayMarks(id, false);
-  hideTutorial();
+    dashboard.appendChild(card);
+    updateAndDisplayMarks(id, false);
+    hideTutorial();
+  }
 }
 
 function generateBar(id) {
@@ -360,11 +362,11 @@ function addSubjects() {
 
 function addSubject(id, subject) {
   subjects[id] = completeSubject(subject);
+  createSubjectCardCollapsed(id);
 
   updateFinalMark(id);
   updateNecesaryMark(id);
 
-  createSubjectCardCollapsed(id);
   saveSubjectsLocalStorage();
   hideLoader('dashboard');
 }
@@ -376,7 +378,7 @@ function addSubjectFromDB(id) {
       console.error('Subject dosen\'t exists');
     }
   }).catch(function (error) {
-    console.error("Error getting subject info:", error);
+    console.error(`Error getting subject (${id}) info:`, error);
   });
 }
 
@@ -710,32 +712,27 @@ function updateMarkFromCardInput(id, exam, mark, input) {
 
 function updateCardGrades(id) {
   let card = getCard(id);
-  if (card) {
-    for (let div in card.getElementsByClassName('subject-bar')[0]) {
-      div.className = 'scolN';
-    }
-    for (const exam in subjects[id].evaluations[subjects[id].selectedEvaluation].exams) {
-      let input = getInput(id, exam);
-      input.className = 'scolN2';
-      input.value = '';
-    }
-    for (const exam in subjects[id].grades) {
-      let barElem = getBarElem(id, exam);
-      let input = getInput(id, exam);
-      if (barElem && input) {
-        barElem.textContent = subjects[id].grades[exam];
-        barElem.parentElement.className = 'scol' + subjects[id].color;
-        input.value = subjects[id].grades[exam];
-        input.className = 'scol' + subjects[id].color;
-      } else {
-        console.log(`Exam ${exam} of ${subjects[id].shortName} (${id}) is not in the card`);
-      }
-    }
-    updateAndDisplayMarks(id);
-  } else {
-    createSubjectCardCollapsed(id);
-    updateCardGrades(id);
+  for (let div in card.getElementsByClassName('subject-bar')[0]) {
+    div.className = 'scolN';
   }
+  for (const exam in subjects[id].evaluations[subjects[id].selectedEvaluation].exams) {
+    let input = getInput(id, exam);
+    input.className = 'scolN2';
+    input.value = '';
+  }
+  for (const exam in subjects[id].grades) {
+    let barElem = getBarElem(id, exam);
+    let input = getInput(id, exam);
+    if (barElem && input) {
+      barElem.textContent = subjects[id].grades[exam];
+      barElem.parentElement.className = 'scol' + subjects[id].color;
+      input.value = subjects[id].grades[exam];
+      input.className = 'scol' + subjects[id].color;
+    } else {
+      console.log(`Exam ${exam} of ${subjects[id].shortName} (${id}) is not in the card`);
+    }
+  }
+  updateAndDisplayMarks(id);
 }
 
 // updates the selectedEvaluation, saves the subjects and displays the new selectedEvaluation
@@ -766,15 +763,30 @@ function showConfetti(elem, conf) {
 
 // returns the card DOM element with that id
 function getCard(id) {
-  return document.getElementById('card-' + id);
+  let elem = document.getElementById('card-' + id);
+  if(!elem) {
+    createSubjectCardCollapsed(id);
+    elem = document.getElementById('card-' + id);
+  }
+  return elem;
 }
 // returns the input DOM element of the card from the subject id and exam exam
 function getInput(id, exam) {
-  return document.getElementById('in-' + id + exam);
+  let elem = document.getElementById('in-' + id + exam);
+  if(!elem) {
+    createSubjectCardCollapsed(id);
+    elem = document.getElementById('in-' + id + exam);
+  }
+  return elem;
 }
 // returns the card bar DOM element of the card from the subject id and exam exam
 function getBarElem(id, exam) {
-  return document.getElementById('bar-' + id + exam);
+  let elem = document.getElementById('bar-' + id + exam);
+  if(!elem) {
+    createSubjectCardCollapsed(id);
+    elem = document.getElementById('bar-' + id + exam);
+  }
+  return elem;
 }
 
 /* ------------------------------ MATH ------------------------------ */
@@ -1605,16 +1617,16 @@ function getAndDisplayUserSubjects() {
 
               console.info(`Loaded subject: ${subjects[id].shortName} - ${id}`);
             } else {
-              console.error(`Subject ${id} dosen\'t exists`);
+              console.error(`Subject ${id} dosen\'t exist`, userInfo.subjects[id]);
             }
           }).catch((error) => {
-            console.error("Error getting subject info:", error);
+            console.error(`Error getting subject (${id}) info:`, error);
           });
         }
         console.info(`User has ${userInfo.subjects.length} saved subjects`);
       } else {
         userDB.set({});
-        console.error(`User ${uid} dosen\'t exists`);
+        console.error(`User ${uid} dosen\'t exist`, userInfo.subjects[id]);
       }
       hideLoader('dashboard');
     }).catch((error) => {
