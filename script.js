@@ -1297,12 +1297,19 @@ function saveEditSubject() {
   let newSubject = readSubjectFromPopup(editSubjectPopup);
   let id = newSubject.id;
 
+  if(newSubject.shortName != subjects[id].shortName) uploadShortName(id, newSubject.shortName);
+  if(newSubject.fullName != subjects[id].fullName)   uploadFullName(id, newSubject.fullName);
+  if(newSubject.course != subjects[id].course)       uploadCourse(id, newSubject.course);
+  if(newSubject.faculty != subjects[id].faculty)     uploadFaculty(id, newSubject.faculty);
+  if(newSubject.uni != subjects[id].uni)             uploadUni(id, newSubject.uni);
+  if(newSubject.color != subjects[id].color)         uploadColor(id, newSubject.color);
+  if(JSON.stringify(newSubject.evaluations) === 
+     JSON.stringify(subjects[id].evaluations))       uploadEvaluation(id, newSubject.evaluations);
+
   subjects[id] = completeSubject(
     subjects[id],
     newSubject
   );
-
-  uploadEvaluation(id, newSubject.evaluations);
 
   updateSubjectCardInfo(id);
 
@@ -1545,7 +1552,27 @@ function uploadEvaluation(id, evaluation) {
 }
 
 function uploadColor(id, color) {
-  return uploadToUserDB(`subjects.${id}.color`, color);
+  return uploadToUserDB(`subjects.${id}.color`, parseInt(color));
+}
+
+function uploadShortName(id, shortName) {
+  return uploadToUserDB(`subjects.${id}.shortName`, shortName);
+}
+
+function uploadFullName(id, fullName) {
+  return uploadToUserDB(`subjects.${id}.fullName`, fullName);
+}
+
+function uploadCourse(id, course) {
+  return uploadToUserDB(`subjects.${id}.course`, course);
+}
+
+function uploadFaculty(id, faculty) {
+  return uploadToUserDB(`subjects.${id}.faculty`, faculty);
+}
+
+function uploadUni(id, uni) {
+  return uploadToUserDB(`subjects.${id}.uni`, uni);
 }
 
 function uploadVersion(id, version) {
