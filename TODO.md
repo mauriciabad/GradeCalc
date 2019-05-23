@@ -13,6 +13,6 @@
 - fix: when you delete a subject it's not deleted in other sync devices
 - fix: user popup android
 - fix: in the search input, when text is removed with the x, the results still appear
-- fix: use tabs inside create subject grid
 - use create subject placeholders as default values
 - fix: create subject buggy 
+- fix: save edit subject doesn't work.
