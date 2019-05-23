@@ -551,12 +551,10 @@ function generateEditSubjectUIHTML(id, subject, popup) {
     
   </div>
 
-  <!--
-  <h2>Condiciones extra para aprovar</h2>
-  <div class="edit-conditions">
+  <h2 style="display: none;" >Condiciones extra para aprovar</h2>
+  <div style="display: none;" class="edit-conditions">
     ${conditions}
-  </div>
-  -->`;
+  </div>`;
 
   return html;
 }
