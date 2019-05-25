@@ -1538,7 +1538,7 @@ function isValidSubjectFromPopup(subject) {
   
   for (const eval in subject.evaluations) {
     for (const exam in subject.evaluations[eval].exams) {
-      if(!subject.evaluations[eval][exam].type) { wrongValue = exam; break; }
+      if(!subject.evaluations[eval].exams[exam].type) { wrongValue = exam; break; }
     }
   }
   if(wrongValue){ showToast(`Pon categoria al examen ${wrongValue}`); return false; }
