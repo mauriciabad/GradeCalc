@@ -1517,6 +1517,9 @@ function uploadSubject(subject) { // TODO: add sanitise as cloud function
 }
 
 function isValidSubjectFromPopup(subject) {
+  console.log(subject);
+  console.log(isEmpty(subject));
+  
   let wrongValue = '';
 
   if(!subject.shortName){ showToast(`Rellena el Nombre`);       return false; }
@@ -1525,10 +1528,12 @@ function isValidSubjectFromPopup(subject) {
   if(!subject.faculty){   showToast(`Rellena la Facultad`);     return false; }
   if(!subject.uni){       showToast(`Rellena la Universidad`);  return false; }
   if(!subject.color){     showToast(`Escoje un Color`);         return false; }
-  if(!subject.evaluations || subject.evaluations == {}){ showToast(`Pon almenos una evaluación (columna)`); return false; }
+  if(isEmpty(subject.evaluations)){ showToast(`Rellena ela Evaluación`); return false; }
+  
+  // TODO: To implement this functions we need to check them before the subject is read
   
   for (const eval in subject.evaluations) {
-    if(subject.evaluations[eval].exams == {}) { wrongValue = eval; break; }
+    if(isEmpty(subject.evaluations[eval].exams)) { wrongValue = eval; break; }
   }
   if(wrongValue){ showToast(`Pon almenos un examen en ${wrongValue}`); return false; }
   
@@ -1544,6 +1549,10 @@ function isValidSubjectFromPopup(subject) {
   if(wrongValue){ showToast(`Pon categoria al examen ${wrongValue}`); return false; }
 
   return true;
+}
+
+function isEmpty(obj) {
+  return Object.entries(obj).length === 0 && obj.constructor === Object;
 }
 
 // EXAMPLE
