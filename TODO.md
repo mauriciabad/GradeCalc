@@ -24,3 +24,4 @@
 - future: do a tutorial for creating subjects
 - future: latest contribution list
 - future: unlock background by sharing the app
+- fix: error in script.js:861 "Uncaught TypeError: Cannot read property 'passMark' of undefined"
