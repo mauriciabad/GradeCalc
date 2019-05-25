@@ -1365,7 +1365,9 @@ function saveViewSubject() {
   let newSubject = readSubjectFromPopup(viewSubjectPopup);
   let id = newSubject.id;
   
-  subjectsToAdd[id] = newSubject;
+  if(isValidSubjectFromPopup(newSubject)){
+    subjectsToAdd[id] = newSubject;
+  }
 }
 
 async function saveNewSubject() {
@@ -1515,15 +1517,33 @@ function uploadSubject(subject) { // TODO: add sanitise as cloud function
 }
 
 function isValidSubjectFromPopup(subject) {
-  if(!subject.shortName) showToast(`Nombre Corto incorrecto`);
-  else if(!subject.fullName) showToast(`Nombre Largo incorrecto`);
-  else if(!subject.course) showToast(`Curso incorrecto`);
-  else if(!subject.faculty) showToast(`Facultad incorrecta`);
-  else if(!subject.uni) showToast(`Universidad incorrecta`);
-  else if(!subject.color) showToast(`Color incorrecto`);
-  else if(!subject.evaluations || subject.evaluations == {}) showToast(`Avaluatión incorrecta`);
-  else return true;
-  return false;
+  let wrongValue = '';
+
+  if(!subject.shortName){ showToast(`Rellena el Nombre`);       return false; }
+  if(!subject.fullName){  showToast(`Rellena el Nombre Largo`); return false; }
+  if(!subject.course){    showToast(`Rellena el Curso`);        return false; }
+  if(!subject.faculty){   showToast(`Rellena la Facultad`);     return false; }
+  if(!subject.uni){       showToast(`Rellena la Universidad`);  return false; }
+  if(!subject.color){     showToast(`Escoje un Color`);         return false; }
+  if(!subject.evaluations || subject.evaluations == {}){ showToast(`Pon almenos una evaluación (columna)`); return false; }
+  
+  for (const eval in subject.evaluations) {
+    if(subject.evaluations[eval].exams == {}) { wrongValue = eval; break; }
+  }
+  if(wrongValue){ showToast(`Pon almenos un examen en ${wrongValue}`); return false; }
+  
+  // if(wrongValue){ showToast(`Pon nombres distintos a los exámenes llamados ${wrongValue}`); return false; }
+  
+  // if(wrongValue){ showToast(`Pon nombres distintos a las evaluaciones llamadas ${wrongValue}`); return false; }
+  
+  for (const eval in subject.evaluations) {
+    for (const exam in subject.evaluations[eval].exams) {
+      if(!subject.evaluations[eval][exam].type) { wrongValue = exam; break; }
+    }
+  }
+  if(wrongValue){ showToast(`Pon categoria al examen ${wrongValue}`); return false; }
+
+  return true;
 }
 
 // EXAMPLE
