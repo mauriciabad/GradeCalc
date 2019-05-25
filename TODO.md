@@ -18,3 +18,9 @@
 - if you click outside the create popup say that will lose data.
 - don't allow to create two exams with the same name.
 - allow to order exams
+- future: personalize background
+- future: show always the repo link
+- future: add a changelog button
+- future: do a tutorial for creating subjects
+- future: latest contribution list
+- future: unlock background by sharing the app
