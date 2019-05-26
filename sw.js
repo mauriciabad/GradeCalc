@@ -1,10 +1,12 @@
-var CACHE_NAME = 'v0.12';
+var CACHE_NAME = 'v0.13';
 
 var urlsToCache = [
   '.',
   '/index.html',
   '/script-min.js',
   '/style-min.css',
+  '/script.js',
+  '/style.css',
 
   '/lib/confetti.js',
   '/lib/web-animations.min.js',
