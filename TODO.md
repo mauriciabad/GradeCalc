@@ -25,3 +25,5 @@
 - future: latest contribution list
 - future: unlock background by sharing the app
 - fix: error in script.js:861 "Uncaught TypeError: Cannot read property 'passMark' of undefined"
+- future: allow move subject cards
+- future: custom sorting of the cards
