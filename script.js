@@ -858,7 +858,7 @@ function hasPassedEverything() {
 
 // returns true if the subject with that id has a finalMark greater than mark (5) in the evaluation (selectedEvaluation)
 function isPassed(id, evaluation = subjects[id].selectedEvaluation) {
-  return subjects[id].finalMark[evaluation] >= (subjects[id].evaluations[evaluation].passMark || 5) && calcCondition(id, evaluation) ;
+  return subjects[id].evaluations[evaluation] != undefined && subjects[id].finalMark[evaluation] >= (subjects[id].evaluations[evaluation].passMark || 5) && calcCondition(id, evaluation) ;
 }
 
 function getExamTypesGrades(id, evaluation) {
