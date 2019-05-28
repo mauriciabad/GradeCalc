@@ -4,11 +4,12 @@ const babel = require('gulp-babel');
 const cleanCSS = require('gulp-clean-css');
 const minify = require('gulp-minify');
 const rename = require("gulp-rename");
+const uglify = require('gulp-uglify');
 
 gulp.task('css', () =>
   gulp.src('style.css')
     .pipe(autoprefixer({
-      browsers: ['> 1%', "last 2 versions"],
+      browsers: ['> 1%', "last 2 versions", 'not dead'],
       cascade: false
     }))
     .pipe(cleanCSS())
@@ -21,10 +22,9 @@ gulp.task('css', () =>
 gulp.task('js', () =>
   gulp.src('script.js')
     .pipe(babel({
-      plugins: ['@babel/transform-runtime'],
-      presets: ['@babel/env']
-  }))
-    .pipe(minify())
+      presets: ['@babel/preset-env']   
+    }))
+    .pipe(uglify())
     .pipe(rename((path) => {
       path.basename = "script.min";
     }))

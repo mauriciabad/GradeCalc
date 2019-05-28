@@ -550,9 +550,9 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   width: 100%;
   height: 100%;
 }
-.searchResultRow1{
+/* .searchResultRow1{
   
-}
+} */
 .searchResultRow2{
   font-size: 0.8em;
 }
@@ -1226,9 +1226,9 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   font-size: 3em;
   font-weight: bold;
 }
-.frozen-layer__spinner{
+/* .frozen-layer__spinner{
 
-}
+} */
 
 .sk-folding-cube {
   margin: 20px auto;
