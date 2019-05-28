@@ -840,11 +840,31 @@ function random(smallest, biggest) {
   return Math.floor(Math.random() * (biggest - smallest)) + smallest;
 }
 
+// Congratulations
+var congratulationsVideo;
+function onYouTubeIframeAPIReady() {congratulationsVideo = new YT.Player('congratulations');}
 function congratulate() {
   if (hasPassedEverything()) {
-    document.getElementById('congratulations-img').style.display = 'block';
+    document.getElementById('congratulations').style.display = 'block';
+    document.getElementById('congratulations-border').style.display = 'block';
+    document.body.style.backgroundColor = '#1AFF10';
+    if(document.documentElement.clientWidth*75 < document.documentElement.clientHeight*50){
+      document.body.style.paddingBottom = '75vw';
+    }else{
+      document.getElementsByTagName('body')[0].style.paddingBottom = '50vh';
+    }
+    if(congratulationsVideo != undefined){
+      congratulationsVideo.setVolume(100);
+      congratulationsVideo.playVideo();
+    }
   } else {
-    document.getElementById('congratulations-img').style.display = 'none';
+    document.getElementById('congratulations').style.display = 'none';
+    document.getElementById('congratulations-border').style.display = 'none';
+    document.body.style.backgroundColor = '#DBDFDF';
+    document.body.style.paddingBottom = '0';
+    if(congratulationsVideo != undefined){
+      congratulationsVideo.pauseVideo();
+    }
   }
 }
 

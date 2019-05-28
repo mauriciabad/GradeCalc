@@ -784,8 +784,30 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
     opacity: 1;
   }
 }
-
-#congratulations-img > img{
+#congratulations{
+  position: fixed;
+  right: 0; bottom: 0; left: 0;
+  width: 100vw;
+  height: 75vw;
+  max-width: 66.6666666vh;
+  max-height: 50vh;
+  margin: 0 auto;
+}
+#congratulations-border{
+  position: fixed;
+  right: 0; bottom: 0; left: 0;
+  width: 100vw;
+  height: 75vw;
+  max-width: 66.6666666vh;
+  max-height: 50vh;
+  margin: 0 auto;
+  box-sizing: border-box;
+  border: solid #20FF17 1px;
+  border-bottom: none;
+  pointer-events: none;
+}
+/* OLD Congratulations
+#congratulations > img{
   max-width: calc(100% - 2em);
   max-height: 33.33vh;
   border-radius: 2em;
@@ -794,9 +816,10 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   transition: transform 150ms var(--easing-bounce);
   animation: rotateIn 2s ease-out;
 }
-#congratulations-img > img:hover{
+#congratulations > img:hover{
   transform: scale(1.075);
-}
+} 
+*/
 
 #dashboard-loader{
   margin: 1em 0;
