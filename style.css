@@ -784,6 +784,10 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
     opacity: 1;
   }
 }
+
+/* ----------------- Congratulations -------------------*/
+
+
 #congratulations{
   position: fixed;
   right: 0; bottom: 0; left: 0;
@@ -805,6 +809,24 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   border: solid #20FF17 1px;
   border-bottom: none;
   pointer-events: none;
+}
+.rainbow-bg{
+  background: linear-gradient(0deg,
+    #ff0000,
+    #ffff00,
+    #00ff00,
+    #00ffff,
+    #0000ff,
+    #ff00ff,
+    #ff0000
+  );
+  background-size: 100% 100px;
+  background-repeat: repeat;
+  animation: rainbow-bg-animation 1s linear infinite;
+}
+@keyframes rainbow-bg-animation { 
+  0%{background-position-y: 0}
+  100%{background-position-y: -100px}
 }
 /* OLD Congratulations
 #congratulations > img{

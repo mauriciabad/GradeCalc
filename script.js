@@ -847,7 +847,8 @@ function congratulate() {
   if (hasPassedEverything()) {
     document.getElementById('congratulations').style.display = 'block';
     document.getElementById('congratulations-border').style.display = 'block';
-    document.body.style.backgroundColor = '#1AFF10';
+    // document.body.style.backgroundColor = '#1AFF10';
+    document.body.classList.add('rainbow-bg');
     if(document.documentElement.clientWidth*75 < document.documentElement.clientHeight*50){
       document.body.style.paddingBottom = '75vw';
     }else{
@@ -860,7 +861,8 @@ function congratulate() {
   } else {
     document.getElementById('congratulations').style.display = 'none';
     document.getElementById('congratulations-border').style.display = 'none';
-    document.body.style.backgroundColor = '#DBDFDF';
+    // document.body.style.backgroundColor = '#DBDFDF';
+    document.body.classList.remove('rainbow-bg');
     document.body.style.paddingBottom = '0';
     if(congratulationsVideo != undefined){
       congratulationsVideo.pauseVideo();
