@@ -13,7 +13,7 @@ gulp.task('css', () =>
     }))
     .pipe(cleanCSS())
     .pipe(rename((path) => {
-      path.basename = "style-min";
+      path.basename = "style.min";
     }))
     .pipe(gulp.dest('./'))
 );
@@ -26,7 +26,7 @@ gulp.task('js', () =>
   }))
     .pipe(minify())
     .pipe(rename((path) => {
-      path.basename = "script-min";
+      path.basename = "script.min";
     }))
     .pipe(gulp.dest('./'))
 );
@@ -36,4 +36,4 @@ gulp.task('watch', () => {
   gulp.watch('script.js', gulp.series('js'));
 });
 
-gulp.task('default', gulp.parallel('css','js','watch'));
+gulp.task('default', gulp.parallel('css','js'));

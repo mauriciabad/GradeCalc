@@ -1,4 +1,5 @@
-# What is GradeCalc?
+# What is GradeCalc
+
 GradeCalc is a progressive web app for students, it's main porpouse is calculating the necessary mark to pass a subject.
 [gradecalc.net](https://gradecalc.net)
 
@@ -14,8 +15,24 @@ GradeCalc is a progressive web app for students, it's main porpouse is calculati
 - Add to homescreen (Android)
 - Solves complex evaluation formulas
 
-## How to build
+## Setup
 
 ```bash
 npm i
 ```
+
+## Develop
+
+```bash
+gulp watch
+```
+
+## Build
+
+```bash
+gulp
+```
+
+### Gulp commands
+
+You can use `gulp js`, `gulp css` or `gulp watch`.

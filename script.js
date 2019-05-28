@@ -1,3 +1,4 @@
+"use strict";
 /* ------------------------------ START UP ------------------------------ */
 var dashboard = document.getElementById('dashboard');
 var editSubjectPopup = document.getElementById('edit-popup-content');
@@ -1532,8 +1533,8 @@ function isValidSubjectFromPopup(subject) {
   
   // TODO: To implement this functions we need to check them before the subject is read
   
-  for (const eval in subject.evaluations) {
-    if(isEmpty(subject.evaluations[eval].exams)) { wrongValue = eval; break; }
+  for (const evaluation in subject.evaluations) {
+    if(isEmpty(subject.evaluations[evaluation].exams)) { wrongValue = evaluation; break; }
   }
   if(wrongValue){ showToast(`Pon almenos un examen en ${wrongValue}`); return false; }
   
@@ -1541,18 +1542,14 @@ function isValidSubjectFromPopup(subject) {
   
   // if(wrongValue){ showToast(`Pon nombres distintos a las evaluaciones llamadas ${wrongValue}`); return false; }
   
-  for (const eval in subject.evaluations) {
-    for (const exam in subject.evaluations[eval].exams) {
-      if(!subject.evaluations[eval].exams[exam].type) { wrongValue = exam; break; }
+  for (const evaluation in subject.evaluations) {
+    for (const exam in subject.evaluations[evaluation].exams) {
+      if(!subject.evaluations[evaluation].exams[exam].type) { wrongValue = exam; break; }
     }
   }
   if(wrongValue){ showToast(`Pon categoria al examen ${wrongValue}`); return false; }
 
   return true;
-}
-
-function isEmpty(obj) {
-  return Object.entries(obj).length === 0 && obj.constructor === Object;
 }
 
 // EXAMPLE

@@ -31,6 +31,8 @@
     "babel-preset-stage-0": "^6.24.1",
     "browser-sync": "^2.26.3",
     "del": "^3.0.0",
+    "eslint": "^5.16.0",
+    "gulp": "^4.0.2",
     "gulp-autoprefixer": "^6.0.0",
     "gulp-babel": "^8.0.0",
     "gulp-cache": "^1.1.1",
