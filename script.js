@@ -874,6 +874,7 @@ var congratulationsVideo;
 function onYouTubeIframeAPIReady() {congratulationsVideo = new YT.Player('congratulations');}
 function congratulate() {
   if (hasPassedEverything()) {
+    document.getElementById('congratulations-gift').src = `media/gift_jump_once.gif?n=${Math.random()}`;
     document.getElementById('congratulations-button').style.display = 'block';
   } else {
     document.getElementById('congratulations-button').style.display = 'none';
