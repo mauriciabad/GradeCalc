@@ -18,7 +18,7 @@ var urlsToCache = [
   '/media/dislike.svg',
   '/media/user-circle.svg',
   '/media/profile-pic.jpg',
-  '/media/congratulations.gif',
+  '/media/gift_jump_once.gif',
 
   '/site.webmanifest',
   '/sw.js',

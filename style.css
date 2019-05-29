@@ -787,7 +787,11 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 
 /* ----------------- Congratulations -------------------*/
 
-
+#congratulations-gift{
+  height: 10em;
+  margin: 0 auto;
+  cursor: pointer;
+}
 #congratulations{
   position: fixed;
   right: 0; bottom: 0; left: 0;
