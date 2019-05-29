@@ -842,7 +842,7 @@ function random(smallest, biggest) {
 
 // Congratulations
 function ShowEasterEgg() {
-  document.getElementById('congratulations-gift').style.display = 'none';
+  document.getElementById('congratulations-button').style.display = 'none';
   document.getElementById('congratulations').style.display = 'block';
   document.getElementById('congratulations-border').style.display = 'block';
   // document.body.style.backgroundColor = '#1AFF10';
@@ -874,9 +874,9 @@ var congratulationsVideo;
 function onYouTubeIframeAPIReady() {congratulationsVideo = new YT.Player('congratulations');}
 function congratulate() {
   if (hasPassedEverything()) {
-    document.getElementById('congratulations-gift').style.display = 'block';
+    document.getElementById('congratulations-button').style.display = 'block';
   } else {
-    document.getElementById('congratulations-gift').style.display = 'none';
+    document.getElementById('congratulations-button').style.display = 'none';
   }
 }
 
