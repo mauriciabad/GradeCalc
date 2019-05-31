@@ -27,3 +27,4 @@
 - fix: error in script.js:861 "Uncaught TypeError: Cannot read property 'passMark' of undefined"
 - future: allow move subject cards
 - future: custom sorting of the cards
+- future: share button on mobile
