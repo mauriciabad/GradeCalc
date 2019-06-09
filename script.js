@@ -12,6 +12,7 @@ var searchResultsNone = document.getElementById('subjects-search-none');
 var frozenLayer = document.getElementById('frozen-layer');
 var frozenLayerMessage = document.getElementById('frozen-layer-message');
 var frozenLayerWarning = document.getElementById('frozen-layer-warning');
+var frozenWarningTimeout;
 
 var allPopups = [
   'user-container',
@@ -1380,7 +1381,7 @@ function readSubjectFromPopup(popup) {
       }
     }
   }
-  console.log(newEval);
+  // console.log(newEval);
 
   return {
     id: id,
@@ -1550,8 +1551,8 @@ function uploadSubject(subject) { // TODO: add sanitise as cloud function
 }
 
 function isValidSubjectFromPopup(subject) {
-  console.log(subject);
-  console.log(isEmpty(subject));
+  // console.log(subject);
+  // console.log(isEmpty(subject));
   
   let wrongValue = '';
 
