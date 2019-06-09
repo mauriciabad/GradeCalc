@@ -317,9 +317,9 @@ em::before{
   font-weight: bold;
 }
 
-.scolN2{
-  background-color: #eee;
-  color: #333;
+.scolN, .scolN2{
+  background-color: #eee !important;
+  color: #333 !important;
 }
 
 .scol1{

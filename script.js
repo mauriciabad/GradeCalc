@@ -246,7 +246,7 @@ function createSubjectCardCollapsed(id) {
   if(!document.getElementById('card-' + id)){
     var card = document.createElement('div');
     card.id = 'card-' + id;
-    card.className = 'subject-card';
+    card.classList.add('subject-card');
     card.onclick = function (event) { toggleExpandCard(event, this); };
     card.innerHTML =
       ` <button onclick="deleteSubject('${id}')" class="subject-card-remove">
@@ -277,7 +277,7 @@ function generateBar(id) {
       }else{
         mark = subjects[id].necesaryMarks[subjects[id].selectedEvaluation][exam];
       }
-      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scolN" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}%" data-exam="${exam}">${exam}<div id="bar-${id + exam}" data-exam="${exam}">${mark}</div></div>`;
+      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color} scolN" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}%" data-exam="${exam}">${exam}<div id="bar-${id + exam}" data-exam="${exam}">${mark}</div></div>`;
     } else {
       barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color}" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}%" data-exam="${exam}">${exam}<div id="bar-${id + exam}" data-exam="${exam}">${subjects[id].grades[exam]}</div></div>`;
     }
@@ -305,7 +305,7 @@ function generateInputs(id) {
     }
 
     if (isUndone(id, examName)) {
-      types[exam.type].inputsHTML += `<div><span>${examName}:</span><input type="number" id="in-${id + examName}" data-exam="${examName}" placeholder="${mark}" value="" class="scolN2" oninput="updateMarkFromCardInput('${id}', '${examName}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
+      types[exam.type].inputsHTML += `<div><span>${examName}:</span><input type="number" id="in-${id + examName}" data-exam="${examName}" placeholder="${mark}" value="" class="scol${subjects[id].color} scolN2" oninput="updateMarkFromCardInput('${id}', '${examName}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
     } else {
       types[exam.type].inputsHTML += `<div><span>${examName}:</span><input type="number" id="in-${id + examName}" data-exam="${examName}" placeholder="${mark}" value="${subjects[id].grades[examName]}" class="scol${subjects[id].color}" oninput="updateMarkFromCardInput('${id}', '${examName}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
     }
@@ -581,14 +581,14 @@ function displayNecesaryMark(id) {
   let barUndone = card.getElementsByClassName('scolN');
   let inUndone = card.getElementsByClassName('scolN2');
 
-  for (let j = 0; j < barUndone.length; j++) {
+  for (const barElem of barUndone) {
     let mark = '';
-    if (subjects[id].necesaryMarks[subjects[id].selectedEvaluation][barUndone[j].dataset.exam] == null) {
+    if (subjects[id].necesaryMarks[subjects[id].selectedEvaluation][barElem.dataset.exam] == null) {
       mark = 'ಥ_ಥ';
     }else{
-      mark = subjects[id].necesaryMarks[subjects[id].selectedEvaluation][barUndone[j].dataset.exam];
-    }
-    barUndone[j].children[0].textContent = mark;
+      mark = subjects[id].necesaryMarks[subjects[id].selectedEvaluation][barElem.dataset.exam];
+    }    
+    barElem.children[0].textContent = mark;
   }
   for (let j = 0; j < inUndone.length; j++) {
     let mark = '';
@@ -694,15 +694,14 @@ function updateMarkFromCardInput(id, exam, mark, input) {
     subjects[id].grades[exam] = Number(mark);
     uploadGrade(id, exam, subjects[id].grades[exam]);
 
-    barElem.parentElement.className = 'scol' + subjects[id].color;
-    barElem.textContent = input.value;
-    input.className = 'scol' + subjects[id].color;
+    barElem.parentElement.classList.remove('scolN');
+    input.classList.remove('scolN2');
   } else {
     delete subjects[id].grades[exam];
     uploadGrade(id, exam, undefined);
 
-    barElem.parentElement.className = 'scolN';
-    input.className = 'scolN2';
+    barElem.parentElement.classList.add('scolN');
+    input.classList.add('scolN2');
   }
   updateAndDisplayMarks(id);
   saveSubjectsLocalStorage();
@@ -710,12 +709,12 @@ function updateMarkFromCardInput(id, exam, mark, input) {
 
 function updateCardGrades(id) {
   let card = getCard(id);
-  for (let div in card.getElementsByClassName('subject-bar')[0]) {
-    div.className = 'scolN';
+  for (let div of card.getElementsByClassName('subject-bar')[0].children) {
+    div.classList.add('scolN');
   }
   for (const exam in subjects[id].evaluations[subjects[id].selectedEvaluation].exams) {
     let input = getInput(id, exam);
-    input.className = 'scolN2';
+    input.classList.add('scolN2');
     input.value = '';
   }
   for (const exam in subjects[id].grades) {
@@ -723,9 +722,9 @@ function updateCardGrades(id) {
     let input = getInput(id, exam);
     if (barElem && input) {
       barElem.textContent = subjects[id].grades[exam];
-      barElem.parentElement.className = 'scol' + subjects[id].color;
+      barElem.parentElement.classList.remove('scolN');
       input.value = subjects[id].grades[exam];
-      input.className = 'scol' + subjects[id].color;
+      input.classList.remove('scolN2');
     } else {
       console.log(`Exam ${exam} of ${subjects[id].shortName} (${id}) is not in the card`);
     }
