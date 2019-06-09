@@ -1,3 +1,5 @@
+# To do list
+
 - (future) Cloud funtion to delete old subjects and users
 - (future) Cloud function to sanitize subjects and upload them
 - (future) Add subjects from 1st course and 3rd
@@ -24,7 +26,6 @@
 - future: do a tutorial for creating subjects
 - future: latest contribution list
 - future: unlock background by sharing the app
-- fix: error in script.js:861 "Uncaught TypeError: Cannot read property 'passMark' of undefined"
 - future: allow move subject cards
 - future: custom sorting of the cards
 - future: share button on mobile

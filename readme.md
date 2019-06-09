@@ -12,8 +12,8 @@ GradeCalc is a progressive web app for students, it's main porpouse is calculati
 - Save your marks in your profile or device.
 - Google+ login.
 - Works offline.
-- Add to homescreen (Android)
-- Solves complex evaluation formulas
+- Add to homescreen.
+- Solves complex evaluation formulas.
 
 ## Setup
 
@@ -35,4 +35,4 @@ gulp
 
 ### Gulp commands
 
-You can use `gulp js`, `gulp css` or `gulp watch`.
+You can use `gulp js`, `gulp css`, `gulp libs` or `gulp watch`.
