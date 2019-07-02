@@ -801,26 +801,17 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   transition: transform 200ms var(--easing-bounce);
 }
 #congratulations{
+  --video-aspect-ratio: calc(16 / 9);
   position: fixed;
   right: 0; bottom: 0; left: 0;
   width: 100vw;
-  height: 75vw;
-  max-width: 66.6666666vh;
+  height: calc(100vw / var(--video-aspect-ratio));
   max-height: 50vh;
+  max-width: calc(50vh * var(--video-aspect-ratio));
   margin: 0 auto;
 }
-#congratulations-border{
-  position: fixed;
-  right: 0; bottom: 0; left: 0;
-  width: 100vw;
-  height: 75vw;
-  max-width: 66.6666666vh;
-  max-height: 50vh;
-  margin: 0 auto;
-  box-sizing: border-box;
-  border: solid #20FF17 1px;
-  border-bottom: none;
-  pointer-events: none;
+.bark-bg{
+  background: #000;
 }
 .rainbow-bg{
   background: linear-gradient(0deg,

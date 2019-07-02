@@ -844,11 +844,11 @@ function random(smallest, biggest) {
 function ShowEasterEgg() {
   document.getElementById('congratulations-button').style.display = 'none';
   document.getElementById('congratulations').style.display = 'block';
-  document.getElementById('congratulations-border').style.display = 'block';
-  // document.body.style.backgroundColor = '#1AFF10';
-  document.body.classList.add('rainbow-bg');
-  if(document.documentElement.clientWidth*75 < document.documentElement.clientHeight*50){
-    document.body.style.paddingBottom = '75vw';
+  document.body.classList.add('bark-bg');
+  // document.body.classList.add('rainbow-bg');
+  let videoAspectRatio = 16/9;
+  if(document.documentElement.clientWidth*100/videoAspectRatio < document.documentElement.clientHeight*50){
+    document.body.style.paddingBottom = `${100/videoAspectRatio}vw`;
   }else{
     document.getElementsByTagName('body')[0].style.paddingBottom = '50vh';
   }
@@ -860,9 +860,8 @@ function ShowEasterEgg() {
 
 function HideEasterEgg() {
   document.getElementById('congratulations').style.display = 'none';
-  document.getElementById('congratulations-border').style.display = 'none';
-  // document.body.style.backgroundColor = '#DBDFDF';
-  document.body.classList.remove('rainbow-bg');
+  document.body.classList.remove('bark-bg');
+  // document.body.classList.remove('rainbow-bg');
   document.body.style.paddingBottom = '0';
   if(congratulationsVideo != undefined){
     congratulationsVideo.pauseVideo();
