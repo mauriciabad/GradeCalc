@@ -1,7 +1,12 @@
-# What is GradeCalc
+# GradeCalc
 
-GradeCalc is a progressive web app for students, it's main porpouse is calculating the necessary mark to pass a subject.
-[gradecalc.net](https://gradecalc.net)
+[GradeCalc](https://gradecalc.net) is a progressive web app for students, it's main porpouse is calculating the necessary mark in the remaining exams to pass a subject.
+
+You can create your own subject and share it, or if someone created it before, you can use theirs.
+
+Also, it allows you to login with Google and store your subjects in the cloud, so you can acces them from yout mobile and pc.
+
+Use it here: [gradecalc.net](https://gradecalc.net)
 
 ## Features
 
@@ -15,24 +20,35 @@ GradeCalc is a progressive web app for students, it's main porpouse is calculati
 - Add to homescreen.
 - Solves complex evaluation formulas.
 
-## Setup
+## Develop
+
+### Setup
+
+Use this command to insatll all dependencies.
 
 ```bash
 npm i
 ```
 
-## Develop
+### Develop
+
+Use this command to compile the js and css when you save the files.
 
 ```bash
 gulp watch
 ```
 
-## Build
+### Build
 
 ```bash
 gulp
 ```
 
-### Gulp commands
+### Run
+
+Just open the `index.html`
+I use the [VS code extension Live server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer).
+
+#### Gulp commands
 
 You can use `gulp js`, `gulp css`, `gulp libs` or `gulp watch`.
