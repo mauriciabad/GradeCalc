@@ -19,13 +19,13 @@
   },
   "homepage": "https://github.com/mauriciabad/GradeCalc#readme",
   "devDependencies": {
-    "@babel/core": "^7.5.4",
+    "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "browser-sync": "^2.26.5",
     "babelify": "^10.0.0",
     "browserify": "^16.3.0",
     "del": "^3.0.0",
-    "eslint": "^5.16.0",
+    "eslint": "^6.1.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^6.1.0",
     "gulp-babel": "^8.0.0",
@@ -45,6 +45,6 @@
   "dependencies": {
     "babel-cli": "^6.26.0",
     "core-js": "^3.1.4",
-    "regenerator-runtime": "^0.13.2"
+    "regenerator-runtime": "^0.13.3"
   }
 }
