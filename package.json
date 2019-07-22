@@ -20,7 +20,7 @@
   "homepage": "https://github.com/mauriciabad/GradeCalc#readme",
   "devDependencies": {
     "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.2",
+    "@babel/preset-env": "^7.5.5",
     "browser-sync": "^2.26.5",
     "babelify": "^10.0.0",
     "browserify": "^16.3.0",
