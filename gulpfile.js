@@ -55,3 +55,4 @@ gulp.task('watch', () => {
 });
 
 gulp.task('default', gulp.parallel('css','js','libs'));
+gulp.task('build', gulp.parallel('css','js','libs'));
