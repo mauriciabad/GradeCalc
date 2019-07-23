@@ -41,7 +41,7 @@ gulp watch
 ### Build
 
 ```bash
-gulp
+gulp build
 ```
 
 ### Run
