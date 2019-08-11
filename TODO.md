@@ -5,6 +5,9 @@
 - `fix`: user popup android
 - `fix`: in the search input, when text is removed with the x, the results still appear
 - `fix`: does not work offline
+- `fix`: A iPhone no es poden afegir evaluaciones a assignatures
+- `fix`: si borres el text del search bar amn la x no es treuen els resultats. Ni quan tires enrere
+- `fix`: quan fas scroll a iPhone dins del popup el botó de add es talla
 
 - Conditions Types and evaluations and &&
 - new subject ask for required inputs (evaluation and conditions)
