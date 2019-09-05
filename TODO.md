@@ -35,3 +35,5 @@
 - `future`: examName && typeName && evalName must be diferent
 - `future`: check if condition is valid
 - `furure`: do google login with a div (like BitBucket or Medium)
+- `furure`: restore edited subject button
+- `furure`: report wrong subject
