@@ -21,7 +21,7 @@ gulp.task('css', () =>
     .pipe(rename((path) => {
       path.basename = "main.min";
     }))
-    .pipe(gulp.dest('./dist'))
+    .pipe(gulp.dest('dist/styles/'))
 );
 
 gulp.task('js', () =>
@@ -31,7 +31,7 @@ gulp.task('js', () =>
     .pipe(rename((path) => {
       path.basename = "script.min";
     }))
-    .pipe(gulp.dest('./dist'))
+    .pipe(gulp.dest('dist/scripts/'))
 );
 
 gulp.task('libs', () =>
@@ -46,7 +46,7 @@ gulp.task('libs', () =>
       .pipe(rename((path) => {
         path.basename = "libs.min";
       }))
-      .pipe(gulp.dest('./dist'))
+      .pipe(gulp.dest('dist/scripts/'))
 );
 
 gulp.task('watch', () => {
