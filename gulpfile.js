@@ -38,7 +38,7 @@ gulp.task('libs', () =>
   browserify({entries: 'src/scripts/libs.js', debug: true})
       .transform("babelify", { presets: ["@babel/preset-env"] })
       .bundle()
-      .pipe(source('src/scripts/libs.js'))
+      .pipe(source('libs.js'))
       .pipe(buffer())
       // .pipe(sourcemaps.init())
       .pipe(uglify())
