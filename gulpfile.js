@@ -12,33 +12,33 @@ const babelify = require('babelify');
 // const sourcemaps  = require('gulp-sourcemaps');
 
 gulp.task('css', () =>
-  gulp.src('style.css')
+  gulp.src('src/styles/main.css')
     .pipe(autoprefixer({
       browsers: ['> 1%', "last 2 versions", 'not dead'],
       cascade: false
     }))
     .pipe(cleanCSS())
     .pipe(rename((path) => {
-      path.basename = "style.min";
+      path.basename = "main.min";
     }))
-    .pipe(gulp.dest('./'))
+    .pipe(gulp.dest('./dist'))
 );
 
 gulp.task('js', () =>
-  gulp.src('script.js')
+  gulp.src('src/scripts/script.js')
     .pipe(babel({ presets: ['@babel/preset-env'] }))
     .pipe(uglify())
     .pipe(rename((path) => {
       path.basename = "script.min";
     }))
-    .pipe(gulp.dest('./'))
+    .pipe(gulp.dest('./dist'))
 );
 
 gulp.task('libs', () =>
-  browserify({entries: './libs.js', debug: true})
+  browserify({entries: 'src/scripts/libs.js', debug: true})
       .transform("babelify", { presets: ["@babel/preset-env"] })
       .bundle()
-      .pipe(source('libs.js'))
+      .pipe(source('src/scripts/libs.js'))
       .pipe(buffer())
       // .pipe(sourcemaps.init())
       .pipe(uglify())
@@ -46,12 +46,12 @@ gulp.task('libs', () =>
       .pipe(rename((path) => {
         path.basename = "libs.min";
       }))
-      .pipe(gulp.dest('./'))
+      .pipe(gulp.dest('./dist'))
 );
 
 gulp.task('watch', () => {
-  gulp.watch('style.css', gulp.series('css'));
-  gulp.watch('script.js', gulp.series('js'));
+  gulp.watch('src/styles/main.css', gulp.series('css'));
+  gulp.watch('src/scripts/script.js', gulp.series('js'));
 });
 
 gulp.task('default', gulp.parallel('css','js','libs'));

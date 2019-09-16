@@ -1,14 +1,15 @@
-var CACHE_NAME = 'v0.21';
+var CACHE_NAME = 'v0.22';
 
 var urlsToCache = [
   '.',
   '/index.html',
-  '/script.min.js',
-  '/style.min.css',
+  '/scripts/script.min.js',
+  '/styles/main.min.css',
 
   '/lib/confetti.js',
   '/lib/web-animations.min.js',
   '/lib/navigo.min.js',
+  '/scripts/libs.min.js',
 
   '/media/plus.svg',
   '/media/edit.svg',
@@ -21,7 +22,7 @@ var urlsToCache = [
   '/media/gift_jump_once.gif',
 
   '/site.webmanifest',
-  '/sw.js',
+  '/scripts/sw.js',
 
   '/icons/favicon.ico',
   '/icons/favicon-16x16.png',
