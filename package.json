@@ -10,7 +10,7 @@
     "predist": "rm -rf dist/* && touch dist/.gitkeep",
     "dist": "run-p dist:*",
     "dist:assets": "cp -r src/assets/* dist/",
-    "dist:scripts": "run-p dist:scripts:*",
+    "dist:scripts": "mkdir -p dist/scripts/ && run-p dist:scripts:*",
     "dist:scripts:gulp": "gulp js",
     "dist:scripts:sw": "cp src/scripts/sw.js dist/scripts/",
     "dist:scripts:lib": "gulp libs",
