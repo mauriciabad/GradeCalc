@@ -20,7 +20,7 @@ Use it here: [gradecalc.net](https://gradecalc.net)
 - Add to homescreen.
 - Solves complex evaluation formulas.
 
-## Develop
+## Development
 
 ### Setup
 
@@ -40,15 +40,16 @@ gulp watch
 
 ### Build
 
+Use this command to compile all the files to the `dist/` directory.
+
 ```bash
-gulp build
+npm run dist
 ```
 
-### Run
+### Deploy
 
-Just open the `index.html`
-I use the [VS code extension Live server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer).
+_100% automated_ with Netlify, just push to master.
 
-#### Gulp commands
+### Gulp commands
 
 You can use `gulp js`, `gulp css`, `gulp libs` or `gulp watch`.
