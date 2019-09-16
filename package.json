@@ -13,7 +13,7 @@
     "dist:scripts": "run-p dist:scripts:*",
     "dist:scripts:gulp": "gulp js",
     "dist:scripts:sw": "cp src/scripts/sw.js dist/",
-    "dist:scripts:lib": "gulp lib",
+    "dist:scripts:lib": "gulp libs",
     "dist:styles": "gulp css",
     "dist:lib": "cp -r lib dist/lib",
     "dist:layout": "cp src/index.html dist/",
