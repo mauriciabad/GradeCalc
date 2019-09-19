@@ -20,9 +20,6 @@ var urlsToCache = [
   './media/profile-pic.jpg',
   './media/gift_jump_once.gif',
 
-  './site.webmanifest',
-  './scripts/sw.js',
-
   './icons/favicon.ico',
   './icons/favicon-16x16.png',
   './icons/favicon-32x32.png',
