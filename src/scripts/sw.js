@@ -1,7 +1,6 @@
-var CACHE_NAME = 'v0.23';
+var CACHE_NAME = 'v0.23.5';
 
 var urlsToCache = [
-  '.',
   '/index.html',
   '/scripts/script.min.js',
   '/styles/main.min.css',
@@ -20,6 +19,9 @@ var urlsToCache = [
   '/media/user-circle.svg',
   '/media/profile-pic.jpg',
   '/media/gift_jump_once.gif',
+
+  '/site.webmanifest',
+  '/scripts/sw.js',
 
   '/icons/favicon.ico',
   '/icons/favicon-16x16.png',
