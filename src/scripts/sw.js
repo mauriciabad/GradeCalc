@@ -1,33 +1,32 @@
-var CACHE_NAME = 'v0.22';
+var CACHE_NAME = 'v0.23';
 
 var urlsToCache = [
-  '.',
-  '/index.html',
-  '/scripts/script.min.js',
-  '/styles/main.min.css',
+  './index.html',
+  './scripts/script.min.js',
+  './styles/main.min.css',
 
-  '/lib/confetti.js',
-  '/lib/web-animations.min.js',
-  '/lib/navigo.min.js',
-  '/scripts/libs.min.js',
+  './lib/confetti.js',
+  './lib/web-animations.min.js',
+  './lib/navigo.min.js',
+  './scripts/libs.min.js',
 
-  '/media/plus.svg',
-  '/media/edit.svg',
-  '/media/trash.svg',
-  '/media/discount.svg',
-  '/media/back.svg',
-  '/media/dislike.svg',
-  '/media/user-circle.svg',
-  '/media/profile-pic.jpg',
-  '/media/gift_jump_once.gif',
+  './media/plus.svg',
+  './media/edit.svg',
+  './media/trash.svg',
+  './media/discount.svg',
+  './media/back.svg',
+  './media/dislike.svg',
+  './media/user-circle.svg',
+  './media/profile-pic.jpg',
+  './media/gift_jump_once.gif',
 
-  '/site.webmanifest',
-  '/scripts/sw.js',
+  './site.webmanifest',
+  './scripts/sw.js',
 
-  '/icons/favicon.ico',
-  '/icons/favicon-16x16.png',
-  '/icons/favicon-32x32.png',
-  '/icons/android-chrome-192x192.png',
+  './icons/favicon.ico',
+  './icons/favicon-16x16.png',
+  './icons/favicon-32x32.png',
+  './icons/android-chrome-192x192.png',
 
   'https://fonts.googleapis.com/css?family=Nunito:300,400,700'
 ];
