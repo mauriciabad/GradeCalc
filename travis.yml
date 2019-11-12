@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - 10 # use Node 10 LTS or later
+before_install:
+  - npm install -g @lhci/cli
+  - npm install -g gulp-cli
+script:
+  - npm run dist # build your site
+  - lhci autorun --rc-overrides.upload.target=temporary-public-storage # run lighthouse CI
+addons:
+  chrome: stable # make sure you have Chrome available
