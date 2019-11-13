@@ -795,7 +795,6 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   text-align: center;
 }
 #congratulations-gift{
-  height: 10em;
   margin: -2em auto;
   transform-origin: 50% 66.666%;
   transition: transform 200ms var(--easing-bounce);

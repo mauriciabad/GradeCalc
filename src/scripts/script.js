@@ -1413,6 +1413,7 @@ async function saveNewSubject() {
     unfreeze();
     
     if(!id) showToast('Error al subir')
+    if(!uid) showToast('Inicia sesión para compartir assignaturas')
     addSubject(id, newSubject);
     router.navigate(`/`);
   }

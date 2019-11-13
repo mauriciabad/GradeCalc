@@ -83,13 +83,13 @@
     </div>
     <div id="congratulations-button" style="display: none;">     
       <p><b>¡Lo has aprobado todo!</b></p>
-      <img id="congratulations-gift" onclick="ShowEasterEgg();" data-src="media/gift_jump_once.gif" alt="¡Felicidades!">
+      <img id="congratulations-gift" onclick="ShowEasterEgg();" src="media/gift_jump_once.gif" alt="¡Felicidades!" loading="lazy" width="300" height="300" intrinsicsize="600x600">
       <p>🥳 Celebralo abriendo el regalo 😉</p>
     </div>
-    <!-- Without controlls --><!--  <iframe id="congratulations" style="display: none;" width="560" height="315" src="https://www.youtube.com/embed/eyNlovbLO6w?enablejsapi=1&modestbranding=1&autohide=1&showinfo=0&controls=0&disablekb=1&fs=0&iv_load_policy=3&loop=1&rel=0&&playlist=eyNlovbLO6w" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
-    <iframe id="congratulations" style="display: none;" width="560" height="315" src="https://www.youtube.com/embed/eyNlovbLO6w?enablejsapi=1&modestbranding=1&autohide=1&showinfo=0&iv_load_policy=3&loop=1&rel=0&&playlist=eyNlovbLO6w" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <!-- Without controlls --><!--  <iframe id="congratulations" style="display: none;" width="560" height="315" src="https://www.youtube.com/embed/cvyrG9iOB2s?enablejsapi=1&modestbranding=1&autohide=1&showinfo=0&controls=0&disablekb=1&fs=0&iv_load_policy=3&loop=1&rel=0&&playlist=cvyrG9iOB2s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+    <iframe id="congratulations" style="display: none;" width="560" height="315" loading="lazy" src="https://www.youtube.com/embed/cvyrG9iOB2s?enablejsapi=1&modestbranding=1&autohide=1&showinfo=0&iv_load_policy=3&loop=1&rel=0&&playlist=cvyrG9iOB2s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     <!-- <a href="https://youtu.be/1Bix44C1EzY" target="_blank" id="congratulations" style="display: none">
-      <img data-src="media/congratulations.gif" alt="¡Felicidades!">
+      <img src="media/congratulations.gif" alt="¡Felicidades!" loading="lazy">
     </a> -->
   </main>
 
@@ -143,7 +143,7 @@
   <div id="user-container" class="popup popup-small" style="display: none;">
     <div onclick="window.history.back();" class="top-bar-popup"></div>
     <div class="popup-content user-popup">
-      <img class="popup-round-img-top" src="media/profile-pic.jpg" alt="Profile Picture">
+      <img class="popup-round-img-top" src="media/profile-pic.jpg" alt="Profile Picture" width="128" height="128" loading="lazy" intrinsicsize="128x128">
       <h2>Anónimo</h2>
       <div>
         <p>Puedes <b>iniciar sesion con Google</b> y:</p>
@@ -177,7 +177,7 @@
     var sw;
     var isSubscribed;
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/scripts/sw.js')
+      navigator.serviceWorker.register('sw.js')
       .then((registration) => {
         console.info('Service worker registration successful, scope is:', registration.scope);
         sw = registration;
@@ -186,11 +186,8 @@
           sw.pushManager.getSubscription()
           .then(function(subscription) {
             isSubscribed = !(subscription === null);
-            if (isSubscribed) {
-              console.info('User IS subscribed.');
-            } else {
-              console.info('User is NOT subscribed.');
-            }
+            if (isSubscribed) console.info('User IS subscribed.');
+            else console.info('User is NOT subscribed.');
           });
         } else {
           console.warn('Push messaging is not supported');
@@ -216,20 +213,11 @@
     };
     firebase.initializeApp(config);
   </script>
-  <script src="/lib/confetti.js"></script>
-  <script src="/lib/web-animations.min.js"></script>
-  <script src="/lib/navigo.min.js"></script>
-  <script src="/scripts/libs.min.js"></script>
-  <script src="/scripts/script.min.js"></script>
-  <script src="https://www.youtube.com/iframe_api"></script>
-  <script>
-    [].forEach.call(document.querySelectorAll('img[data-src]'),    function(img) {
-      img.setAttribute('src', img.getAttribute('data-src'));
-      img.onload = function() {
-        img.removeAttribute('data-src');
-      };
-    });
-  </script>
-
+  <script src="lib/confetti.js" async></script>
+  <script src="lib/web-animations.min.js" async></script>
+  <script src="lib/navigo.min.js"></script>
+  <script src="scripts/libs.min.js"></script>
+  <script src="scripts/script.min.js"></script>
+  <script src="https://www.youtube.com/iframe_api" async></script>
 </body>
 </html>
