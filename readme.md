@@ -14,7 +14,7 @@ Use it here: [gradecalc.net](https://gradecalc.net)
 - Find your subjects in a database.
 - Create your own subject template and share it.
 - Add, modify and delete subjects.
-- Save your marks in your profile or device.
+- Save your marks in your account and device.
 - Google+ login.
 - Works offline.
 - Add to homescreen.
