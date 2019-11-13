@@ -177,7 +177,7 @@
     var sw;
     var isSubscribed;
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/scripts/sw.js')
+      navigator.serviceWorker.register('./scripts/sw.js')
       .then((registration) => {
         console.info('Service worker registration successful, scope is:', registration.scope);
         sw = registration;
