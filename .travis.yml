@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - 10 # use Node 10 LTS or later
+  - "node"
 before_install:
   - npm install -g @lhci/cli
   - npm install -g gulp-cli
