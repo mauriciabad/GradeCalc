@@ -5,7 +5,8 @@ before_install:
   - npm install -g @lhci/cli
   - npm install -g gulp-cli
 script:
-  - npm run dist # build your site
-  - lhci autorun --rc-overrides.upload.target=temporary-public-storage # run lighthouse CI
+  - npm run dist
+after_success:
+  - lhci autorun
 addons:
-  chrome: stable # make sure you have Chrome available
+  chrome: stable # for lighthouse
