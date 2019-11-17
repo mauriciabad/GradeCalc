@@ -696,6 +696,7 @@ function updateMarkFromCardInput(id, exam, mark, input) {
     uploadGrade(id, exam, subjects[id].grades[exam]);
 
     barElem.parentElement.classList.remove('scolN');
+    barElem.textContent = mark;
     input.classList.remove('scolN2');
   } else {
     delete subjects[id].grades[exam];
