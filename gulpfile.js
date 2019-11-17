@@ -13,10 +13,7 @@ const babelify = require('babelify');
 
 gulp.task('css', () =>
   gulp.src('src/styles/main.css')
-    .pipe(autoprefixer({
-      browsers: ['> 1%', "last 2 versions", 'not dead'],
-      cascade: false
-    }))
+    .pipe(autoprefixer({cascade: false}))
     .pipe(cleanCSS())
     .pipe(rename((path) => {
       path.basename = "main.min";
