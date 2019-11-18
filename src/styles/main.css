@@ -681,7 +681,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   margin: 0.5em 0 0;
 }
 #tutorial a{
-  color: coral;
+  color: #c15100;
   text-shadow: 0 0.1em 0 #dce0e0,
                -0.0707em 0.0707em 0 #dce0e0,
                0.0707em 0.0707em 0 #dce0e0,
