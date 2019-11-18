@@ -3,7 +3,10 @@
     "assert": {
       "preset": "lighthouse:recommended",
       "assertions": {
-        "categories:pwa": "error"
+        "categories:pwa": "error",
+        "uses-http2": "off",
+        "canonical": "off",
+        "redirects-http": "off"
       }
     },
     "upload": {
