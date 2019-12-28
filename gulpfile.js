@@ -46,10 +46,16 @@ gulp.task('libs', () =>
       .pipe(gulp.dest('dist/scripts/'))
 );
 
+gulp.task('html', () =>
+  gulp.src('src/index.html')
+    .pipe(gulp.dest('dist/'))
+);
+
 gulp.task('watch', () => {
   gulp.watch('src/styles/main.css', gulp.series('css'));
   gulp.watch('src/scripts/script.js', gulp.series('js'));
+  gulp.watch('src/index.html', gulp.series('html'));
 });
 
-gulp.task('default', gulp.parallel('css','js','libs'));
-gulp.task('build', gulp.parallel('css','js','libs'));
+gulp.task('default', gulp.parallel('css','js','libs','html'));
+gulp.task('build', gulp.parallel('css','js','libs','html'));
