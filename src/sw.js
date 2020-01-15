@@ -1,4 +1,4 @@
-var CACHE_NAME = 'v0.25.0';
+var CACHE_NAME = 'v0.24.0';
 
 var urlsToCache = [
   '/',
@@ -16,7 +16,6 @@ var urlsToCache = [
   'media/trash.svg',
   'media/discount.svg',
   'media/back.svg',
-  'media/dislike.svg',
   'media/user-circle.svg',
   'media/profile-pic.jpg',
   'media/gift_jump_once.gif',

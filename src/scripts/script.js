@@ -329,7 +329,6 @@ function generateEvaluations(id) {
   }
   evaluationsHTML +=
     `</select>
-  <img src="media/dislike.svg" style="display: none;" title="Hay otra evaluación mejor">
 </div>`;
   return evaluationsHTML;
 }
@@ -636,28 +635,6 @@ function updateNecesaryMark(id) {
   }
 
   gradeCalcAllEqual(id, subjects[id].selectedEvaluation);
-
-  let selectedEvaluationIsBestOption = getBestEval(id) === subjects[id].selectedEvaluation;
-  let card = getCard(id);
-  if (card) card.querySelector('.evaluation-select > img').style.display = selectedEvaluationIsBestOption ? 'none' : 'block';
-}
-
-function getBestEval(id) {
-  let smallestNecesaryMarkEvaluation;
-  let smallestNecesaryMark;
-  for (const evaluation in subjects[id].evaluations) {
-    let greatestNecesaryMark = undefined;
-    for (const examName in subjects[id].evaluations[evaluation].exams) {
-      if(greatestNecesaryMark == undefined || greatestNecesaryMark < subjects[id].necesaryMarks[evaluation][examName]) {
-        greatestNecesaryMark = subjects[id].necesaryMarks[evaluation][examName];
-      }
-      if(smallestNecesaryMark == undefined || smallestNecesaryMark > greatestNecesaryMark) {
-        smallestNecesaryMark = subjects[id].necesaryMarks[evaluation][examName];
-        smallestNecesaryMarkEvaluation = evaluation;
-      }
-    }
-  }
-  return smallestNecesaryMarkEvaluation;
 }
 
 function smallestNecessaryMark(id, evaluation) {
