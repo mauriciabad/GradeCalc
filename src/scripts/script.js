@@ -1150,6 +1150,11 @@ function toNewEvalNeeeeeeeeew(evaluations) {
   }
   return evaluationNew;
 }
+
+function getRandomID() {
+  return Math.random().toString(36).substr(2);
+}
+
 /* ------------------------------ EDITOR ------------------------------ */
 
 // function showSubjectInfo(id,placeholder=JSON.stringify(subjects[id].evaluation)) {
@@ -1384,13 +1389,13 @@ function readSubjectFromPopup(popup) {
   // console.log(newEval);
 
   return {
-    id: id,
+    id
     shortName: popup.querySelector('input[name="shortName"]').value,
-    fullName: popup.querySelector('input[name="fullName"]').value,
-    course: popup.querySelector('input[name="course"]').value,
-    faculty: popup.querySelector('input[name="faculty"]').value,
-    uni: popup.querySelector('input[name="uni"]').value,
-    color: popup.querySelector('input[name="color-bar"]:checked').value,
+    fullName:  popup.querySelector('input[name="fullName"]').value,
+    course:    popup.querySelector('input[name="course"]').value,
+    faculty:   popup.querySelector('input[name="faculty"]').value,
+    uni:       popup.querySelector('input[name="uni"]').value,
+    color:     popup.querySelector('input[name="color-bar"]:checked').value,
     evaluations: newEval,
   };
 }
@@ -1538,17 +1543,19 @@ function logoutGoogle() {
 // }
 
 function uploadSubject(subject) { // TODO: add sanitise as cloud function
-  if (uid && subject != undefined && subject != null && subject != '' && subject != {} && subject != []) {
-    return subjectsDB.add({creator: displayName, creatorId: uid, creationDate: new Date(), ...subject})
-      .then((doc) => {
-        console.log(`Created ${subject.shortName} with id ${doc.id}`);
-        return doc.id;
-      })
-      .catch((error) => {
-        console.error("Error creating subject ", error);
-        return false;
-      });
-  }
+  if (subject != undefined && subject != null && subject != '' && subject != {} && subject != []) {
+    if(uid){
+      return subjectsDB.add({creator: displayName, creatorId: uid, creationDate: new Date(), ...subject})
+        .then((doc) => {
+          console.log(`Created ${subject.shortName} with id ${doc.id}`);
+          return doc.id;
+        })
+        .catch((error) => {
+          console.error("Error creating subject ", error);
+          return false;
+        });
+    } else return 'local-id-' + getRandomID();
+  } else return false;
 }
 
 function isValidSubjectFromPopup(subject) {
@@ -1563,7 +1570,7 @@ function isValidSubjectFromPopup(subject) {
   if(!subject.faculty){   showToast(`Rellena la Facultad`);     return false; }
   if(!subject.uni){       showToast(`Rellena la Universidad`);  return false; }
   if(!subject.color){     showToast(`Escoje un Color`);         return false; }
-  if(isEmpty(subject.evaluations)){ showToast(`Rellena ela Evaluación`); return false; }
+  if(isEmpty(subject.evaluations)){ showToast(`Rellena la Evaluación`); return false; }
   
   // TODO: To implement this functions we need to check them before the subject is read
   
