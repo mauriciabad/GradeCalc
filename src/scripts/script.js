@@ -1389,7 +1389,7 @@ function readSubjectFromPopup(popup) {
   // console.log(newEval);
 
   return {
-    id
+    id,
     shortName: popup.querySelector('input[name="shortName"]').value,
     fullName:  popup.querySelector('input[name="fullName"]').value,
     course:    popup.querySelector('input[name="course"]').value,
