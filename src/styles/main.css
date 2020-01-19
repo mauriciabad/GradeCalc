@@ -1363,34 +1363,4 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   }
 }
 
-/* ----------------- Christmas update -------------------*/
-#snow {
-    position:fixed; top:0; left:0;
-    background: linear-gradient(to bottom,#69add4 0,#175291 84%)
-}
-#congratulations-button, #tutorial{
-  text-shadow: 0 0 8px #fff, 0 0 8px #fff, 0 0 8px #fff, 0 0 8px #fff;
-  color: black;
-  position: relative;
-}
-#tutorial{pointer-events: none;}
-#christmas-song{display: none;}
-#congratulations-gift{display:none;}
-#congratulations-button p:last-child{display: none;}
-
-@media(min-width: 600px){
-  #christmas-song {
-    display: block;
-    width: 100%;
-    max-width: 800px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-  }
-  
-  body{ margin-bottom: 200px; }
-}
-
 /* ----------------- Next section -------------------*/
