@@ -1,6 +1,7 @@
 :root {
   /* --toastTime: 5000ms; */
   --easing-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --background-color: #dce0e0;
 }
 *, *::before, *::after{
   font-family: 'Nunito', 'Quicksand', 'Roboto', -apple-system, system, system-ui, sans-serif;
@@ -11,7 +12,7 @@ body{
   font-family: 'Nunito', 'Quicksand', 'Roboto', -apple-system, system, system-ui, sans-serif;
   margin: 0;
   color: #444;
-  background-color: #dce0e0;
+  background-color: var(--background-color);
   text-align: center;
 }
 p{
@@ -678,15 +679,15 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 }
 #tutorial a{
   color: #c15100;
-  text-shadow: 0 0.1em 0 #dce0e0,
-               -0.0707em 0.0707em 0 #dce0e0,
-               0.0707em 0.0707em 0 #dce0e0,
-               0.1em 0 0 #dce0e0,
-               -0.1em 0 0 #dce0e0,
-               -0.0382em 0.0924em 0 #dce0e0,
-               0.0382em 0.0924em 0 #dce0e0,
-               -0.0923em 0.0383em 0 #dce0e0,
-               0.0923em 0.0383em 0 #dce0e0; 
+  text-shadow: 0 0.1em 0 var(--background-color),
+               -0.0707em 0.0707em 0 var(--background-color),
+               0.0707em 0.0707em 0 var(--background-color),
+               0.1em 0 0 var(--background-color),
+               -0.1em 0 0 var(--background-color),
+               -0.0382em 0.0924em 0 var(--background-color),
+               0.0382em 0.0924em 0 var(--background-color),
+               -0.0923em 0.0383em 0 var(--background-color),
+               0.0923em 0.0383em 0 var(--background-color); 
   text-decoration: none;
   position: relative;
 }
@@ -1370,8 +1371,8 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   bottom: 0;
   left: 0;
   right: 0;
-  padding-bottom: 2rem;
-  z-index: -1;
+  padding-bottom: 1rem;
+  z-index: -2;
   text-align: center;
   opacity: 0;
   pointer-events: none;
@@ -1382,16 +1383,34 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 .ad__text {
   color: #888;
   font-size: 0.7rem;
-  line-height: 1.5;
   display: block;
+  margin-bottom: 0.2rem;
+}
+.ad__text--bottom {
+  margin-top: 0.02rem;
+  margin-bottom: 0;
 }
 
-main { animation: ad-margin 61s;}
+#dashboard {
+  animation: ad-margin 61s;
+  background: var(--background-color);
+  position: relative;
+}
+#dashboard::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 1rem;
+  z-index: -1;
+  background: linear-gradient(to bottom, var(--background-color), transparent);
+}
 
 /* Hide in small screens */
-@media (max-width: 728px), (max-height: 480px){
-  .ad { display: none !important; }
-  main { margin-bottom: 0 !important; }
+@media (max-height: 500px){
+  .ad { display: none !important; animation: none; }
+  #dashboard { margin-bottom: 0 !important; animation: none; }
 }
 
 @keyframes ad {
@@ -1401,8 +1420,8 @@ main { animation: ad-margin 61s;}
 }
 
 @keyframes ad-margin {
-  0%     { margin-bottom: calc(90px + 3rem); }
-  98.36% { margin-bottom: calc(90px + 3rem); }
+  0%     { margin-bottom: calc(60px + 4rem); }
+  98.36% { margin-bottom: calc(60px + 4rem); }
   100%   { margin-bottom: 0; }
 }
 
