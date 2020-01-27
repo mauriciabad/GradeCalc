@@ -1363,4 +1363,21 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   }
 }
 
+/* ----------------- Ad -------------------*/
+
+.ad {
+  position: fixed;
+  bottom: 2rem;
+  left: calc(50% - 364px);
+  z-index: -1;
+  display: none;
+}
+
+@media (min-width: 728px) and (min-height: 480px){
+  .ad { display: block; }
+  main {
+    margin-bottom: calc(90px + 3rem);
+  }
+}
+
 /* ----------------- Next section -------------------*/
