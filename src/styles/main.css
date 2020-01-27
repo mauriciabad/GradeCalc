@@ -1367,17 +1367,43 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 
 .ad {
   position: fixed;
-  bottom: 2rem;
-  left: calc(50% - 364px);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-bottom: 2rem;
   z-index: -1;
-  display: none;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  animation: ad 61s;
+  line-height: 1;
+}
+.ad__text {
+  color: #888;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  display: block;
 }
 
-@media (min-width: 728px) and (min-height: 480px){
-  .ad { display: block; }
-  main {
-    margin-bottom: calc(90px + 3rem);
-  }
+main { animation: ad-margin 61s;}
+
+/* Hide in small screens */
+@media (max-width: 728px), (max-height: 480px){
+  .ad { display: none !important; }
+  main { margin-bottom: 0 !important; }
+}
+
+@keyframes ad {
+  0%     { opacity: 1; pointer-events: all; user-select: auto; }
+  98.36% { opacity: 1; pointer-events: all; user-select: auto; }
+  100%   { opacity: 0; pointer-events: all; user-select: auto; }
+}
+
+@keyframes ad-margin {
+  0%     { margin-bottom: calc(90px + 3rem); }
+  98.36% { margin-bottom: calc(90px + 3rem); }
+  100%   { margin-bottom: 0; }
 }
 
 /* ----------------- Next section -------------------*/
