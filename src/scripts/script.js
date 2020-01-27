@@ -1490,7 +1490,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     bntLogin.classList.remove('btn-red');
     bntLogin.classList.add('btn-green');
     bntLogin.onclick = function () { loginGoogle(); window.history.back(); };
-    showToast('Guarda tus notas en la nube', 'Iniciar sesión', 'loginGoogle();');
+    showToast('Para guardar tus notas en la nube', 'Inicia sesión', 'loginGoogle();');
   }
   document.getElementById('user-container').children[1].children[0].src = photoURL;
   document.getElementById('profile-topbar').src = isAnonymous ? 'media/user-circle.svg' : photoURL;
@@ -1655,7 +1655,7 @@ function uploadToDB(db, ref, value) {
 function getAndDisplayUserSubjects() {
   if (isAnonymous) {
     console.warn('To get user info you need to sign in');
-    showToast('Guarda tus notas en la nube', 'Iniciar sesión', 'loginGoogle();');
+    showToast('Para guardar tus notas en la nube', 'Inicia sesión', 'loginGoogle();');
     hideLoader('dashboard');
   } else {
     showLoader('Descargando asignaturas', 'dashboard');
