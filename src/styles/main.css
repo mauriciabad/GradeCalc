@@ -690,6 +690,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
                0.0923em 0.0383em 0 var(--background-color); 
   text-decoration: none;
   position: relative;
+  z-index: 1;
 }
 #tutorial a::before{
   content: "";
@@ -807,10 +808,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   max-width: calc(50vh * var(--video-aspect-ratio));
   margin: 0 auto;
 }
-.bark-bg{
-  background: #000;
-}
-.rainbow-bg{
+/* .rainbow-bg{
   background: linear-gradient(0deg,
     #ff0000,
     #ffff00,
@@ -827,7 +825,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 @keyframes rainbow-bg-animation { 
   0%{background-position-y: 0}
   100%{background-position-y: -100px}
-}
+} */
 /* OLD Congratulations
 #congratulations > img{
   max-width: calc(100% - 2em);
@@ -1372,7 +1370,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   left: 0;
   right: 0;
   padding-bottom: 1rem;
-  z-index: -2;
+  z-index: -11;
   text-align: center;
   opacity: 0;
   pointer-events: none;
@@ -1391,26 +1389,26 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   margin-bottom: 0;
 }
 
-#dashboard {
+.screen {
   animation: ad-margin 61s;
   background: var(--background-color);
   position: relative;
 }
-#dashboard::after {
+.screen::after {
   content: '';
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
   height: 1rem;
-  z-index: -1;
+  z-index: -10;
   background: linear-gradient(to bottom, var(--background-color), transparent);
 }
 
 /* Hide in small screens */
 @media (max-height: 500px){
   .ad { display: none !important; animation: none; }
-  #dashboard { margin-bottom: 0 !important; animation: none; }
+  .screen { margin-bottom: 0 !important; animation: none; }
 }
 
 @keyframes ad {

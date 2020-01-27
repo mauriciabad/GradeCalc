@@ -822,7 +822,7 @@ function random(smallest, biggest) {
 function ShowEasterEgg() {
   document.getElementById('congratulations-button').style.display = 'none';
   document.getElementById('congratulations').style.display = 'block';
-  document.body.classList.add('bark-bg');
+  document.body.style.setProperty('--background-color', '#000');
   // document.body.classList.add('rainbow-bg');
   let videoAspectRatio = 16/9;
   if(document.documentElement.clientWidth*100/videoAspectRatio < document.documentElement.clientHeight*50){
@@ -838,7 +838,7 @@ function ShowEasterEgg() {
 
 function HideEasterEgg() {
   document.getElementById('congratulations').style.display = 'none';
-  document.body.classList.remove('bark-bg');
+  document.body.style.setProperty('--background-color', 'inherit');
   // document.body.classList.remove('rainbow-bg');
   document.body.style.paddingBottom = '0';
   if(congratulationsVideo != undefined){
