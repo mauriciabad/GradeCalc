@@ -1,5 +1,0 @@
-https://gradecalc.net https://gradecalc.app
-http://gradecalc.net/* https://gradecalc.app/:splat 301!
-https://gradecalc.net/* gradecalc.app/:splat 301!
-http://www.gradecalc.net/* https://gradecalc.app/:splat 301!
-https://www.gradecalc.net/* gradecalc.app/:splat 301!
