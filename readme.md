@@ -2,7 +2,7 @@
 
 # GradeCalc
 
-[GradeCalc](https://gradecalc.net) is a progressive web app for students, it's main porpouse is calculating the necessary mark in the remaining exams to pass a subject.
+[GradeCalc](https://gradecalc.app) is a progressive web app for students, it's main porpouse is calculating the necessary mark in the remaining exams to pass a subject.
 
 You can create your own subject and share it, or if someone created it before, you can use theirs.
 
