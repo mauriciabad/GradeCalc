@@ -8,7 +8,7 @@ You can create your own subject and share it, or if someone created it before, y
 
 Also, it allows you to login with Google and store your subjects in the cloud, so you can acces them from yout mobile and pc.
 
-Use it here: [gradecalc.net](https://gradecalc.net)
+Use it here: [gradecalc.app](https://gradecalc.app)
 
 ## Features
 
