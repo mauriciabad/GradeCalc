@@ -1806,7 +1806,7 @@ if (window.location.hostname === 'gradecalc.net') {
     subjects = replaceSubjects;
     saveSubjectsLocalStorage();
     sessionStorage.setItem('replacedSubjects', 'true');
-    history.replaceState(undefined, "replacedSubjects", "");
+    history.replaceState({}, '', '/');
     showToast('Asignaturas transferidas 👍🏼');
     console.log('Subjects transfered', subjects);
   }
