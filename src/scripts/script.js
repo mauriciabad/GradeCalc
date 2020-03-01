@@ -1770,3 +1770,46 @@ function install() {
     });
   }
 }
+
+
+/* ------------------------------ PWA redirect ------------------------------ */
+
+let redirectTimer;
+if (window.location.hostname === 'gradecalc.net') {
+  document.body.innerHTML += `
+  <div id="redirect-container" class="popup popup-small" style="display: none;">
+    <div onclick="window.history.back(); clearTimeout(redirectTimer);" class="top-bar-popup"></div>
+    <div class="popup-content redirect-popup">
+      <h2>Redirectionando...</h2>
+      <div>
+        <p>GradeCalc tiene un <b>nuevo dominio: <a href="https://gradecalc.app">gradecalc.app</a></b></p>
+        <p>Actualiza tus marcadores.</p>
+        <p>Si has instalado la app, desinstálala y vuelvela a instalar.</p>
+      </div>
+    </div>
+  </div>`;
+  router.navigate(`/`);
+  popupShow('redirect-container', true);
+  redirectTimer = setTimeout(() => {
+    window.location = 'https://gradecalc.app?replaceSubjects='+encodeURI(JSON.stringify(getSubjectsLocalStorage()));
+  }, 5000);
+} else if (window.location.hostname === 'gradecalc.app') {
+  let replaceSubjectsStr = findGetParameter(replaceSubjects);
+  let replaceSubjects = JSON.parse(findGetParameter(replaceSubjects));
+  if(replaceSubjectsStr && replaceSubjects){
+    subjects = replaceSubjects;
+    saveSubjectsLocalStorage();
+    showToast('Asignaturas transferidas 👍🏼');
+  }
+}
+
+function findGetParameter(parameterName) {
+  var result = null,
+      tmp = [];
+  var items = location.search.substr(1).split("&");
+  for (var index = 0; index < items.length; index++) {
+      tmp = items[index].split("=");
+      if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+  }
+  return result;
+}
