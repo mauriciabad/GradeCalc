@@ -1782,7 +1782,7 @@ if (window.location.hostname === 'gradecalc.net') {
     <div class="popup-content redirect-popup">
       <h2>Redirectionando en <span id="redirectTimerSpan">30</span>s...</h2>
       <div>
-        <p>GradeCalc tiene un <b>nuevo dominio .app</b></p>
+        <p>GradeCalc tiene un <b>nuevo dominio</b> .app (antes .net)</p>
         <p style="text-align: center; font-size: 2em;"><a href="https://gradecalc.app" id="redirect-a" style="color: blue;">gradecalc<b>.app</b></a></p>
         <ul>
           <li>Actualiza tus marcadores.</li>
@@ -1806,11 +1806,11 @@ if (window.location.hostname === 'gradecalc.net') {
   let replaceSubjectsStr = findGetParameter('replaceSubjects');
   let replaceSubjects = JSON.parse(replaceSubjectsStr);
   let replacedSubjects = localStorage.getItem('replacedSubjectsFromNetDomain');
+  history.replaceState({}, '', '/');
   if(replaceSubjectsStr && replaceSubjects && replacedSubjects !== 'true' ){
     subjects = replaceSubjects;
     saveSubjectsLocalStorage();
     localStorage.setItem('replacedSubjectsFromNetDomain', 'true');
-    history.replaceState({}, '', '/');
     showToast('Asignaturas transferidas 👍🏼');
     console.log('Subjects transfered', subjects);
   }
