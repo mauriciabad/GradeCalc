@@ -1787,7 +1787,7 @@ if (window.location.hostname === 'gradecalc.net') {
         <ul>
           <li>Actualiza tus marcadores.</li>
           <li>Si has instalado la app, desinstálala y vuelvela a instalar.</li>
-          <li>Haz click en el enlace de arriba.</li>
+          <li>Haz click en el enlace de arriba o espera.</li>
         </ul>
         <p>Tus datos se transferiran</p>
       </div>
