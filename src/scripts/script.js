@@ -1774,33 +1774,48 @@ function install() {
 
 /* ------------------------------ PWA redirect ------------------------------ */
 
-let redirectTimer;
+let redirectTimer, newUrl;
 if (window.location.hostname === 'gradecalc.net') {
   document.body.innerHTML += `
-  <div id="redirect-container" class="popup popup-small" style="display: none;">
-    <div onclick="window.history.back(); clearTimeout(redirectTimer);" class="top-bar-popup"></div>
+  <div id="redirect-container" class="popup popup-small" style="display: flex;">
+    <div class="top-bar-popup"></div>
     <div class="popup-content redirect-popup">
-      <h2>Redirectionando...</h2>
+      <h2>Redireccionando en <span id="redirectTimerSpan">30</span>s...</h2>
       <div>
-        <p>GradeCalc tiene un <b>nuevo dominio: <a href="https://gradecalc.app">gradecalc.app</a></b></p>
-        <p>Actualiza tus marcadores.</p>
-        <p>Si has instalado la app, desinstálala y vuelvela a instalar.</p>
+        <p>GradeCalc tiene un <b>nuevo dominio</b> .app (antes era .net)</p>
+        <p style="text-align: center; font-size: 2em;"><a href="https://gradecalc.app" id="redirect-a" onclick="event.preventDefault(); transferData()" style="color: blue;">gradecalc<b>.app</b></a></p>
+        <ul>
+          <li>Actualiza tus marcadores.</li>
+          <li>Si has instalado la app, desinstálala y vuélvela a instalar.</li>
+          <li>Haz click en el enlace de arriba o espera.</li>
+        </ul>
+        <p>Tus datos se transferirán</p>
       </div>
     </div>
   </div>`;
-  router.navigate(`/`);
-  popupShow('redirect-container', true);
-  redirectTimer = setTimeout(() => {
-    window.location = 'https://gradecalc.app?replaceSubjects='+encodeURI(JSON.stringify(getSubjectsLocalStorage()));
-  }, 5000);
+  let redirectTimerSpan = document.getElementById('redirectTimerSpan');
+  newUrl = 'https://gradecalc.app?replaceSubjects='+encodeURI(JSON.stringify(getSubjectsLocalStorage()));
+  document.getElementById('redirect-a').href = newUrl;
+  setInterval(() => {redirectTimerSpan.textContent -= 1;}, 1000);
+  redirectTimer = setTimeout(transferData, 30000);
 } else if (window.location.hostname === 'gradecalc.app') {
-  let replaceSubjectsStr = findGetParameter(replaceSubjects);
-  let replaceSubjects = JSON.parse(findGetParameter(replaceSubjects));
-  if(replaceSubjectsStr && replaceSubjects){
+  let replaceSubjectsStr = findGetParameter('replaceSubjects');
+  let replaceSubjects = JSON.parse(replaceSubjectsStr);
+  let replacedSubjects = localStorage.getItem('replacedSubjectsFromNetDomain');
+  history.replaceState({}, '', '/');
+  if(replaceSubjectsStr && replaceSubjects && replacedSubjects !== 'true' ){
     subjects = replaceSubjects;
     saveSubjectsLocalStorage();
+    localStorage.setItem('replacedSubjectsFromNetDomain', 'true');
     showToast('Asignaturas transferidas 👍🏼');
+    console.log('Subjects transfered', subjects);
   }
+}
+
+function transferData(){
+  subjects = {};
+  saveSubjectsLocalStorage();
+  window.location = newUrl;
 }
 
 function findGetParameter(parameterName) {
