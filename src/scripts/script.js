@@ -1774,7 +1774,7 @@ function install() {
 
 /* ------------------------------ PWA redirect ------------------------------ */
 
-let redirectTimer,;
+let redirectTimer;
 if (window.location.hostname === 'gradecalc.net') {
   document.body.innerHTML += `
   <div id="redirect-container" class="popup popup-small" style="display: flex;">
