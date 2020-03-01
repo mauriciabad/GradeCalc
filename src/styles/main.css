@@ -1364,7 +1364,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
 
 /* ----------------- Ad -------------------*/
 
-.ad {
+/* .ad {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -1421,6 +1421,6 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   0%     { margin-bottom: calc(60px + 4rem); }
   98.36% { margin-bottom: calc(60px + 4rem); }
   100%   { margin-bottom: 0; }
-}
+} */
 
 /* ----------------- Next section -------------------*/
