@@ -1782,7 +1782,7 @@ if (window.location.hostname === 'gradecalc.net') {
     <div class="popup-content redirect-popup">
       <h2>Redirectionando en <span id="redirectTimerSpan">30</span>s...</h2>
       <div>
-        <p>GradeCalc tiene un <b>nuevo dominio</b> .app (antes .net)</p>
+        <p>GradeCalc tiene un <b>nuevo dominio</b> .app (antes era .net)</p>
         <p style="text-align: center; font-size: 2em;"><a href="https://gradecalc.app" id="redirect-a" onclick="transferData()" style="color: blue;">gradecalc<b>.app</b></a></p>
         <ul>
           <li>Actualiza tus marcadores.</li>
