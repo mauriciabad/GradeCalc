@@ -1797,7 +1797,7 @@ if (window.location.hostname === 'gradecalc.net') {
   }, 1000);
   redirectTimer = setTimeout(() => {
     window.location = 'https://gradecalc.app?replaceSubjects='+encodeURI(JSON.stringify(getSubjectsLocalStorage()));
-  }, 6000);
+  }, 10000);
 } else if (window.location.hostname === 'gradecalc.app') {
   let replaceSubjectsStr = findGetParameter('replaceSubjects');
   let replaceSubjects = JSON.parse(replaceSubjectsStr);
