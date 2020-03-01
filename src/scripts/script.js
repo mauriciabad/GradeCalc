@@ -1797,7 +1797,11 @@ if (window.location.hostname === 'gradecalc.net') {
   let newUrl = 'https://gradecalc.app?replaceSubjects='+encodeURI(JSON.stringify(getSubjectsLocalStorage()));
   document.getElementById('redirect-a').href = newUrl;
   setInterval(() => {redirectTimerSpan.textContent -= 1;}, 1000);
-  redirectTimer = setTimeout(() => {window.location = newUrl;}, 30000);
+  redirectTimer = setTimeout(() => {
+    subjects = {};
+    saveSubjectsLocalStorage();
+    window.location = newUrl;
+  }, 30000);
 } else if (window.location.hostname === 'gradecalc.app') {
   let replaceSubjectsStr = findGetParameter('replaceSubjects');
   let replaceSubjects = JSON.parse(replaceSubjectsStr);
