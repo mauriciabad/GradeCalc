@@ -1777,10 +1777,10 @@ function install() {
 let redirectTimer;
 if (window.location.hostname === 'gradecalc.net') {
   document.body.innerHTML += `
-  <div id="redirect-container" class="popup popup-small" style="display: none;">
-    <div onclick="window.history.back(); clearTimeout(redirectTimer);" class="top-bar-popup"></div>
+  <div id="redirect-container" class="popup popup-small" style="display: flex;">
+    <div onclick="this.patentNode.style.display='none';clearTimeout(redirectTimer);" class="top-bar-popup"></div>
     <div class="popup-content redirect-popup">
-      <h2>Redirectionando en <span id="redirectTimerSpan">6</span>...</h2>
+      <h2>Redirectionando en <span id="redirectTimerSpan">10</span>...</h2>
       <div>
         <p>GradeCalc tiene un <b>nuevo dominio: <br><a href="https://gradecalc.app">gradecalc.app</a></b></p>
         <ul>
@@ -1791,11 +1791,9 @@ if (window.location.hostname === 'gradecalc.net') {
       </div>
     </div>
   </div>`;
-  router.navigate(`/`);
-  popupShow('redirect-container', true);
   let redirectTimerSpan = document.getElementById('redirectTimerSpan');
   setInterval(() => {
-    redirectTimerSpan -= 1;
+    redirectTimerSpan.textContent -= 1;
   }, 1000);
   redirectTimer = setTimeout(() => {
     window.location = 'https://gradecalc.app?replaceSubjects='+encodeURI(JSON.stringify(getSubjectsLocalStorage()));
