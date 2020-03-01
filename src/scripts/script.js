@@ -1803,9 +1803,12 @@ if (window.location.hostname === 'gradecalc.net') {
 } else if (window.location.hostname === 'gradecalc.app') {
   let replaceSubjectsStr = findGetParameter('replaceSubjects');
   let replaceSubjects = JSON.parse(replaceSubjectsStr);
-  if(replaceSubjectsStr && replaceSubjects){
+  let replacedSubjects = sessionStorage.getItem('replacedSubjects');
+  if(replaceSubjectsStr && replaceSubjects && replacedSubjects !== 'true' ){
     subjects = replaceSubjects;
     saveSubjectsLocalStorage();
+    sessionStorage.setItem('replacedSubjects', 'true');
+    history.replaceState(undefined, "replacedSubjects", "");
     showToast('Asignaturas transferidas 👍🏼');
   }
 }
