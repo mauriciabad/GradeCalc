@@ -1403,10 +1403,10 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   height: 1rem;
   z-index: -10;
   background: linear-gradient(to bottom, var(--background-color), transparent);
-}
+} */
 
 /* Hide in small screens */
-@media (max-height: 500px){
+/* @media (max-height: 500px){
   .ad { display: none !important; animation: none; }
   .screen { margin-bottom: 0 !important; animation: none; }
 }
