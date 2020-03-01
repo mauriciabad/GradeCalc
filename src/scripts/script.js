@@ -1780,10 +1780,10 @@ if (window.location.hostname === 'gradecalc.net') {
   <div id="redirect-container" class="popup popup-small" style="display: flex;">
     <div onclick="this.patentNode.style.display='none';clearTimeout(redirectTimer);" class="top-bar-popup"></div>
     <div class="popup-content redirect-popup">
-      <h2>Redirectionando en <span id="redirectTimerSpan">10</span>...</h2>
+      <h2>Redirectionando en <span id="redirectTimerSpan">20</span>s...</h2>
       <div>
         <p>GradeCalc tiene un <b>nuevo dominio .app</b></p>
-        <p style="text-align: center; font-size: 2em;"><a href="https://gradecalc.app">gradecalc<b>.app</b></a></p>
+        <p style="text-align: center; font-size: 2em;"><a href="https://gradecalc.app" style="color: blue;" onclick="event.preventDefault(); window.location = 'https://gradecalc.app?replaceSubjects='+encodeURI(JSON.stringify(getSubjectsLocalStorage()));">gradecalc<b>.app</b></a></p>
         <ul>
           <li>Actualiza tus marcadores.</li>
           <li>Si has instalado la app, desinstálala y vuelvela a instalar.</li>
@@ -1798,7 +1798,7 @@ if (window.location.hostname === 'gradecalc.net') {
   }, 1000);
   redirectTimer = setTimeout(() => {
     window.location = 'https://gradecalc.app?replaceSubjects='+encodeURI(JSON.stringify(getSubjectsLocalStorage()));
-  }, 10000);
+  }, 20000);
 } else if (window.location.hostname === 'gradecalc.app') {
   let replaceSubjectsStr = findGetParameter('replaceSubjects');
   let replaceSubjects = JSON.parse(replaceSubjectsStr);
