@@ -1780,7 +1780,7 @@ if (window.location.hostname === 'gradecalc.net') {
   <div id="redirect-container" class="popup popup-small" style="display: flex;">
     <div onclick="this.patentNode.style.display='none';clearTimeout(redirectTimer);" class="top-bar-popup"></div>
     <div class="popup-content redirect-popup">
-      <h2>Redirectionando en <span id="redirectTimerSpan">20</span>s...</h2>
+      <h2>Redirectionando en <span id="redirectTimerSpan">30</span>s...</h2>
       <div>
         <p>GradeCalc tiene un <b>nuevo dominio .app</b></p>
         <p style="text-align: center; font-size: 2em;"><a href="https://gradecalc.app" id="redirect-a" style="color: blue;">gradecalc<b>.app</b></a></p>
@@ -1797,15 +1797,15 @@ if (window.location.hostname === 'gradecalc.net') {
   let newUrl = 'https://gradecalc.app?replaceSubjects='+encodeURI(JSON.stringify(getSubjectsLocalStorage()));
   document.getElementById('redirect-a').href = newUrl;
   setInterval(() => {redirectTimerSpan.textContent -= 1;}, 1000);
-  redirectTimer = setTimeout(() => {window.location = newUrl;}, 20000);
+  redirectTimer = setTimeout(() => {window.location = newUrl;}, 30000);
 } else if (window.location.hostname === 'gradecalc.app') {
   let replaceSubjectsStr = findGetParameter('replaceSubjects');
   let replaceSubjects = JSON.parse(replaceSubjectsStr);
-  let replacedSubjects = sessionStorage.getItem('replacedSubjects');
+  let replacedSubjects = localStorage.getItem('replacedSubjectsFromNetDomain');
   if(replaceSubjectsStr && replaceSubjects && replacedSubjects !== 'true' ){
     subjects = replaceSubjects;
     saveSubjectsLocalStorage();
-    sessionStorage.setItem('replacedSubjects', 'true');
+    localStorage.setItem('replacedSubjectsFromNetDomain', 'true');
     history.replaceState({}, '', '/');
     showToast('Asignaturas transferidas 👍🏼');
     console.log('Subjects transfered', subjects);
