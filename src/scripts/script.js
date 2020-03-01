@@ -1774,7 +1774,7 @@ function install() {
 
 /* ------------------------------ PWA redirect ------------------------------ */
 
-let redirectTimer;
+let redirectTimer,;
 if (window.location.hostname === 'gradecalc.net') {
   document.body.innerHTML += `
   <div id="redirect-container" class="popup popup-small" style="display: flex;">
@@ -1783,22 +1783,21 @@ if (window.location.hostname === 'gradecalc.net') {
       <h2>Redirectionando en <span id="redirectTimerSpan">20</span>s...</h2>
       <div>
         <p>GradeCalc tiene un <b>nuevo dominio .app</b></p>
-        <p style="text-align: center; font-size: 2em;"><a href="https://gradecalc.app" style="color: blue;" onclick="event.preventDefault(); window.location = 'https://gradecalc.app?replaceSubjects='+encodeURI(JSON.stringify(getSubjectsLocalStorage()));">gradecalc<b>.app</b></a></p>
+        <p style="text-align: center; font-size: 2em;"><a href="https://gradecalc.app" id="redirect-a" style="color: blue;">gradecalc<b>.app</b></a></p>
         <ul>
           <li>Actualiza tus marcadores.</li>
           <li>Si has instalado la app, desinstálala y vuelvela a instalar.</li>
+          <li>Haz click en el enlace de arriba.</li>
         </ul>
-        <p>Tus datos estan siendo transferidos...</p>
+        <p>Tus datos se transferiran</p>
       </div>
     </div>
   </div>`;
   let redirectTimerSpan = document.getElementById('redirectTimerSpan');
-  setInterval(() => {
-    redirectTimerSpan.textContent -= 1;
-  }, 1000);
-  redirectTimer = setTimeout(() => {
-    window.location = 'https://gradecalc.app?replaceSubjects='+encodeURI(JSON.stringify(getSubjectsLocalStorage()));
-  }, 20000);
+  let newUrl = 'https://gradecalc.app?replaceSubjects='+encodeURI(JSON.stringify(getSubjectsLocalStorage()));
+  document.getElementById('redirect-a').href = newUrl;
+  setInterval(() => {redirectTimerSpan.textContent -= 1;}, 1000);
+  redirectTimer = setTimeout(() => {window.location = newUrl;}, 20000);
 } else if (window.location.hostname === 'gradecalc.app') {
   let replaceSubjectsStr = findGetParameter('replaceSubjects');
   let replaceSubjects = JSON.parse(replaceSubjectsStr);
