@@ -1780,16 +1780,16 @@ if (window.location.hostname === 'gradecalc.net') {
   <div id="redirect-container" class="popup popup-small" style="display: flex;">
     <div class="top-bar-popup"></div>
     <div class="popup-content redirect-popup">
-      <h2>Redirectionando en <span id="redirectTimerSpan">30</span>s...</h2>
+      <h2>Redireccionando en <span id="redirectTimerSpan">30</span>s...</h2>
       <div>
         <p>GradeCalc tiene un <b>nuevo dominio</b> .app (antes era .net)</p>
         <p style="text-align: center; font-size: 2em;"><a href="https://gradecalc.app" id="redirect-a" onclick="event.preventDefault(); transferData()" style="color: blue;">gradecalc<b>.app</b></a></p>
         <ul>
           <li>Actualiza tus marcadores.</li>
-          <li>Si has instalado la app, desinstálala y vuelvela a instalar.</li>
+          <li>Si has instalado la app, desinstálala y vuélvela a instalar.</li>
           <li>Haz click en el enlace de arriba o espera.</li>
         </ul>
-        <p>Tus datos se transferiran</p>
+        <p>Tus datos se transferirán</p>
       </div>
     </div>
   </div>`;
