@@ -1778,7 +1778,7 @@ let redirectTimer;
 if (window.location.hostname === 'gradecalc.net') {
   document.body.innerHTML += `
   <div id="redirect-container" class="popup popup-small" style="display: flex;">
-    <div onclick="this.patentNode.style.display='none';clearTimeout(redirectTimer);" class="top-bar-popup"></div>
+    <div class="top-bar-popup"></div>
     <div class="popup-content redirect-popup">
       <h2>Redirectionando en <span id="redirectTimerSpan">30</span>s...</h2>
       <div>
