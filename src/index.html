@@ -193,22 +193,22 @@
       .catch((error) => {console.warn('Service worker registration failed, error:', error);});
     }
   </script>
-  <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-firestore.js"></script>
   <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearchLite.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jsep@0.3.4/build/jsep.min.js"></script>
   <script>
-    // Initialize Firebase
-    var config = {
+    const firebaseConfig = {
       apiKey: "AIzaSyDQmE1YoLWHMJ0td05JiHd-0yIW2mvJojc",
       authDomain: "gradecalc-2018.firebaseapp.com",
       databaseURL: "https://gradecalc-2018.firebaseio.com",
       projectId: "gradecalc-2018",
       storageBucket: "gradecalc-2018.appspot.com",
-      messagingSenderId: "353677026446"
+      messagingSenderId: "353677026446",
+      appId: "1:353677026446:web:f4774c6df4c0679070d5df"
     };
-    firebase.initializeApp(config);
+    firebase.initializeApp(firebaseConfig);
   </script>
   <script src="lib/confetti.js" async></script>
   <script src="lib/web-animations.min.js" async></script>
