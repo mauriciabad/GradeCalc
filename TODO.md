@@ -37,3 +37,4 @@
 - `furure`: do google login with a div (like BitBucket or Medium)
 - `furure`: restore edited subject button
 - `furure`: report wrong subject
+- `furure`: show most searched when search popup is opened
