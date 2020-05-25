@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de privacidad</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: calc(var(--vh, 1vh) * 100);
+      margin: 0;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+    p {
+      max-width: 20rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <h1>Politica de privacidad</h1>
+  <p>
+    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptates ea quia omnis dolores aperiam ipsam, magni culpa odio temporibus, exercitationem beatae quae. Inventore sit rem molestiae autem impedit iusto blanditiis.
+  </p>
+  
+  <script>
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+    // We listen to the resize event
+    window.addEventListener('resize', () => {
+      // We execute the same script as before
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    });
+  </script>
+</body>
+</html>
