@@ -731,7 +731,17 @@ function showConfetti(elem, conf) {
       startVelocity: random(60, 90),
       elementCount: random(30, 60),
       decay: 0.8,
-      colors: ['#E68F17', '#FAB005', '#FA5252', '#E64980', '#BE4BDB', '#0B7285', '#15AABF', '#EE1233', '#40C057']
+      colors: [
+        '#E68F17',
+        '#FAB005',
+        '#FA5252',
+        '#E64980',
+        '#BE4BDB',
+        '#0B7285',
+        '#15AABF',
+        '#EE1233',
+        '#40C057'
+      ]
     };
   }
   window.confetti(elem, conf);
