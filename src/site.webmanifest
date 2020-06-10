@@ -23,6 +23,12 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
+        },
+        {
+            "src": "/icons/safari-pinned-tab.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "badge"
         }
     ],
     "theme_color": "#1b9f64",
