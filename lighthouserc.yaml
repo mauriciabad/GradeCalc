@@ -9,7 +9,7 @@ ci:
       meta-viewport: off
       categories:performance:
         - error
-        - minScore: 0.8
+        - minScore: 0.6
       categories:seo:
         - error
         - minScore: 0.8
