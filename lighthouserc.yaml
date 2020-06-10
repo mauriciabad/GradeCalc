@@ -1,6 +1,5 @@
 ci:
   assert:
-    preset: lighthouse:recommended
     assertions:
       categories:pwa: error
       uses-http2: off
