@@ -51,11 +51,16 @@ gulp.task('html', () =>
     .pipe(gulp.dest('dist/'))
 );
 
+gulp.task('legal', () =>
+  gulp.src('src/legal.html')
+    .pipe(gulp.dest('dist/'))
+);
+
 gulp.task('watch', () => {
   gulp.watch('src/styles/main.css', gulp.series('css'));
   gulp.watch('src/scripts/script.js', gulp.series('js'));
   gulp.watch('src/index.html', gulp.series('html'));
 });
 
-gulp.task('default', gulp.parallel('css','js','libs','html'));
-gulp.task('build', gulp.parallel('css','js','libs','html'));
+gulp.task('default', gulp.parallel('css','js','libs','html','legal'));
+gulp.task('build', gulp.parallel('css','js','libs','html','legal'));
