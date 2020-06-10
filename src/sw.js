@@ -1,4 +1,4 @@
-var CACHE_NAME = 'v0.24.1';
+var CACHE_NAME = 'v0.24.2';
 
 var urlsToCache = [
   '/',
@@ -26,6 +26,9 @@ var urlsToCache = [
   'icons/favicon-16x16.png',
   'icons/favicon-32x32.png',
   'icons/android-chrome-192x192.png',
+  'icons/android-chrome-512x512.png',
+  'icons/maskable_icon_192.png',
+  'icons/maskable_icon_512.png',
 
   'https://fonts.googleapis.com/css?family=Nunito:300,400,700'
 ];
