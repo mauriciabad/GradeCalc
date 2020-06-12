@@ -47,20 +47,20 @@ gulp.task('libs', () =>
 );
 
 gulp.task('html', () =>
-  gulp.src('src/index.html')
+  gulp.src(['src/*.html'])
     .pipe(gulp.dest('dist/'))
 );
 
-gulp.task('legal', () =>
-  gulp.src('src/legal.html')
-    .pipe(gulp.dest('dist/'))
+gulp.task('static', () =>
+  gulp.src(['static/**/*', 'static/**/.*', 'static/.**/*', 'static/.**/.*'], {base: 'static'})
+    .pipe(gulp.dest('dist'))
 );
 
 gulp.task('watch', () => {
   gulp.watch('src/styles/main.css', gulp.series('css'));
   gulp.watch('src/scripts/script.js', gulp.series('js'));
-  gulp.watch('src/index.html', gulp.series('html'));
+  gulp.watch('src/*.html', gulp.series('html'));
 });
 
-gulp.task('default', gulp.parallel('css','js','libs','html','legal'));
-gulp.task('build', gulp.parallel('css','js','libs','html','legal'));
+gulp.task('default', gulp.parallel('css','js','libs','html','static'));
+gulp.task('build', gulp.parallel('css','js','libs','html','static'));
