@@ -57,7 +57,7 @@ gulp.task('static', () =>
 );
 
 gulp.task('assets', () =>
-  gulp.src(['src/assets/**/*'], {base: 'src'})
+  gulp.src(['src/assets/**/*'], {base: 'src/assets'})
     .pipe(gulp.dest('dist'))
 );
 
