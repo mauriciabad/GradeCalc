@@ -56,11 +56,16 @@ gulp.task('static', () =>
     .pipe(gulp.dest('dist'))
 );
 
+gulp.task('assets', () =>
+  gulp.src(['src/assets/**/*'], {base: 'src'})
+    .pipe(gulp.dest('dist'))
+);
+
 gulp.task('watch', () => {
   gulp.watch('src/styles/main.css', gulp.series('css'));
   gulp.watch('src/scripts/script.js', gulp.series('js'));
   gulp.watch('src/*.html', gulp.series('html'));
 });
 
-gulp.task('default', gulp.parallel('css','js','libs','html','static'));
-gulp.task('build', gulp.parallel('css','js','libs','html','static'));
+gulp.task('default', gulp.parallel('css','js','libs','html','static','assets'));
+gulp.task('build', gulp.parallel('css','js','libs','html','static','assets'));
