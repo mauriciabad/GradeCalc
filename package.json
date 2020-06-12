@@ -9,7 +9,7 @@
   "scripts": {
     "predist": "rm -rf dist/* && touch dist/.gitkeep",
     "dist": "run-p dist:*",
-    "dist:assets": "cp -r src/assets/* dist/",
+    "dist:assets": "gulp assets",
     "dist:_redirects": "cp src/_redirects dist/",
     "dist:scripts": "mkdir -p dist/scripts/ && run-p dist:scripts:*",
     "dist:scripts:gulp": "gulp js",
@@ -17,7 +17,8 @@
     "dist:scripts:lib": "gulp libs",
     "dist:styles": "gulp css",
     "dist:lib": "cp -r lib dist/lib",
-    "dist:layout": "cp src/index.html dist/",
+    "dist:layout": "gulp html",
+    "dist:static": "gulp static",
     "dist:webmanifest": "cp src/site.webmanifest dist/"
   },
   "repository": {
