@@ -823,9 +823,9 @@ function round(n, d = 2) {
   return (isNaN(n) || n === '' || n == undefined) ? undefined : Math.floor(Math.round(n * (10 ** d))) / (10 ** d);
 }
 
-// returns a random number from smallest to biggest
-function random(smallest, biggest) {
-  return Math.floor(Math.random() * (biggest - smallest)) + smallest;
+// returns a random number from min to max
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // Congratulations
