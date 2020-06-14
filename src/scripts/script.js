@@ -393,7 +393,7 @@ function completeSubject(...subjects) {
       faculty: '',
       uni: '',
       course: '',
-      color: 1,
+      color: random(1,8),
 
       necesaryMarks: {},
       finalMark: {}
