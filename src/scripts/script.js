@@ -1782,6 +1782,51 @@ function install() {
 }
 
 
+/* ------------------------------ Form satisfaction ------------------------------ */
+
+if (localStorage.getItem('stopFormPopup') !== 'true') {
+  document.body.innerHTML += `
+  <div id="form-container" class="popup popup-small" style="display: flex;">
+    <div class="top-bar-popup"></div>
+    <div class="popup-content form-popup">
+      <h2>Encuesta de satisfación</h2>
+      <div>
+        <p>Hola, agradeceria que repondieras esta encuesta para incluirla en mi TFG sobre GradeCalc. 😋</p>
+        <p>Tardarás menos de 4 minutos.</p>
+        <a href="https://forms.gle/DEsxsMLXKEDXHZaA9" target="_blank" class="popup-content-action" style="background-color: #6A7FDB; text-decoration: none; display: inline-block; margin: 1.5rem 0 0.5rem;" onclick="document.getElementById('cbox-form').checked = true;">Responder</a>
+        <p style="text-align: center;">
+          <a href="https://forms.gle/DEsxsMLXKEDXHZaA9" target="_blank" style="color: blue; display: inline-block; margin: 0.5rem 0 1.5rem;" onclick="document.getElementById('cbox-form').checked = true;">https://forms.gle/DEsxsMLXKEDXHZaA9</a>
+        </p>
+        <p>
+          <input type="checkbox" name="cbox-form" id="cbox-form">
+          <label for="cbox-form">No recordar más</label>
+        </p>
+      </div>
+      <button class="popup-main-button" id="closeFormPopupButton1" style="display: none;" onclick="closeFormPopup()">Hecho</button>
+      <button class="popup-main-button" id="closeFormPopupButton2" onclick="closeFormPopup()">Más tarde</button>
+    </div>
+  </div>`;
+}
+
+const formCheckbox = document.getElementById('cbox-form');
+
+function closeFormPopup() {
+  document.getElementById('form-container').style.display = 'none';
+
+  const stopFormPopup = formCheckbox.checked;
+  localStorage.setItem('stopFormPopup', stopFormPopup);
+}
+
+formCheckbox.addEventListener( 'change', function() {
+  if(this.checked) {
+    document.getElementById('closeFormPopupButton1').style.display = null;
+    document.getElementById('closeFormPopupButton2').style.display = 'none';
+  } else {
+    document.getElementById('closeFormPopupButton1').style.display = 'none';
+    document.getElementById('closeFormPopupButton2').style.display = null;
+  }
+});
+
 /* ------------------------------ PWA redirect ------------------------------ */
 
 let redirectTimer, newUrl;
