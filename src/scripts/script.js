@@ -1784,9 +1784,12 @@ function install() {
 
 /* ------------------------------ Form satisfaction ------------------------------ */
 
-const formUrl = 'https://forms.gle/DEsxsMLXKEDXHZaA9';
+function isValidDate(d) { return d instanceof Date && !isNaN(d); }
 
-if (localStorage.getItem('stopFormPopup') !== 'true') {
+const formUrl = 'https://forms.gle/DEsxsMLXKEDXHZaA9';
+const storageDate = new Date(parseInt(localStorage.getItem('remindFormPopupDate')));
+
+if (localStorage.getItem('stopFormPopup') !== 'true' && (!isValidDate(storageDate) || storageDate <= new Date())) {
   document.body.innerHTML += `
   <div id="form-container" class="popup popup-small" style="display: flex;">
     <div class="top-bar-popup"></div>
@@ -1817,6 +1820,11 @@ function closeFormPopup() {
 
   const stopFormPopup = formCheckbox.checked;
   localStorage.setItem('stopFormPopup', stopFormPopup);
+
+  const remindFormPopupDate = new Date();
+  // remindFormPopupDate.setDate(remindFormPopupDate.getDate() + 1); // Add 1 day
+  remindFormPopupDate.setTime(remindFormPopupDate.getTime() + (1*60*60*1000)); // Add 1 hour
+  localStorage.setItem('remindFormPopupDate', remindFormPopupDate.getTime());
 }
 
 formCheckbox.addEventListener( 'change', function() {
