@@ -1784,6 +1784,8 @@ function install() {
 
 /* ------------------------------ Form satisfaction ------------------------------ */
 
+const formUrl = 'https://forms.gle/DEsxsMLXKEDXHZaA9';
+
 if (localStorage.getItem('stopFormPopup') !== 'true') {
   document.body.innerHTML += `
   <div id="form-container" class="popup popup-small" style="display: flex;">
@@ -1792,10 +1794,10 @@ if (localStorage.getItem('stopFormPopup') !== 'true') {
       <h2>Encuesta de satisfación</h2>
       <div>
         <p>Hola, agradeceria que repondieras esta encuesta para incluirla en mi TFG sobre GradeCalc. 😋</p>
-        <p>Tardarás menos de 4 minutos.</p>
-        <a href="https://forms.gle/DEsxsMLXKEDXHZaA9" target="_blank" class="popup-content-action" style="background-color: #6A7FDB; text-decoration: none; display: inline-block; margin: 1.5rem 0 0.5rem;" onclick="document.getElementById('cbox-form').checked = true;">Responder</a>
+        <p>Son solo 2 minutos.</p>
+        <a href="${formUrl}" target="_blank" class="popup-content-action" style="background-color: #6A7FDB; text-decoration: none; display: inline-block; margin: 1.5rem 0 0.5rem;" onclick="document.getElementById('cbox-form').checked = true;">Responder</a>
         <p style="text-align: center;">
-          <a href="https://forms.gle/DEsxsMLXKEDXHZaA9" target="_blank" style="color: blue; display: inline-block; margin: 0.5rem 0 1.5rem;" onclick="document.getElementById('cbox-form').checked = true;">https://forms.gle/DEsxsMLXKEDXHZaA9</a>
+          <a href="${formUrl}" target="_blank" style="color: blue; display: inline-block; margin: 0.5rem 0 1.5rem;" onclick="document.getElementById('cbox-form').checked = true;">https://forms.gle/DEsxsMLXKEDXHZaA9</a>
         </p>
         <p>
           <input type="checkbox" name="cbox-form" id="cbox-form">
