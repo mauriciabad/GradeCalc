@@ -1789,7 +1789,9 @@ function isValidDate(d) { return d instanceof Date && !isNaN(d); }
 const formUrl = 'https://forms.gle/DEsxsMLXKEDXHZaA9';
 const storageDate = new Date(parseInt(localStorage.getItem('remindFormPopupDate')));
 
-if (localStorage.getItem('stopFormPopup') !== 'true' && (!isValidDate(storageDate) || storageDate <= new Date())) {
+if (localStorage.getItem('stopFormPopup') !== 'true' 
+  && (!isValidDate(storageDate) || storageDate <= new Date())
+  && !isEmpty(subjects)) {
   document.body.innerHTML += `
   <div id="form-container" class="popup popup-small" style="display: flex;">
     <div class="top-bar-popup"></div>
