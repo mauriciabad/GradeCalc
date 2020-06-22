@@ -1784,60 +1784,60 @@ function install() {
 
 /* ------------------------------ Form satisfaction ------------------------------ */
 
-function isValidDate(d) { return d instanceof Date && !isNaN(d); }
+// function isValidDate(d) { return d instanceof Date && !isNaN(d); }
 
-const formUrl = 'https://forms.gle/DEsxsMLXKEDXHZaA9';
-const storageDate = new Date(parseInt(localStorage.getItem('remindFormPopupDate')));
+// const formUrl = 'https://forms.gle/DEsxsMLXKEDXHZaA9';
+// const storageDate = new Date(parseInt(localStorage.getItem('remindFormPopupDate')));
 
-if (localStorage.getItem('stopFormPopup') !== 'true' 
-  && (!isValidDate(storageDate) || storageDate <= new Date())
-  && !isEmpty(subjects)) {
-  document.body.innerHTML += `
-  <div id="form-container" class="popup popup-small" style="display: flex;">
-    <div class="top-bar-popup"></div>
-    <div class="popup-content form-popup">
-      <h2>Encuesta de satisfación</h2>
-      <div>
-        <p>Hola, agradeceria que repondieras esta encuesta para incluirla en mi TFG sobre GradeCalc. 😋</p>
-        <p>Son solo 2 minutos.</p>
-        <a href="${formUrl}" target="_blank" class="popup-content-action" style="background-color: #6A7FDB; text-decoration: none; display: inline-block; margin: 1.5rem 0 0.5rem;" onclick="document.getElementById('cbox-form').checked = true;">Responder</a>
-        <p style="text-align: center;">
-          <a href="${formUrl}" target="_blank" style="color: blue; display: inline-block; margin: 0.5rem 0 1.5rem;" onclick="document.getElementById('cbox-form').checked = true;">https://forms.gle/DEsxsMLXKEDXHZaA9</a>
-        </p>
-        <p>
-          <input type="checkbox" name="cbox-form" id="cbox-form">
-          <label for="cbox-form">No recordar más</label>
-        </p>
-      </div>
-      <button class="popup-main-button" id="closeFormPopupButton1" style="display: none;" onclick="closeFormPopup()">Hecho</button>
-      <button class="popup-main-button" id="closeFormPopupButton2" onclick="closeFormPopup()">Más tarde</button>
-    </div>
-  </div>`;
-}
+// if (localStorage.getItem('stopFormPopup') !== 'true' 
+//   && (!isValidDate(storageDate) || storageDate <= new Date())
+//   && !isEmpty(subjects)) {
+//   document.body.innerHTML += `
+//   <div id="form-container" class="popup popup-small" style="display: flex;">
+//     <div class="top-bar-popup"></div>
+//     <div class="popup-content form-popup">
+//       <h2>Encuesta de satisfación</h2>
+//       <div>
+//         <p>Hola, agradeceria que repondieras esta encuesta para incluirla en mi TFG sobre GradeCalc. 😋</p>
+//         <p>Son solo 2 minutos.</p>
+//         <a href="${formUrl}" target="_blank" class="popup-content-action" style="background-color: #6A7FDB; text-decoration: none; display: inline-block; margin: 1.5rem 0 0.5rem;" onclick="document.getElementById('cbox-form').checked = true;">Responder</a>
+//         <p style="text-align: center;">
+//           <a href="${formUrl}" target="_blank" style="color: blue; display: inline-block; margin: 0.5rem 0 1.5rem;" onclick="document.getElementById('cbox-form').checked = true;">https://forms.gle/DEsxsMLXKEDXHZaA9</a>
+//         </p>
+//         <p>
+//           <input type="checkbox" name="cbox-form" id="cbox-form">
+//           <label for="cbox-form">No recordar más</label>
+//         </p>
+//       </div>
+//       <button class="popup-main-button" id="closeFormPopupButton1" style="display: none;" onclick="closeFormPopup()">Hecho</button>
+//       <button class="popup-main-button" id="closeFormPopupButton2" onclick="closeFormPopup()">Más tarde</button>
+//     </div>
+//   </div>`;
+// }
 
-const formCheckbox = document.getElementById('cbox-form');
+// const formCheckbox = document.getElementById('cbox-form');
 
-function closeFormPopup() {
-  document.getElementById('form-container').style.display = 'none';
+// function closeFormPopup() {
+//   document.getElementById('form-container').style.display = 'none';
 
-  const stopFormPopup = formCheckbox.checked;
-  localStorage.setItem('stopFormPopup', stopFormPopup);
+//   const stopFormPopup = formCheckbox.checked;
+//   localStorage.setItem('stopFormPopup', stopFormPopup);
 
-  const remindFormPopupDate = new Date();
-  // remindFormPopupDate.setDate(remindFormPopupDate.getDate() + 1); // Add 1 day
-  remindFormPopupDate.setTime(remindFormPopupDate.getTime() + (1*60*60*1000)); // Add 1 hour
-  localStorage.setItem('remindFormPopupDate', remindFormPopupDate.getTime());
-}
+//   const remindFormPopupDate = new Date();
+//   // remindFormPopupDate.setDate(remindFormPopupDate.getDate() + 1); // Add 1 day
+//   remindFormPopupDate.setTime(remindFormPopupDate.getTime() + (1*60*60*1000)); // Add 1 hour
+//   localStorage.setItem('remindFormPopupDate', remindFormPopupDate.getTime());
+// }
 
-formCheckbox.addEventListener( 'change', function() {
-  if(this.checked) {
-    document.getElementById('closeFormPopupButton1').style.display = null;
-    document.getElementById('closeFormPopupButton2').style.display = 'none';
-  } else {
-    document.getElementById('closeFormPopupButton1').style.display = 'none';
-    document.getElementById('closeFormPopupButton2').style.display = null;
-  }
-});
+// formCheckbox.addEventListener( 'change', function() {
+//   if(this.checked) {
+//     document.getElementById('closeFormPopupButton1').style.display = null;
+//     document.getElementById('closeFormPopupButton2').style.display = 'none';
+//   } else {
+//     document.getElementById('closeFormPopupButton1').style.display = 'none';
+//     document.getElementById('closeFormPopupButton2').style.display = null;
+//   }
+// });
 
 /* ------------------------------ PWA redirect ------------------------------ */
 
