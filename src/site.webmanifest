@@ -35,5 +35,12 @@
     "theme_color": "#1b9f64",
     "background_color": "#1b9f64",
     "start_url": "/index.html",
-    "display": "standalone"
+    "display": "standalone",
+    "prefer_related_applications": true,
+    "related_applications": [
+        {
+            "platform": "play",
+            "id": "org.mauriciabad.app.gradecalc"
+        }
+    ]
 }
