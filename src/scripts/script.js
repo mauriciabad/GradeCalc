@@ -362,6 +362,7 @@ function addSubjects() {
 }
 
 function addSubject(id, subject) {
+  subject = sortSubjectExams(subject);
   subjects[id] = completeSubject(subject);
   createSubjectCardCollapsed(id);
 
@@ -381,6 +382,41 @@ function addSubjectFromDB(id) {
   }).catch(function (error) {
     console.error(`Error getting subject (${id}) info:`, error);
   });
+}
+
+// TODO: This is a temporal fix to show exams sorted in the subject bar and should be removed
+function sortSubjectExams(subject) {
+  let newSubject = {...subject};
+
+  for (const evaluation in subject.evaluations) {
+
+    const examsSortedArray = Object
+      .keys(subject.evaluations[evaluation].exams)
+      .map((examName) => ({
+        examName,
+        ...subject.evaluations[evaluation].exams[examName]
+      }))
+      .sort((a, b) => {
+        var aSize = a.type;
+        var bSize = b.type;
+        var aLow = a.examName;
+        var bLow = b.examName;
+    
+        if(aSize == bSize) return (aLow < bLow) ? -1 : (aLow > bLow) ? 1 : 0;
+        else return (aSize < bSize) ? -1 : 1;
+      });
+
+    let newEvaluationExams = {};
+    for (const exam of examsSortedArray) {
+      const examName = exam.examName;
+      delete exam.examName;
+      if (!newEvaluationExams[examName]) newEvaluationExams[examName] = {};
+      newEvaluationExams[examName] = exam;
+    }
+
+    newSubject.evaluations[evaluation].exams =  newEvaluationExams;
+  }
+  return newSubject;
 }
 
 function completeSubject(...subjects) {
