@@ -29,7 +29,7 @@
         {
             "src": "/icons/safari-pinned-tab.svg",
             "type": "image/svg",
-            "purpose": "badge"
+            "purpose": "monochrome"
         }
     ],
     "theme_color": "#1b9f64",
