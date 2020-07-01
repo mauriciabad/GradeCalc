@@ -278,9 +278,9 @@ function generateBar(id) {
       }else{
         mark = subjects[id].necesaryMarks[subjects[id].selectedEvaluation][exam];
       }
-      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color} scolN" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${round(subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight,4) * 100}%" data-exam="${exam}">${exam}<div id="bar-${id + exam}" data-exam="${exam}">${mark}</div></div>`;
+      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color} scolN" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${round(subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100, 4)}%" data-exam="${exam}">${exam}<div id="bar-${id + exam}" data-exam="${exam}">${mark}</div></div>`;
     } else {
-      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color}" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${round(subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight,4) * 100}%" data-exam="${exam}">${exam}<div id="bar-${id + exam}" data-exam="${exam}">${subjects[id].grades[exam]}</div></div>`;
+      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color}" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${round(subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100, 4)}%" data-exam="${exam}">${exam}<div id="bar-${id + exam}" data-exam="${exam}">${subjects[id].grades[exam]}</div></div>`;
     }
   }
   return barHTML;
