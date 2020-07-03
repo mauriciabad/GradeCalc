@@ -539,7 +539,7 @@ function generateEditSubjectUIHTML(id, subject, popup) {
   <div class="edit-popup-info">
     <div>
       <label for="${popup}-course">Curso</label>
-      <input type="text" name="course" id="${popup}-course" value="${subject.course ? 'Q2 2019-2020' : ''}" placeholder="Q1 2019-2020" required>
+      <input type="text" name="course" id="${popup}-course" value="${subject.course ? subject.course : ''}" placeholder="Q1 2019-2020" required>
     </div>
     <div>
       <label for="${popup}-faculty">Facultad</label>
@@ -1784,7 +1784,7 @@ function generateSearchResultSubject(match, id) {
             </label>
             <label class="searchResultTitle" for="checkbox-${id}">
               <span class="searchResultRow1">${match.shortName.value} - ${match.fullName.value}</span><br>
-              <span class="searchResultRow2">${match.faculty.value} ${match.uni.value} - Q2 2019-2020</span>
+              <span class="searchResultRow2">${match.faculty.value} ${match.uni.value} - ${match.course.value}</span>
             </label>
             ${(subjects[id]) ? '<!-- ' : ''}<div class="searchResultAction" onclick="this.parentElement.querySelector('input[name=\\'id\\']').checked = true; showViewSubject('${id}');"><img src="media/edit.svg"></div>${(subjects[id]) ? ' --> ' : ''}
           </li>`;
