@@ -523,13 +523,6 @@ function generateEditSubjectUIHTML(id, subject, popup) {
     </label>`;
   }
 
-  let fixedDate = new Date();
-  if(subject.creationDate && subject.creationDate.seconds < 1582938000) {
-    fixedDate = new Date(subject.creationDate.seconds * 1000);
-    fixedDate.setYear(2020);
-    fixedDate.setMonth(2 + (fixedDate.getMonth() % 2));
-  }
-  
   let html = `
   <h2>Información</h2>
   <input type="hidden" name="id" id="${popup}-id" value="${id}" style="display: none;" hidden>
@@ -567,7 +560,7 @@ function generateEditSubjectUIHTML(id, subject, popup) {
 
   <div class="edit-popup-info">
     <div>
-      <span>Fecha de creación: <span id="${popup}-creationDate">${subject.creationDate ? fixedDate.toLocaleDateString('es-ES') : '--/--/----'}</span></span>
+      <span>Fecha de creación: <span id="${popup}-creationDate">${subject.creationDate ? new Date(subject.creationDate.seconds * 1000).toLocaleDateString('es-ES') : '--/--/----'}</span></span>
     </div>
     <div>
       <span>Creador: <span id="${popup}-creator">${subject.creator ? subject.creator : 'Anónimo'}</span></span>
