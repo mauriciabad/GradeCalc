@@ -278,9 +278,9 @@ function generateBar(id) {
       }else{
         mark = subjects[id].necesaryMarks[subjects[id].selectedEvaluation][exam];
       }
-      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color} scolN" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}%" data-exam="${exam}">${exam}<div id="bar-${id + exam}" data-exam="${exam}">${mark}</div></div>`;
+      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color} scolN" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${round(subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100, 4)}%" data-exam="${exam}">${exam}<div id="bar-${id + exam}" data-exam="${exam}">${mark}</div></div>`;
     } else {
-      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color}" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}%" data-exam="${exam}">${exam}<div id="bar-${id + exam}" data-exam="${exam}">${subjects[id].grades[exam]}</div></div>`;
+      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color}" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${round(subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100, 4)}%" data-exam="${exam}">${exam}<div id="bar-${id + exam}" data-exam="${exam}">${subjects[id].grades[exam]}</div></div>`;
     }
   }
   return barHTML;
@@ -362,6 +362,7 @@ function addSubjects() {
 }
 
 function addSubject(id, subject) {
+  subject = sortSubjectExams(subject);
   subjects[id] = completeSubject(subject);
   createSubjectCardCollapsed(id);
 
@@ -383,6 +384,41 @@ function addSubjectFromDB(id) {
   });
 }
 
+// TODO: This is a temporal fix to show exams sorted in the subject bar and should be removed
+function sortSubjectExams(subject) {
+  let newSubject = {...subject};
+
+  for (const evaluation in subject.evaluations) {
+
+    const examsSortedArray = Object
+      .keys(subject.evaluations[evaluation].exams)
+      .map((examName) => ({
+        examName,
+        ...subject.evaluations[evaluation].exams[examName]
+      }))
+      .sort((a, b) => {
+        var aSize = a.type;
+        var bSize = b.type;
+        var aLow = a.examName;
+        var bLow = b.examName;
+    
+        if(aSize == bSize) return (aLow < bLow) ? -1 : (aLow > bLow) ? 1 : 0;
+        else return (aSize < bSize) ? -1 : 1;
+      });
+
+    let newEvaluationExams = {};
+    for (const exam of examsSortedArray) {
+      const examName = exam.examName;
+      delete exam.examName;
+      if (!newEvaluationExams[examName]) newEvaluationExams[examName] = {};
+      newEvaluationExams[examName] = exam;
+    }
+
+    newSubject.evaluations[evaluation].exams =  newEvaluationExams;
+  }
+  return newSubject;
+}
+
 function completeSubject(...subjects) {
   let subject = Object.assign(
     {
@@ -393,7 +429,7 @@ function completeSubject(...subjects) {
       faculty: '',
       uni: '',
       course: '',
-      color: 1,
+      color: random(1,8),
 
       necesaryMarks: {},
       finalMark: {}
@@ -460,7 +496,7 @@ function generateEditSubjectUIHTML(id, subject, popup) {
     grid += `
     <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 1;" class="" type="text"   name="exam"       value="${exam}"                 data-exam="${examCount}" placeholder="NEW" autocomplete="off" maxlength="5" required>
     <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 2;" class="" type="text"   name="examType"   value="${exams[exam].examType}" data-exam="${examCount}" placeholder="Parciales" required>
-    <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 3;" class="" type="number" name="mark"       value=""                        data-exam="${examCount}" placeholder="-" autocomplete="off" min="0" max="10" step="0.01">`;
+    <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 3;" class="" type="number" name="mark"       value=""                        data-exam="${examCount}" placeholder="${(subject.grades ? subject.grades : {})[exam] || '-'}" autocomplete="off" min="0" max="10" step="0.01" disabled>`;
     newEvals += `<div style="grid-row: ${(2 + examCount * 1)}; grid-column: ${(5 + evaluations.length * 1)};" class="edit-weight edit-new-evaluation" data-exam="${examCount}" data-evaluation="${evaluations.length}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
     for (const evaluationCount in evaluations) {
       grid += `<div style="grid-row: ${(2 + examCount * 1)}; grid-column: ${(5 + evaluationCount * 1)};" class="edit-weight" data-exam="${examCount}" data-evaluation="${evaluationCount}"><input type="number" name="weight" value="${exams[exam].weight[evaluations[evaluationCount]] && exams[exam].weight[evaluations[evaluationCount]] != 0 ? round(exams[exam].weight[evaluations[evaluationCount]] * 100, 4) : ''}" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
@@ -476,7 +512,7 @@ function generateEditSubjectUIHTML(id, subject, popup) {
   newExams += `
   <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="${examCount}" placeholder="NEW" autocomplete="off" maxlength="5">
   <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 2;" class="edit-new-exam" type="text"   name="examType"   value="" data-exam="${examCount}" placeholder="Parciales">
-  <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="${examCount}" placeholder="-" autocomplete="off" min="0" max="10" step="0.01">
+  <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="${examCount}" placeholder="-" autocomplete="off" min="0" max="10" step="0.01" disabled>
   `;
 
   for (const color of [1, 8, 3, 4, 6, 5, 2, 7]) {
@@ -823,9 +859,9 @@ function round(n, d = 2) {
   return (isNaN(n) || n === '' || n == undefined) ? undefined : Math.floor(Math.round(n * (10 ** d))) / (10 ** d);
 }
 
-// returns a random number from smallest to biggest
-function random(smallest, biggest) {
-  return Math.floor(Math.random() * (biggest - smallest)) + smallest;
+// returns a random number from min to max
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // Congratulations
@@ -1781,6 +1817,63 @@ function install() {
   }
 }
 
+
+/* ------------------------------ Form satisfaction ------------------------------ */
+
+// function isValidDate(d) { return d instanceof Date && !isNaN(d); }
+
+// const formUrl = 'https://forms.gle/DEsxsMLXKEDXHZaA9';
+// const storageDate = new Date(parseInt(localStorage.getItem('remindFormPopupDate')));
+
+// if (localStorage.getItem('stopFormPopup') !== 'true' 
+//   && (!isValidDate(storageDate) || storageDate <= new Date())
+//   && !isEmpty(subjects)) {
+//   document.body.innerHTML += `
+//   <div id="form-container" class="popup popup-small" style="display: flex;">
+//     <div class="top-bar-popup"></div>
+//     <div class="popup-content form-popup">
+//       <h2>Encuesta de satisfación</h2>
+//       <div>
+//         <p>Hola, agradeceria que repondieras esta encuesta para incluirla en mi TFG sobre GradeCalc. 😋</p>
+//         <p>Son solo 2 minutos.</p>
+//         <a href="${formUrl}" target="_blank" class="popup-content-action" style="background-color: #6A7FDB; text-decoration: none; display: inline-block; margin: 1.5rem 0 0.5rem;" onclick="document.getElementById('cbox-form').checked = true;">Responder</a>
+//         <p style="text-align: center;">
+//           <a href="${formUrl}" target="_blank" style="color: blue; display: inline-block; margin: 0.5rem 0 1.5rem;" onclick="document.getElementById('cbox-form').checked = true;">https://forms.gle/DEsxsMLXKEDXHZaA9</a>
+//         </p>
+//         <p>
+//           <input type="checkbox" name="cbox-form" id="cbox-form">
+//           <label for="cbox-form">No recordar más</label>
+//         </p>
+//       </div>
+//       <button class="popup-main-button" id="closeFormPopupButton1" style="display: none;" onclick="closeFormPopup()">Hecho</button>
+//       <button class="popup-main-button" id="closeFormPopupButton2" onclick="closeFormPopup()">Más tarde</button>
+//     </div>
+//   </div>`;
+// }
+
+// const formCheckbox = document.getElementById('cbox-form');
+
+// function closeFormPopup() {
+//   document.getElementById('form-container').style.display = 'none';
+
+//   const stopFormPopup = formCheckbox.checked;
+//   localStorage.setItem('stopFormPopup', stopFormPopup);
+
+//   const remindFormPopupDate = new Date();
+//   // remindFormPopupDate.setDate(remindFormPopupDate.getDate() + 1); // Add 1 day
+//   remindFormPopupDate.setTime(remindFormPopupDate.getTime() + (1*60*60*1000)); // Add 1 hour
+//   localStorage.setItem('remindFormPopupDate', remindFormPopupDate.getTime());
+// }
+
+// formCheckbox.addEventListener( 'change', function() {
+//   if(this.checked) {
+//     document.getElementById('closeFormPopupButton1').style.display = null;
+//     document.getElementById('closeFormPopupButton2').style.display = 'none';
+//   } else {
+//     document.getElementById('closeFormPopupButton1').style.display = 'none';
+//     document.getElementById('closeFormPopupButton2').style.display = null;
+//   }
+// });
 
 /* ------------------------------ PWA redirect ------------------------------ */
 

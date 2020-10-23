@@ -607,7 +607,8 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   margin: 0.75em 0.5em 0.75em 1em;
   display: none;
 } */
-#subject-start-creator{
+#subject-start-creator,
+.popup-content-action{
   background-color: #666;
   padding: 0.66em 1em;
   line-height: 1;
@@ -1017,6 +1018,7 @@ input[type=text]:focus:not(:invalid), input[type=number]:focus:not(:invalid){
   align-items: end;
   overflow: auto;
   scroll-behavior: smooth;
+  padding-bottom: 0.25rem;
 }
 .edit-popup-grid input { width: 100%; }
 .edit-popup-grid > * { transition: opacity 200ms ease-out; }

@@ -1,0 +1,11 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target" : {
+    "namespace": "android_app",
+    "package_name": "org.mauriciabad.app.gradecalc",
+    "sha256_cert_fingerprints": [
+      "74:5D:36:84:F5:41:41:19:65:78:C2:95:4F:5D:32:BA:CC:9E:02:F2:BB:FD:83:B9:9B:E2:C5:2F:15:1C:A4:AC",
+      "AC:35:AA:72:3C:48:0D:7E:0D:19:0D:A5:35:4C:9D:55:8E:6D:FB:97:14:E4:05:43:1C:81:C7:16:58:23:37:47"
+    ]
+  }
+}]

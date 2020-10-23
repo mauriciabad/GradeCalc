@@ -9,6 +9,7 @@ before_install:
   - npm install -g gulp-cli
 script:
   - npm run dist
+  - npm run test
 after_success:
   - lhci autorun
 addons:
