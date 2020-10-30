@@ -30,7 +30,7 @@ var toastTimer = 0;
 var toast = document.getElementById('toast');
 
 var displayName = 'Anónimo';
-var photoURL = 'media/profile-pic.jpg';
+var photoURL = 'media/default-user-avatar.png';
 var isAnonymous = true;
 var uid = 0;
 
