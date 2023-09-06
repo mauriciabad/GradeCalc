@@ -1,4 +1,9 @@
-http://gradecalc.net/* https://gradecalc.app/:splat 301!
-https://gradecalc.net/* https://gradecalc.app/:splat 301!
-http://www.gradecalc.net/* https://gradecalc.app/:splat 301!
-https://www.gradecalc.net/* https://gradecalc.app/:splat 301!
+http://gradecalc.net/* https://gradecalc.netlify.app/:splat 301!
+https://gradecalc.net/* https://gradecalc.netlify.app/:splat 301!
+http://www.gradecalc.net/* https://gradecalc.netlify.app/:splat 301!
+https://www.gradecalc.net/* https://gradecalc.netlify.app/:splat 301!
+
+http://gradecalc.app/* https://gradecalc.netlify.app/:splat 301!
+https://gradecalc.app/* https://gradecalc.netlify.app/:splat 301!
+http://www.gradecalc.app/* https://gradecalc.netlify.app/:splat 301!
+https://www.gradecalc.app/* https://gradecalc.netlify.app/:splat 301!
