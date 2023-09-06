@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /* ------------------------------ START UP ------------------------------ */
 var dashboard = document.getElementById('dashboard');
 var editSubjectPopup = document.getElementById('edit-popup-content');
@@ -20,7 +20,7 @@ var allPopups = [
   'edit-container',
   'view-container',
   'new-container',
-]
+];
 var userInfo;
 var subjects = {};
 var removedSubject = {};
@@ -55,24 +55,19 @@ loadData();
 // also load firebase (at the bottom)
 // also load navigo (at the next section)
 
-
 /* -------------------- HISTORY && POPUPs ------------------------------ */
 
 var setPageDashboard = (params) => {
   popupHideAll();
-}
+};
 
-var setPageUser = (params) => {
-
-}
+var setPageUser = (params) => {};
 
 var setPageMe = (params) => {
   popupShow('user-container', true);
-}
+};
 
-var setPageMeEdit = (params) => {
-
-}
+var setPageMeEdit = (params) => {};
 
 var setPageMeSubjectEdit = (params) => {
   if (subjects[params.id]) {
@@ -84,49 +79,56 @@ var setPageMeSubjectEdit = (params) => {
     showToast(`You don't have the subject ${params.id}`);
     window.history.back();
   }
-}
+};
 
 var setPageMeSubjectAdd = (params) => {
   popupShow('add-container', false);
   document.getElementById('search-subject-input').focus();
-}
+};
 
 var setPageSubjectNew = (params) => {
   popupShow('new-container', false);
   clearNewSubjectUI();
-}
+};
 
 var setPageSubjectView = (params) => {
-  subjectsDB.doc(params.id).get().then((doc) => {
-    if (doc.exists) {
-      popupShow('view-container', false);
-      generateViewSubjectUI(params.id, doc.data());
-    } else {
+  subjectsDB
+    .doc(params.id)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        popupShow('view-container', false);
+        generateViewSubjectUI(params.id, doc.data());
+      } else {
+        window.history.back();
+        console.error(`Subject width id ${params.id} doesn't exist`);
+      }
+    })
+    .catch((error) => {
       window.history.back();
-      console.error(`Subject width id ${params.id} doesn't exist`);
-    }
-  }).catch((error) => {
-    window.history.back();
-    console.error(`Error getting subject (${id}) info:`, error);
-  });
-}
+      console.error(`Error getting subject (${id}) info:`, error);
+    });
+};
 
-var setPageSubjectEdit = (params) => {
-
-}
+var setPageSubjectEdit = (params) => {};
 
 var router = new Navigo(null, true);
-router.on({
-  '/user/:id': { as: 'user.view', uses: setPageUser },
-  '/me': { as: 'me', uses: setPageMe },
-  '/me/edit': { as: 'me.edit', uses: setPageMeEdit },
-  '/me/subjects/:id/edit': { as: 'me.subject.edit', uses: setPageMeSubjectEdit },
-  '/me/subjects/add': { as: 'me.subject.add', uses: setPageMeSubjectAdd },
-  '/subjects/new': { as: 'subject.new', uses: setPageSubjectNew }, //asks basic info and finds duplicates, then goes to subject.edit
-  '/subjects/:id': { as: 'subject.view', uses: setPageSubjectView },
-  '/subjects/:id/edit': { as: 'subject.edit', uses: setPageSubjectEdit },
-  '*': { as: 'dashboard', uses: setPageDashboard }
-}).resolve();
+router
+  .on({
+    '/user/:id': { as: 'user.view', uses: setPageUser },
+    '/me': { as: 'me', uses: setPageMe },
+    '/me/edit': { as: 'me.edit', uses: setPageMeEdit },
+    '/me/subjects/:id/edit': {
+      as: 'me.subject.edit',
+      uses: setPageMeSubjectEdit,
+    },
+    '/me/subjects/add': { as: 'me.subject.add', uses: setPageMeSubjectAdd },
+    '/subjects/new': { as: 'subject.new', uses: setPageSubjectNew }, //asks basic info and finds duplicates, then goes to subject.edit
+    '/subjects/:id': { as: 'subject.view', uses: setPageSubjectView },
+    '/subjects/:id/edit': { as: 'subject.edit', uses: setPageSubjectEdit },
+    '*': { as: 'dashboard', uses: setPageDashboard },
+  })
+  .resolve();
 
 function showUserInfo() {
   router.navigate(`/me`);
@@ -153,25 +155,31 @@ function popupShow(id, isSmall) {
   popupHideAll(id);
   let elem = document.getElementById(id);
   elem.style.display = 'flex';
-  elem.animate({
-    opacity: [0, 1],
-    easing: ["ease-in"]
-  }, 125).onfinish = function () {
-    if (!isSmall && window.matchMedia("(max-width: 600px)").matches) {
+  elem.animate(
+    {
+      opacity: [0, 1],
+      easing: ['ease-in'],
+    },
+    125
+  ).onfinish = function () {
+    if (!isSmall && window.matchMedia('(max-width: 600px)').matches) {
       currentScreen.style.display = 'none';
       topbar.style.display = 'none';
     }
-  }
+  };
 }
 
 //Hides the popup
 function popupHide(popup) {
   currentScreen.style.display = 'block';
   topbar.style.display = 'flex';
-  popup.animate({
-    opacity: [1, 0],
-    easing: ["ease-in"]
-  }, 125).onfinish = function () {
+  popup.animate(
+    {
+      opacity: [1, 0],
+      easing: ['ease-in'],
+    },
+    125
+  ).onfinish = function () {
     popup.style.display = 'none';
   };
 }
@@ -179,7 +187,7 @@ function popupHide(popup) {
 //Hides all popups
 function popupHideAll(exeption) {
   for (const popup of allPopups) {
-    if(popup != exeption){
+    if (popup != exeption) {
       popupHide(document.getElementById(popup));
     }
   }
@@ -194,30 +202,37 @@ function loadData() {
   console.info('Subjects loaded from localStorage');
 
   for (const id in subjects) {
-    autoUpdate(id); 
+    autoUpdate(id);
     createSubjectCardCollapsed(id);
   }
   hideLoader('dashboard');
 }
 
 function autoUpdate(id) {
-  if (subjects[id].evaluation != undefined || subjects[id].evaluations == undefined) {
+  if (
+    subjects[id].evaluation != undefined ||
+    subjects[id].evaluations == undefined
+  ) {
     subjects[id].evaluations = toNewEvalNeeeeeeeeew(subjects[id].evaluation);
     delete subjects[id].evaluation;
     uploadEvaluation(id, subjects[id].evaluations);
     saveSubjectsLocalStorage();
   }
-  if(Object.keys(subjects[id].evaluations).length == 0){
+  if (Object.keys(subjects[id].evaluations).length == 0) {
     delete subjects[id];
     saveSubjectsLocalStorage();
   }
-  if (subjects[id].necesaryMark != undefined || subjects[id].necesaryMarks == undefined) {
+  if (
+    subjects[id].necesaryMark != undefined ||
+    subjects[id].necesaryMarks == undefined
+  ) {
     delete subjects[id].necesaryMark;
     subjects[id].necesaryMarks = {};
     for (const evaluation in subjects[id].evaluations) {
       subjects[id].necesaryMarks[evaluation] = {};
-      for (const examName in subjects[id].evaluations[evaluation].exams) { 
-        subjects[id].necesaryMarks[evaluation][examName] = subjects[id].evaluations[evaluation].passMark;
+      for (const examName in subjects[id].evaluations[evaluation].exams) {
+        subjects[id].necesaryMarks[evaluation][examName] =
+          subjects[id].evaluations[evaluation].passMark;
       }
     }
     updateNecesaryMark(id);
@@ -227,39 +242,49 @@ function autoUpdate(id) {
 
 //updates the subject card information (bar, inputs and names)
 function updateSubjectCardInfo(id) {
-  getCard(id).innerHTML =
-    `<button onclick="deleteSubject('${id}')" class="subject-card-remove">
+  getCard(
+    id
+  ).innerHTML = `<button onclick="deleteSubject('${id}')" class="subject-card-remove">
   <img src="media/trash.svg" alt="x" aria-label="Delete subject">
 </button>
 <button onclick="showEditSubject('${id}')" class="subject-card-info">
   <img src="media/edit.svg" alt="%" aria-label="Show subject information">
 </button>
 <h2>${subjects[id].shortName}</h2>
-<p class="subject-finalMark" style="color: ${isPassed(id,subjects[id].selectedEvaluation) ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
+<p class="subject-finalMark" style="color: ${
+    isPassed(id, subjects[id].selectedEvaluation) ? '#5a9764' : '#b9574c'
+  };">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
 <div class="subject-bar">${generateBar(id)}</div>
-<div class="grades-input hidden" style="height: 0px;">${generateInputs(id) + generateEvaluations(id)}</div>`;
+<div class="grades-input hidden" style="height: 0px;">${
+    generateInputs(id) + generateEvaluations(id)
+  }</div>`;
 
   updateAndDisplayMarks(id, false);
 }
 
 //Creates the subject card and appends it to the dashboard
 function createSubjectCardCollapsed(id) {
-  if(!document.getElementById('card-' + id)){
+  if (!document.getElementById('card-' + id)) {
     var card = document.createElement('div');
     card.id = 'card-' + id;
     card.classList.add('subject-card');
-    card.onclick = function (event) { toggleExpandCard(event, this); };
-    card.innerHTML =
-      ` <button onclick="deleteSubject('${id}')" class="subject-card-remove">
+    card.onclick = function (event) {
+      toggleExpandCard(event, this);
+    };
+    card.innerHTML = ` <button onclick="deleteSubject('${id}')" class="subject-card-remove">
           <img src="media/trash.svg" alt="x" aria-label="Delete subject">
         </button>
         <button onclick="showEditSubject('${id}')" class="subject-card-info">
           <img src="media/edit.svg" alt="%" aria-label="Show subject information">
         </button>
         <h2>${subjects[id].shortName}</h2>
-        <p class="subject-finalMark" style="color: ${isPassed(id,subjects[id].selectedEvaluation) ? '#5a9764' : '#b9574c'};">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
+        <p class="subject-finalMark" style="color: ${
+          isPassed(id, subjects[id].selectedEvaluation) ? '#5a9764' : '#b9574c'
+        };">${subjects[id].finalMark[subjects[id].selectedEvaluation]}</p>
         <div class="subject-bar">${generateBar(id)}</div>
-        <div class="grades-input hidden" style="height: 0px;">${generateInputs(id) + generateEvaluations(id)}</div>`;
+        <div class="grades-input hidden" style="height: 0px;">${
+          generateInputs(id) + generateEvaluations(id)
+        }</div>`;
 
     dashboard.appendChild(card);
     updateAndDisplayMarks(id, false);
@@ -269,18 +294,45 @@ function createSubjectCardCollapsed(id) {
 
 function generateBar(id) {
   let weight = 0;
-  let barHTML = "";
-  for (const exam in subjects[id].evaluations[subjects[id].selectedEvaluation].exams) {
+  let barHTML = '';
+  for (const exam in subjects[id].evaluations[subjects[id].selectedEvaluation]
+    .exams) {
     if (isUndone(id, exam)) {
       let mark = '';
-      if (subjects[id].necesaryMarks[subjects[id].selectedEvaluation][exam] == null) {
+      if (
+        subjects[id].necesaryMarks[subjects[id].selectedEvaluation][exam] ==
+        null
+      ) {
         mark = 'ಥ_ಥ';
-      }else{
-        mark = subjects[id].necesaryMarks[subjects[id].selectedEvaluation][exam];
+      } else {
+        mark =
+          subjects[id].necesaryMarks[subjects[id].selectedEvaluation][exam];
       }
-      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color} scolN" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${round(subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100, 4)}%" data-exam="${exam}">${exam}<div id="bar-${id + exam}" data-exam="${exam}">${mark}</div></div>`;
+      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${
+        subjects[id].color
+      } scolN" style="flex-grow: ${
+        subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam]
+          .weight * 100
+      }" title="${round(
+        subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam]
+          .weight * 100,
+        4
+      )}%" data-exam="${exam}">${exam}<div id="bar-${
+        id + exam
+      }" data-exam="${exam}">${mark}</div></div>`;
     } else {
-      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${subjects[id].color}" style="flex-grow: ${subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100}" title="${round(subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam].weight * 100, 4)}%" data-exam="${exam}">${exam}<div id="bar-${id + exam}" data-exam="${exam}">${subjects[id].grades[exam]}</div></div>`;
+      barHTML += `<div onclick="selectInput('in-${id + exam}')" class="scol${
+        subjects[id].color
+      }" style="flex-grow: ${
+        subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam]
+          .weight * 100
+      }" title="${round(
+        subjects[id].evaluations[subjects[id].selectedEvaluation].exams[exam]
+          .weight * 100,
+        4
+      )}%" data-exam="${exam}">${exam}<div id="bar-${
+        id + exam
+      }" data-exam="${exam}">${subjects[id].grades[exam]}</div></div>`;
     }
   }
   return barHTML;
@@ -289,52 +341,80 @@ function generateInputs(id) {
   let html = '';
   let types = {};
 
-  for (const examName in subjects[id].evaluations[subjects[id].selectedEvaluation].exams) {
-    let exam = subjects[id].evaluations[subjects[id].selectedEvaluation].exams[examName];
-    
-    if(!types[exam.type]) types[exam.type] = {};
-    if(!types[exam.type].weight) types[exam.type].weight = 0;
-    if(!types[exam.type].inputsHTML) types[exam.type].inputsHTML = '';
+  for (const examName in subjects[id].evaluations[
+    subjects[id].selectedEvaluation
+  ].exams) {
+    let exam =
+      subjects[id].evaluations[subjects[id].selectedEvaluation].exams[examName];
+
+    if (!types[exam.type]) types[exam.type] = {};
+    if (!types[exam.type].weight) types[exam.type].weight = 0;
+    if (!types[exam.type].inputsHTML) types[exam.type].inputsHTML = '';
 
     types[exam.type].weight += exam.weight;
 
     let mark = '';
-    if (subjects[id].necesaryMarks[subjects[id].selectedEvaluation][examName] == null) {
+    if (
+      subjects[id].necesaryMarks[subjects[id].selectedEvaluation][examName] ==
+      null
+    ) {
       mark = 'ಥ_ಥ';
-    }else{
-      mark = subjects[id].necesaryMarks[subjects[id].selectedEvaluation][examName];
+    } else {
+      mark =
+        subjects[id].necesaryMarks[subjects[id].selectedEvaluation][examName];
     }
 
     if (isUndone(id, examName)) {
-      types[exam.type].inputsHTML += `<div><span>${examName}:</span><input type="number" id="in-${id + examName}" data-exam="${examName}" placeholder="${mark}" value="" class="scol${subjects[id].color} scolN2" oninput="updateMarkFromCardInput('${id}', '${examName}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
+      types[
+        exam.type
+      ].inputsHTML += `<div><span>${examName}:</span><input type="number" id="in-${
+        id + examName
+      }" data-exam="${examName}" placeholder="${mark}" value="" class="scol${
+        subjects[id].color
+      } scolN2" oninput="updateMarkFromCardInput('${id}', '${examName}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
     } else {
-      types[exam.type].inputsHTML += `<div><span>${examName}:</span><input type="number" id="in-${id + examName}" data-exam="${examName}" placeholder="${mark}" value="${subjects[id].grades[examName]}" class="scol${subjects[id].color}" oninput="updateMarkFromCardInput('${id}', '${examName}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
+      types[
+        exam.type
+      ].inputsHTML += `<div><span>${examName}:</span><input type="number" id="in-${
+        id + examName
+      }" data-exam="${examName}" placeholder="${mark}" value="${
+        subjects[id].grades[examName]
+      }" class="scol${
+        subjects[id].color
+      }" oninput="updateMarkFromCardInput('${id}', '${examName}', this.value, this);" autocomplete="off" step="0.01" min="0" max="10"></div>`;
     }
   }
 
   for (const type in types) {
-    html += `<h3>${type}</h3><span>${round(types[type].weight * 100, 0)}%</span><div>${types[type].inputsHTML}</div>`;
+    html += `<h3>${type}</h3><span>${round(
+      types[type].weight * 100,
+      0
+    )}%</span><div>${types[type].inputsHTML}</div>`;
   }
 
   return html;
 }
 
 function generateEvaluations(id) {
-  let evaluationsHTML =
-    `<div class="evaluation-select"${Object.keys(subjects[id].evaluations).length <= 1 ? ' style="display: none;"' : ''}>
+  let evaluationsHTML = `<div class="evaluation-select"${
+    Object.keys(subjects[id].evaluations).length <= 1
+      ? ' style="display: none;"'
+      : ''
+  }>
   <span>Evaluación:</span>
   <select onchange="setSelectedEvaluation('${id}',this.value);">`;
   for (const evaluation in subjects[id].evaluations) {
-    evaluationsHTML += `<option value="${evaluation}"${evaluation == subjects[id].selectedEvaluation ? 'selected="selected"' : ''}>${evaluation}</option>`;
+    evaluationsHTML += `<option value="${evaluation}"${
+      evaluation == subjects[id].selectedEvaluation ? 'selected="selected"' : ''
+    }>${evaluation}</option>`;
   }
-  evaluationsHTML +=
-    `</select>
+  evaluationsHTML += `</select>
 </div>`;
   return evaluationsHTML;
 }
 
 function addToSubjectsToAdd(id, checked) {
-  if(checked){
+  if (checked) {
     subjectsToAdd[id] = null;
   } else {
     delete subjectsToAdd[id];
@@ -348,10 +428,10 @@ function addSubjects() {
 
   for (let id in subjectsToAdd) {
     if (subjects[id] == undefined) {
-      if(subjectsToAdd[id] == null){
+      if (subjectsToAdd[id] == null) {
         addSubjectFromDB(id);
       } else {
-        addSubject(id, subjectsToAdd[id])
+        addSubject(id, subjectsToAdd[id]);
       }
     } else {
       // showToast(`Ya tienes ${subjects[id].shortName}`);
@@ -373,37 +453,39 @@ function addSubject(id, subject) {
   hideLoader('dashboard');
 }
 function addSubjectFromDB(id) {
-  subjectsDB.doc(id).get().then((doc) => {
-    if (doc.exists) {
-      addSubject(id, doc.data());
-    } else {
-      console.error('Subject dosen\'t exists');
-    }
-  }).catch(function (error) {
-    console.error(`Error getting subject (${id}) info:`, error);
-  });
+  subjectsDB
+    .doc(id)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        addSubject(id, doc.data());
+      } else {
+        console.error("Subject dosen't exists");
+      }
+    })
+    .catch(function (error) {
+      console.error(`Error getting subject (${id}) info:`, error);
+    });
 }
 
 // TODO: This is a temporal fix to show exams sorted in the subject bar and should be removed
 function sortSubjectExams(subject) {
-  let newSubject = {...subject};
+  let newSubject = { ...subject };
 
   for (const evaluation in subject.evaluations) {
-
-    const examsSortedArray = Object
-      .keys(subject.evaluations[evaluation].exams)
+    const examsSortedArray = Object.keys(subject.evaluations[evaluation].exams)
       .map((examName) => ({
         examName,
-        ...subject.evaluations[evaluation].exams[examName]
+        ...subject.evaluations[evaluation].exams[examName],
       }))
       .sort((a, b) => {
         var aSize = a.type;
         var bSize = b.type;
         var aLow = a.examName;
         var bLow = b.examName;
-    
-        if(aSize == bSize) return (aLow < bLow) ? -1 : (aLow > bLow) ? 1 : 0;
-        else return (aSize < bSize) ? -1 : 1;
+
+        if (aSize == bSize) return aLow < bLow ? -1 : aLow > bLow ? 1 : 0;
+        else return aSize < bSize ? -1 : 1;
       });
 
     let newEvaluationExams = {};
@@ -414,7 +496,7 @@ function sortSubjectExams(subject) {
       newEvaluationExams[examName] = exam;
     }
 
-    newSubject.evaluations[evaluation].exams =  newEvaluationExams;
+    newSubject.evaluations[evaluation].exams = newEvaluationExams;
   }
   return newSubject;
 }
@@ -429,37 +511,49 @@ function completeSubject(...subjects) {
       faculty: '',
       uni: '',
       course: '',
-      color: random(1,8),
+      color: random(1, 8),
 
       necesaryMarks: {},
-      finalMark: {}
+      finalMark: {},
     },
     ...subjects
   );
   delete subject.id;
   delete subject.evaluation; // TODO: remove this if all subjects have last evaluation structure
-  if (!subject.selectedEvaluation || !Object.keys(subject.evaluations).includes(subject.selectedEvaluation)) subject.selectedEvaluation = Object.keys(subject.evaluations)[0] || '';
-    for (const evaluation in subject.evaluations) {
-      if(!subject.necesaryMarks[evaluation]) {
-        subject.necesaryMarks[evaluation] = {};
-        for (const examName in subject.evaluations[evaluation].exams) { 
-          subject.necesaryMarks[evaluation][examName] = subject.evaluations[evaluation].passMark;
-        }
-        subject.finalMark[evaluation] = 0;
+  if (
+    !subject.selectedEvaluation ||
+    !Object.keys(subject.evaluations).includes(subject.selectedEvaluation)
+  )
+    subject.selectedEvaluation = Object.keys(subject.evaluations)[0] || '';
+  for (const evaluation in subject.evaluations) {
+    if (!subject.necesaryMarks[evaluation]) {
+      subject.necesaryMarks[evaluation] = {};
+      for (const examName in subject.evaluations[evaluation].exams) {
+        subject.necesaryMarks[evaluation][examName] =
+          subject.evaluations[evaluation].passMark;
       }
+      subject.finalMark[evaluation] = 0;
     }
+  }
   return subject;
 }
 
 function clearNewSubjectUI() {
-  let html = generateEditSubjectUIHTML('new', completeSubject({creator: displayName, creationDate: {seconds: Math.floor(Date.now()/1000), nanoseconds: 0}}), 'new');
-  
+  let html = generateEditSubjectUIHTML(
+    'new',
+    completeSubject({
+      creator: displayName,
+      creationDate: { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 },
+    }),
+    'new'
+  );
+
   newSubjectPopup.innerHTML = html;
 }
 
 function generateViewSubjectUI(id, subject) {
   let html = generateEditSubjectUIHTML(id, subject, 'view');
-  
+
   viewSubjectPopup.innerHTML = html;
 
   let evaluations = Object.keys(subject.evaluations);
@@ -489,36 +583,81 @@ function generateEditSubjectUIHTML(id, subject, popup) {
   let colors = '';
   let conditions = '';
 
-  newEvals += `<input style="grid-row: 1; grid-column: ${(5 + evaluations.length * 1)};" class=" edit-new-evaluation" data-evaluation="${evaluations.length}" type="text" name="evaluationName" value="" placeholder="NEW" autocomplete="off" oninput="updateEvalName(this.dataset.evaluation, this.value, '${popup}');">`;
+  newEvals += `<input style="grid-row: 1; grid-column: ${
+    5 + evaluations.length * 1
+  };" class=" edit-new-evaluation" data-evaluation="${
+    evaluations.length
+  }" type="text" name="evaluationName" value="" placeholder="NEW" autocomplete="off" oninput="updateEvalName(this.dataset.evaluation, this.value, '${popup}');">`;
 
   let examCount = 0;
   for (const exam in exams) {
     grid += `
-    <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 1;" class="" type="text"   name="exam"       value="${exam}"                 data-exam="${examCount}" placeholder="NEW" autocomplete="off" maxlength="5" required>
-    <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 2;" class="" type="text"   name="examType"   value="${exams[exam].examType}" data-exam="${examCount}" placeholder="Parciales" required>
-    <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 3;" class="" type="number" name="mark"       value=""                        data-exam="${examCount}" placeholder="${(subject.grades ? subject.grades : {})[exam] || '-'}" autocomplete="off" min="0" max="10" step="0.01" disabled>`;
-    newEvals += `<div style="grid-row: ${(2 + examCount * 1)}; grid-column: ${(5 + evaluations.length * 1)};" class="edit-weight edit-new-evaluation" data-exam="${examCount}" data-evaluation="${evaluations.length}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
+    <input style="grid-row: ${
+      2 + examCount * 1
+    }; grid-column: 1;" class="" type="text"   name="exam"       value="${exam}"                 data-exam="${examCount}" placeholder="NEW" autocomplete="off" maxlength="5" required>
+    <input style="grid-row: ${
+      2 + examCount * 1
+    }; grid-column: 2;" class="" type="text"   name="examType"   value="${
+      exams[exam].examType
+    }" data-exam="${examCount}" placeholder="Parciales" required>
+    <input style="grid-row: ${
+      2 + examCount * 1
+    }; grid-column: 3;" class="" type="number" name="mark"       value=""                        data-exam="${examCount}" placeholder="${
+      (subject.grades ? subject.grades : {})[exam] || '-'
+    }" autocomplete="off" min="0" max="10" step="0.01" disabled>`;
+    newEvals += `<div style="grid-row: ${2 + examCount * 1}; grid-column: ${
+      5 + evaluations.length * 1
+    };" class="edit-weight edit-new-evaluation" data-exam="${examCount}" data-evaluation="${
+      evaluations.length
+    }"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
     for (const evaluationCount in evaluations) {
-      grid += `<div style="grid-row: ${(2 + examCount * 1)}; grid-column: ${(5 + evaluationCount * 1)};" class="edit-weight" data-exam="${examCount}" data-evaluation="${evaluationCount}"><input type="number" name="weight" value="${exams[exam].weight[evaluations[evaluationCount]] && exams[exam].weight[evaluations[evaluationCount]] != 0 ? round(exams[exam].weight[evaluations[evaluationCount]] * 100, 4) : ''}" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
+      grid += `<div style="grid-row: ${2 + examCount * 1}; grid-column: ${
+        5 + evaluationCount * 1
+      };" class="edit-weight" data-exam="${examCount}" data-evaluation="${evaluationCount}"><input type="number" name="weight" value="${
+        exams[exam].weight[evaluations[evaluationCount]] &&
+        exams[exam].weight[evaluations[evaluationCount]] != 0
+          ? round(exams[exam].weight[evaluations[evaluationCount]] * 100, 4)
+          : ''
+      }" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
     }
     ++examCount;
   }
   for (const evaluationCount in evaluations) {
-    grid += `<input style="grid-row: 1; grid-column: ${(5 + evaluationCount * 1)};" class="edit-evaluationName" type="text" name="evaluationName" value="${evaluations[evaluationCount]}" data-evaluation="${evaluationCount}" placeholder="NEW" autocomplete="off" required oninput="updateEvalName(this.dataset.evaluation, this.value, '${popup}');">`;
-    newExams += `<div style="grid-row: ${(2 + examCount * 1)}; grid-column: ${(5 + evaluationCount * 1)};" class="edit-weight edit-new-exam" data-exam="${examCount}" data-evaluation="${evaluationCount}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
-    footer += `<span  style="grid-row: ${(3 + examCount * 1)}; grid-column: ${(5 + evaluationCount * 1)};" class="edit-total" data-evaluation="${evaluationCount}">0%</span>`;
-    conditions += `<label class="edit-conditions-label">${evaluations[evaluationCount]}</label><input class="edit-conditions-input" type="text" placeholder="nombreExamen >= 2" name="condition" data-evaluation="${evaluationCount}" value="${subject.evaluations[evaluations[evaluationCount]].condition || ''}">`;
+    grid += `<input style="grid-row: 1; grid-column: ${
+      5 + evaluationCount * 1
+    };" class="edit-evaluationName" type="text" name="evaluationName" value="${
+      evaluations[evaluationCount]
+    }" data-evaluation="${evaluationCount}" placeholder="NEW" autocomplete="off" required oninput="updateEvalName(this.dataset.evaluation, this.value, '${popup}');">`;
+    newExams += `<div style="grid-row: ${2 + examCount * 1}; grid-column: ${
+      5 + evaluationCount * 1
+    };" class="edit-weight edit-new-exam" data-exam="${examCount}" data-evaluation="${evaluationCount}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`;
+    footer += `<span  style="grid-row: ${3 + examCount * 1}; grid-column: ${
+      5 + evaluationCount * 1
+    };" class="edit-total" data-evaluation="${evaluationCount}">0%</span>`;
+    conditions += `<label class="edit-conditions-label">${
+      evaluations[evaluationCount]
+    }</label><input class="edit-conditions-input" type="text" placeholder="nombreExamen >= 2" name="condition" data-evaluation="${evaluationCount}" value="${
+      subject.evaluations[evaluations[evaluationCount]].condition || ''
+    }">`;
   }
   newExams += `
-  <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="${examCount}" placeholder="NEW" autocomplete="off" maxlength="5">
-  <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 2;" class="edit-new-exam" type="text"   name="examType"   value="" data-exam="${examCount}" placeholder="Parciales">
-  <input style="grid-row: ${(2 + examCount * 1)}; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="${examCount}" placeholder="-" autocomplete="off" min="0" max="10" step="0.01" disabled>
+  <input style="grid-row: ${
+    2 + examCount * 1
+  }; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="${examCount}" placeholder="NEW" autocomplete="off" maxlength="5">
+  <input style="grid-row: ${
+    2 + examCount * 1
+  }; grid-column: 2;" class="edit-new-exam" type="text"   name="examType"   value="" data-exam="${examCount}" placeholder="Parciales">
+  <input style="grid-row: ${
+    2 + examCount * 1
+  }; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="${examCount}" placeholder="-" autocomplete="off" min="0" max="10" step="0.01" disabled>
   `;
 
   for (const color of [1, 8, 3, 4, 6, 5, 2, 7]) {
     colors += `
     <label class="scol${color}"  for="color-bar-${popup}-elem${color}">
-      <input type="radio" name="color-bar" value="${color}" id="color-bar-${popup}-elem${color}" ${(color == subject.color) ? 'checked' : ''}>
+      <input type="radio" name="color-bar" value="${color}" id="color-bar-${popup}-elem${color}" ${
+      color == subject.color ? 'checked' : ''
+    }>
       <span class="edit-color-checkmark"></span>
     </label>`;
   }
@@ -529,25 +668,35 @@ function generateEditSubjectUIHTML(id, subject, popup) {
   <div class="edit-popup-info">
     <div>
       <label for="${popup}-shortName">Nombre</label>
-      <input type="text" name="shortName" id="${popup}-shortName" value="${subject.shortName}" placeholder="M2" required>
+      <input type="text" name="shortName" id="${popup}-shortName" value="${
+    subject.shortName
+  }" placeholder="M2" required>
     </div>
     <div class="edit-fullName">
       <label for="${popup}-fullName">Nombre Largo</label>
-      <input type="text" name="fullName" id="${popup}-fullName" value="${subject.fullName ? subject.fullName : ''}" placeholder="Matemáticas 2" required>
+      <input type="text" name="fullName" id="${popup}-fullName" value="${
+    subject.fullName ? subject.fullName : ''
+  }" placeholder="Matemáticas 2" required>
     </div>
   </div>
   <div class="edit-popup-info">
     <div>
       <label for="${popup}-course">Curso</label>
-      <input type="text" name="course" id="${popup}-course" value="${subject.course ? subject.course : ''}" placeholder="Q1 2019-2020" required>
+      <input type="text" name="course" id="${popup}-course" value="${
+    subject.course ? subject.course : ''
+  }" placeholder="Q1 2019-2020" required>
     </div>
     <div>
       <label for="${popup}-faculty">Facultad</label>
-      <input type="text" name="faculty" id="${popup}-faculty" value="${subject.faculty ? subject.faculty : ''}" placeholder="FIB" required>
+      <input type="text" name="faculty" id="${popup}-faculty" value="${
+    subject.faculty ? subject.faculty : ''
+  }" placeholder="FIB" required>
     </div>
     <div>
       <label for="${popup}-uni">Universidad</label>
-      <input type="text" name="uni" id="${popup}-uni" value="${subject.uni ? subject.uni : ''}" placeholder="UPC" required>
+      <input type="text" name="uni" id="${popup}-uni" value="${
+    subject.uni ? subject.uni : ''
+  }" placeholder="UPC" required>
     </div>
   </div>
   <div class="color-bar">
@@ -560,15 +709,25 @@ function generateEditSubjectUIHTML(id, subject, popup) {
 
   <div class="edit-popup-info">
     <div>
-      <span>Fecha de creación: <span id="${popup}-creationDate">${subject.creationDate ? new Date(subject.creationDate.seconds * 1000).toLocaleDateString('es-ES') : '--/--/----'}</span></span>
+      <span>Fecha de creación: <span id="${popup}-creationDate">${
+    subject.creationDate
+      ? new Date(subject.creationDate.seconds * 1000).toLocaleDateString(
+          'es-ES'
+        )
+      : '--/--/----'
+  }</span></span>
     </div>
     <div>
-      <span>Creador: <span id="${popup}-creator">${subject.creator ? subject.creator : 'Anónimo'}</span></span>
+      <span>Creador: <span id="${popup}-creator">${
+    subject.creator ? subject.creator : 'Anónimo'
+  }</span></span>
     </div>
   </div>
 
   <h2>Evaluación</h2>
-  <div class="edit-popup-grid" onkeyup="editUIUpdateGrid(this, event, '${popup}');" data-evaluations="${evaluations.length}" data-exams="${examCount}">
+  <div class="edit-popup-grid" onkeyup="editUIUpdateGrid(this, event, '${popup}');" data-evaluations="${
+    evaluations.length
+  }" data-exams="${examCount}">
     <!-- Header -->
     <span  style="grid-row: 1; grid-column: 1;" >Nombre</span>
     <span  style="grid-row: 1; grid-column: 2;" >Categoría</span>
@@ -577,7 +736,9 @@ function generateEditSubjectUIHTML(id, subject, popup) {
     <!-- Body -->
     ${grid}
     <!-- Divider -->
-    <div style="grid-row: 2 / ${2 + examCount};" class="grid-separator-evaluation"></div>
+    <div style="grid-row: 2 / ${
+      2 + examCount
+    };" class="grid-separator-evaluation"></div>
 
     <!-- new -->
     ${newEvals}
@@ -598,8 +759,10 @@ function generateEditSubjectUIHTML(id, subject, popup) {
 
 /* ------------------------------ UI & DATA UPDATE ------------------------------ */
 function updateEvalName(evaluationN, value, popup) {
-  let label = document.querySelector(`#${popup}-popup-content .edit-conditions-label[data-evaluation='${evaluationN}']`);
-  if(label) label.textContent = value || '';
+  let label = document.querySelector(
+    `#${popup}-popup-content .edit-conditions-label[data-evaluation='${evaluationN}']`
+  );
+  if (label) label.textContent = value || '';
 }
 
 //Updates, saves and shows the finalMark and necesaryMarks
@@ -619,50 +782,76 @@ function displayNecesaryMark(id) {
 
   for (const barElem of barUndone) {
     let mark = '';
-    if (subjects[id].necesaryMarks[subjects[id].selectedEvaluation][barElem.dataset.exam] == null) {
+    if (
+      subjects[id].necesaryMarks[subjects[id].selectedEvaluation][
+        barElem.dataset.exam
+      ] == null
+    ) {
       mark = 'ಥ_ಥ';
-    }else{
-      mark = subjects[id].necesaryMarks[subjects[id].selectedEvaluation][barElem.dataset.exam];
-    }    
+    } else {
+      mark =
+        subjects[id].necesaryMarks[subjects[id].selectedEvaluation][
+          barElem.dataset.exam
+        ];
+    }
     barElem.children[0].textContent = mark;
   }
   for (let j = 0; j < inUndone.length; j++) {
     let mark = '';
-    if (subjects[id].necesaryMarks[subjects[id].selectedEvaluation][inUndone[j].dataset.exam] == null) {
+    if (
+      subjects[id].necesaryMarks[subjects[id].selectedEvaluation][
+        inUndone[j].dataset.exam
+      ] == null
+    ) {
       mark = 'ಥ_ಥ';
-    }else{
-      mark = subjects[id].necesaryMarks[subjects[id].selectedEvaluation][inUndone[j].dataset.exam];
+    } else {
+      mark =
+        subjects[id].necesaryMarks[subjects[id].selectedEvaluation][
+          inUndone[j].dataset.exam
+        ];
     }
     inUndone[j].placeholder = mark;
   }
 }
 
 function displayFinalMark(id) {
-  let cardFinalMark = getCard(id).getElementsByClassName('subject-finalMark')[0];
-  cardFinalMark.textContent = subjects[id].finalMark[subjects[id].selectedEvaluation];
-  cardFinalMark.style.color = (isPassed(id,subjects[id].selectedEvaluation) ? '#5a9764' : '#b9574c');
+  let cardFinalMark =
+    getCard(id).getElementsByClassName('subject-finalMark')[0];
+  cardFinalMark.textContent =
+    subjects[id].finalMark[subjects[id].selectedEvaluation];
+  cardFinalMark.style.color = isPassed(id, subjects[id].selectedEvaluation)
+    ? '#5a9764'
+    : '#b9574c';
 }
 
 function updateNecesaryMark(id) {
   let evaluation = subjects[id].selectedEvaluation;
-  let identifiers = getConditionIdentifiers(id,evaluation);
-  for (const exam in subjects[id].necesaryMarks[evaluation]) { 
+  let identifiers = getConditionIdentifiers(id, evaluation);
+  for (const exam in subjects[id].necesaryMarks[evaluation]) {
     subjects[id].necesaryMarks[evaluation][exam] = undefined;
   }
 
   for (const exam in identifiers.exams) {
-    switch(identifiers.exams[exam].operator){
-      case '>=': subjects[id].necesaryMarks[evaluation][exam] = identifiers.exams[exam].value; break;
+    switch (identifiers.exams[exam].operator) {
+      case '>=':
+        subjects[id].necesaryMarks[evaluation][exam] =
+          identifiers.exams[exam].value;
+        break;
     }
   }
-  
+
   for (const type in identifiers.types) {
-    switch(identifiers.types[type].operator){
-      case '>=': 
-        for (const exam in subjects[id].necesaryMarks[evaluation]) { 
+    switch (identifiers.types[type].operator) {
+      case '>=':
+        for (const exam in subjects[id].necesaryMarks[evaluation]) {
           if (subjects[id].evaluations[evaluation].exams[exam].type == type) {
-            if (subjects[id].necesaryMarks[evaluation][exam] !== undefined && subjects[id].necesaryMarks[evaluation][exam] < identifiers.types[type].value) {
-              subjects[id].necesaryMarks[evaluation][exam] = identifiers.types[type].value;
+            if (
+              subjects[id].necesaryMarks[evaluation][exam] !== undefined &&
+              subjects[id].necesaryMarks[evaluation][exam] <
+                identifiers.types[type].value
+            ) {
+              subjects[id].necesaryMarks[evaluation][exam] =
+                identifiers.types[type].value;
             }
           }
         }
@@ -676,7 +865,10 @@ function updateNecesaryMark(id) {
 function smallestNecessaryMark(id, evaluation) {
   let result = {};
   for (const exam in subjects[id].necesaryMarks[evaluation]) {
-    if(result.mark === undefined || result.mark < subjects[id].necesaryMarks[evaluation][exam]){
+    if (
+      result.mark === undefined ||
+      result.mark < subjects[id].necesaryMarks[evaluation][exam]
+    ) {
       result.exam = exam;
       result.mark = subjects[id].necesaryMarks[evaluation][exam];
     }
@@ -689,9 +881,14 @@ function updateFinalMark(id, confetti = true) {
   for (const evaluation in subjects[id].evaluations) {
     subjects[id].finalMark[evaluation] = 0;
     for (const exam in subjects[id].evaluations[evaluation].exams) {
-      if (!isUndone(id, exam)) subjects[id].finalMark[evaluation] += subjects[id].grades[exam] * subjects[id].evaluations[evaluation].exams[exam].weight;
+      if (!isUndone(id, exam))
+        subjects[id].finalMark[evaluation] +=
+          subjects[id].grades[exam] *
+          subjects[id].evaluations[evaluation].exams[exam].weight;
     }
-    subjects[id].finalMark[evaluation] = round(subjects[id].finalMark[evaluation]);
+    subjects[id].finalMark[evaluation] = round(
+      subjects[id].finalMark[evaluation]
+    );
   }
   let nowPassed = isPassed(id);
   if (confetti && !subjects[id].passed && nowPassed) showConfetti(getCard(id));
@@ -704,7 +901,7 @@ function updateMarkFromCardInput(id, exam, mark, input) {
   let barElem = getBarElem(id, exam);
 
   if (!isNaN(mark) && mark != '') {
-    subjects[id].passed = isPassed(id)
+    subjects[id].passed = isPassed(id);
     subjects[id].grades[exam] = Number(mark);
     uploadGrade(id, exam, subjects[id].grades[exam]);
 
@@ -727,7 +924,8 @@ function updateCardGrades(id) {
   for (let div of card.getElementsByClassName('subject-bar')[0].children) {
     div.classList.add('scolN');
   }
-  for (const exam in subjects[id].evaluations[subjects[id].selectedEvaluation].exams) {
+  for (const exam in subjects[id].evaluations[subjects[id].selectedEvaluation]
+    .exams) {
     let input = getInput(id, exam);
     input.classList.add('scolN2');
     input.value = '';
@@ -741,19 +939,25 @@ function updateCardGrades(id) {
       input.value = subjects[id].grades[exam];
       input.classList.remove('scolN2');
     } else {
-      console.log(`Exam ${exam} of ${subjects[id].shortName} (${id}) is not in the card`);
+      console.log(
+        `Exam ${exam} of ${subjects[id].shortName} (${id}) is not in the card`
+      );
     }
   }
   updateAndDisplayMarks(id);
 }
 
 // updates the selectedEvaluation, saves the subjects and displays the new selectedEvaluation
-function setSelectedEvaluation(id, evaluation = subjects[id].selectedEvaluation) {
+function setSelectedEvaluation(
+  id,
+  evaluation = subjects[id].selectedEvaluation
+) {
   subjects[id].selectedEvaluation = evaluation;
   saveSubjectsLocalStorage();
   let card = getCard(id);
   card.getElementsByClassName('subject-bar')[0].innerHTML = generateBar(id);
-  card.getElementsByClassName('grades-input')[0].innerHTML = generateInputs(id) + generateEvaluations(id, evaluation);
+  card.getElementsByClassName('grades-input')[0].innerHTML =
+    generateInputs(id) + generateEvaluations(id, evaluation);
   updateHeigth(card.getElementsByClassName('grades-input')[0]);
   updateAndDisplayMarks(id);
 }
@@ -776,8 +980,8 @@ function showConfetti(elem, conf) {
         '#0B7285',
         '#15AABF',
         '#EE1233',
-        '#40C057'
-      ]
+        '#40C057',
+      ],
     };
   }
   window.confetti(elem, conf);
@@ -786,7 +990,7 @@ function showConfetti(elem, conf) {
 // returns the card DOM element with that id
 function getCard(id) {
   let elem = document.getElementById('card-' + id);
-  if(!elem) {
+  if (!elem) {
     createSubjectCardCollapsed(id);
     elem = document.getElementById('card-' + id);
   }
@@ -795,7 +999,7 @@ function getCard(id) {
 // returns the input DOM element of the card from the subject id and exam exam
 function getInput(id, exam) {
   let elem = document.getElementById('in-' + id + exam);
-  if(!elem) {
+  if (!elem) {
     createSubjectCardCollapsed(id);
     elem = document.getElementById('in-' + id + exam);
   }
@@ -804,7 +1008,7 @@ function getInput(id, exam) {
 // returns the card bar DOM element of the card from the subject id and exam exam
 function getBarElem(id, exam) {
   let elem = document.getElementById('bar-' + id + exam);
-  if(!elem) {
+  if (!elem) {
     createSubjectCardCollapsed(id);
     elem = document.getElementById('bar-' + id + exam);
   }
@@ -818,36 +1022,48 @@ function gradeCalcAllEqual(id, evaluation) {
   let exams = [];
   let expectedMark = 0;
   for (const exam in subjects[id].evaluations[evaluation].exams) {
-    if (isUndone(id, exam)){
-      if(subjects[id].necesaryMarks[evaluation][exam] == undefined) {
-        sumUndoneExams += subjects[id].evaluations[evaluation].exams[exam].weight;
+    if (isUndone(id, exam)) {
+      if (subjects[id].necesaryMarks[evaluation][exam] == undefined) {
+        sumUndoneExams +=
+          subjects[id].evaluations[evaluation].exams[exam].weight;
         exams.push(exam);
-      }else{
-        expectedMark += subjects[id].evaluations[evaluation].exams[exam].weight * subjects[id].necesaryMarks[evaluation][exam];
+      } else {
+        expectedMark +=
+          subjects[id].evaluations[evaluation].exams[exam].weight *
+          subjects[id].necesaryMarks[evaluation][exam];
       }
-    }else{      
-      expectedMark += subjects[id].evaluations[evaluation].exams[exam].weight * subjects[id].grades[exam];
+    } else {
+      expectedMark +=
+        subjects[id].evaluations[evaluation].exams[exam].weight *
+        subjects[id].grades[exam];
     }
   }
   let passMark = subjects[id].evaluations[evaluation].passMark || 5;
   let necesaryMark = (passMark - expectedMark) / sumUndoneExams;
   let smallestNecesaryMark = smallestNecessaryMark(id, evaluation);
-  if (smallestNecesaryMark.mark != undefined && smallestNecesaryMark.mark < necesaryMark){
-    subjects[id].necesaryMarks[evaluation][smallestNecesaryMark.exam] = undefined;
+  if (
+    smallestNecesaryMark.mark != undefined &&
+    smallestNecesaryMark.mark < necesaryMark
+  ) {
+    subjects[id].necesaryMarks[evaluation][smallestNecesaryMark.exam] =
+      undefined;
     gradeCalcAllEqual(id, evaluation);
-  }else{
+  } else {
     let canPass = calcCondition(id, evaluation, false);
     for (const exam in subjects[id].evaluations[evaluation].exams) {
-      if(!subjects[id].necesaryMarks[evaluation][exam]) {
-        if (isUndone(id, exam)){
-          if(canPass === false){
+      if (!subjects[id].necesaryMarks[evaluation][exam]) {
+        if (isUndone(id, exam)) {
+          if (canPass === false) {
             subjects[id].necesaryMarks[evaluation][exam] = null;
-          }else{
-            subjects[id].necesaryMarks[evaluation][exam] = Math.max(0, round(necesaryMark));
+          } else {
+            subjects[id].necesaryMarks[evaluation][exam] = Math.max(
+              0,
+              round(necesaryMark)
+            );
           }
-        }
-        else {
-          subjects[id].necesaryMarks[evaluation][exam] = subjects[id].grades[exam];
+        } else {
+          subjects[id].necesaryMarks[evaluation][exam] =
+            subjects[id].grades[exam];
         }
       }
     }
@@ -856,7 +1072,9 @@ function gradeCalcAllEqual(id, evaluation) {
 
 //returns n rounded to d decimals (2)
 function round(n, d = 2) {
-  return (isNaN(n) || n === '' || n == undefined) ? undefined : Math.floor(Math.round(n * (10 ** d))) / (10 ** d);
+  return isNaN(n) || n === '' || n == undefined
+    ? undefined
+    : Math.floor(Math.round(n * 10 ** d)) / 10 ** d;
 }
 
 // returns a random number from min to max
@@ -870,13 +1088,16 @@ function ShowEasterEgg() {
   document.getElementById('congratulations').style.display = 'block';
   document.body.style.setProperty('--background-color', '#000');
   // document.body.classList.add('rainbow-bg');
-  let videoAspectRatio = 16/9;
-  if(document.documentElement.clientWidth*100/videoAspectRatio < document.documentElement.clientHeight*50){
-    document.body.style.paddingBottom = `${100/videoAspectRatio}vw`;
-  }else{
+  let videoAspectRatio = 16 / 9;
+  if (
+    (document.documentElement.clientWidth * 100) / videoAspectRatio <
+    document.documentElement.clientHeight * 50
+  ) {
+    document.body.style.paddingBottom = `${100 / videoAspectRatio}vw`;
+  } else {
     document.getElementsByTagName('body')[0].style.paddingBottom = '50vh';
   }
-  if(congratulationsVideo != undefined){
+  if (congratulationsVideo != undefined) {
     congratulationsVideo.setVolume(100);
     congratulationsVideo.playVideo();
   }
@@ -887,17 +1108,21 @@ function HideEasterEgg() {
   document.body.style.setProperty('--background-color', 'inherit');
   // document.body.classList.remove('rainbow-bg');
   document.body.style.paddingBottom = '0';
-  if(congratulationsVideo != undefined){
+  if (congratulationsVideo != undefined) {
     congratulationsVideo.pauseVideo();
   }
   congratulate();
 }
 
 var congratulationsVideo;
-function onYouTubeIframeAPIReady() {congratulationsVideo = new YT.Player('congratulations');}
+function onYouTubeIframeAPIReady() {
+  congratulationsVideo = new YT.Player('congratulations');
+}
 function congratulate() {
   if (hasPassedEverything()) {
-    document.getElementById('congratulations-gift').src = `media/gift_jump_once.gif?n=${Math.random()}`;
+    document.getElementById(
+      'congratulations-gift'
+    ).src = `media/gift_jump_once.gif?n=${Math.random()}`;
     document.getElementById('congratulations-button').style.display = 'block';
   } else {
     document.getElementById('congratulations-button').style.display = 'none';
@@ -915,26 +1140,31 @@ function hasPassedEverything() {
 
 // returns true if the subject with that id has a finalMark greater than mark (5) in the evaluation (selectedEvaluation)
 function isPassed(id, evaluation = subjects[id].selectedEvaluation) {
-  return subjects[id].evaluations[evaluation] != undefined && subjects[id].finalMark[evaluation] >= (subjects[id].evaluations[evaluation].passMark || 5) && calcCondition(id, evaluation) ;
+  return (
+    subjects[id].evaluations[evaluation] != undefined &&
+    subjects[id].finalMark[evaluation] >=
+      (subjects[id].evaluations[evaluation].passMark || 5) &&
+    calcCondition(id, evaluation)
+  );
 }
 
 function getExamTypesGrades(id, evaluation) {
   let types = {};
   for (const examName in subjects[id].evaluations[evaluation].exams) {
     let exam = subjects[id].evaluations[evaluation].exams[examName];
-    if(!types[exam.type]) types[exam.type] = 0;
+    if (!types[exam.type]) types[exam.type] = 0;
     types[exam.type] += exam.weight * (subjects[id].grades[examName] || 0);
   }
   return types;
 }
 
 function getConditionIdentifiers(id, evaluation) {
-  if(!subjects[id].evaluations[evaluation].condition) return true;
+  if (!subjects[id].evaluations[evaluation].condition) return true;
   let tree = jsep(subjects[id].evaluations[evaluation].condition);
   let identifiers = {
     exams: {},
     evaluations: {},
-    types: {}
+    types: {},
   };
   let types = Object.keys(getExamTypesGrades(id, evaluation));
   findIdentifiersTree(tree, identifiers, types, id, evaluation);
@@ -942,75 +1172,105 @@ function getConditionIdentifiers(id, evaluation) {
 }
 
 function findIdentifiersTree(tree, identifiers, types, id, evaluation) {
-  switch(tree.type){
+  switch (tree.type) {
     case 'LogicalExpression':
     case 'BinaryExpression':
-      if(tree["left"].type == 'Identifier' && tree["right"].type == 'Literal'){
-        identifiers[identifierCategory(tree["left"].name, id, evaluation,types)][tree["left"].name] = {
-          value: tree["right"].value,
-          operator: tree.operator
+      if (
+        tree['left'].type == 'Identifier' &&
+        tree['right'].type == 'Literal'
+      ) {
+        identifiers[
+          identifierCategory(tree['left'].name, id, evaluation, types)
+        ][tree['left'].name] = {
+          value: tree['right'].value,
+          operator: tree.operator,
         };
-      }else{
-        findIdentifiersTree(tree["left"], identifiers, types, id, evaluation);
-        findIdentifiersTree(tree["right"], identifiers, types, id, evaluation);
+      } else {
+        findIdentifiersTree(tree['left'], identifiers, types, id, evaluation);
+        findIdentifiersTree(tree['right'], identifiers, types, id, evaluation);
       }
       break;
   }
 }
 
 function identifierCategory(identifier, id, evaluation, types = undefined) {
-  if(Object.keys(subjects[id].evaluations[evaluation].exams).includes(identifier)) return 'exams';
-  if(Object.keys(subjects[id].evaluations).includes(identifier)) return 'evaluations';
-  if(types == undefined) types = Object.keys(getExamTypesGrades(id, evaluation));
-  if(types.includes(identifier)) return 'types';
+  if (
+    Object.keys(subjects[id].evaluations[evaluation].exams).includes(identifier)
+  )
+    return 'exams';
+  if (Object.keys(subjects[id].evaluations).includes(identifier))
+    return 'evaluations';
+  if (types == undefined)
+    types = Object.keys(getExamTypesGrades(id, evaluation));
+  if (types.includes(identifier)) return 'types';
 }
 
 function calcCondition(id, evaluation, now = true) {
-  if(!subjects[id].evaluations[evaluation].condition) return true;
+  if (!subjects[id].evaluations[evaluation].condition) return true;
   let tree = jsep(subjects[id].evaluations[evaluation].condition);
   let values = {
     ...subjects[id].grades,
     ...subjects[id].finalMark,
-    ...getExamTypesGrades(id, evaluation)
+    ...getExamTypesGrades(id, evaluation),
   };
   return evaluationTree(tree, values, now);
 }
 
 function evaluationTree(tree, values, now) {
-  switch(tree.type){
+  switch (tree.type) {
     case 'LogicalExpression':
       switch (tree.operator) {
-        case '&&': return evaluationTree(tree["left"], values, now) && evaluationTree(tree["right"], values, now); break;
-        default:   return null; break;
+        case '&&':
+          return (
+            evaluationTree(tree['left'], values, now) &&
+            evaluationTree(tree['right'], values, now)
+          );
+          break;
+        default:
+          return null;
+          break;
       }
       break;
     case 'BinaryExpression':
-      switch(tree.operator){
-        case '>=': 
-          if(tree["left"].type != 'Identifier' || tree["right"].type != 'Literal'){
+      switch (tree.operator) {
+        case '>=':
+          if (
+            tree['left'].type != 'Identifier' ||
+            tree['right'].type != 'Literal'
+          ) {
             return null;
-          }else{
-            if(!now && values[tree["left"].name] == undefined) return true;
-            else return (values[tree["left"].name] || 0) >= tree["right"].value;
+          } else {
+            if (!now && values[tree['left'].name] == undefined) return true;
+            else return (values[tree['left'].name] || 0) >= tree['right'].value;
           }
           break;
-        case '<': 
-          if(tree["left"].type != 'Identifier' || tree["right"].type != 'Literal' || identifierCategory(tree["left"].name) != 'evaluations'){
+        case '<':
+          if (
+            tree['left'].type != 'Identifier' ||
+            tree['right'].type != 'Literal' ||
+            identifierCategory(tree['left'].name) != 'evaluations'
+          ) {
             return null;
-          }else{
-            if(!now && values[tree["left"].name] == undefined) return true;
-            else return (values[tree["left"].name] || 0) < tree["lerightft"].value;
+          } else {
+            if (!now && values[tree['left'].name] == undefined) return true;
+            else
+              return (values[tree['left'].name] || 0) < tree['lerightft'].value;
           }
           break;
-        default: return null; break;
+        default:
+          return null;
+          break;
       }
       break;
     case 'Literal':
-      return tree.value; break;
+      return tree.value;
+      break;
     case 'Identifier':
-      return values[tree.name] || 0; break;
+      return values[tree.name] || 0;
+      break;
     default:
-      return null; break;
+      return null;
+      break;
   }
 }
 
@@ -1020,7 +1280,11 @@ function evaluationTree(tree, values, now) {
 function toggleExpandCard(event, card) {
   let inputs = card.getElementsByClassName('grades-input')[0];
   let bar = card.getElementsByClassName('subject-bar')[0];
-  if (!['INPUT', 'SELECT', 'OPTION', 'BUTTON', 'IMG'].includes(event.target.tagName)) {
+  if (
+    !['INPUT', 'SELECT', 'OPTION', 'BUTTON', 'IMG'].includes(
+      event.target.tagName
+    )
+  ) {
     if (bar.contains(event.target)) {
       inputs.classList.remove('hidden');
     } else {
@@ -1031,7 +1295,8 @@ function toggleExpandCard(event, card) {
 }
 
 function updateHeigth(elem) {
-  elem.style.height = (elem.classList.contains('hidden') ? 0 : elem.scrollHeight) + 'px';
+  elem.style.height =
+    (elem.classList.contains('hidden') ? 0 : elem.scrollHeight) + 'px';
 }
 
 //Puts the cursor and selects the content of the input
@@ -1047,9 +1312,9 @@ function appendElement(parent, str) {
   return element;
 }
 
-
 /* ------------------------------ Cards Remove animation ------------------------------ */
-var cards; updateCards();
+var cards;
+updateCards();
 var cardsOldInfo = {};
 var cardsNewInfo = cardsOldInfo;
 
@@ -1066,9 +1331,9 @@ function getCardsInfo() {
   cards.forEach((card) => {
     var rect = card.getBoundingClientRect();
     cardsInfo[card.id] = {
-      "x": rect.left,
-      "y": rect.top,
-      "width": (rect.right - rect.left)
+      x: rect.left,
+      y: rect.top,
+      width: rect.right - rect.left,
     };
   });
   return cardsInfo;
@@ -1081,13 +1346,22 @@ function moveCards() {
     // console.log(card.id);
     // console.log(cardsOldInfo[card.id]);
     // console.log(cardsNewInfo[card.id]);
-    card.animate([
-      { transform: `translate(${cardsOldInfo[card.id].x - cardsNewInfo[card.id].x}px, ${cardsOldInfo[card.id].y - cardsNewInfo[card.id].y}px) scaleX(${cardsOldInfo[card.id].width / cardsNewInfo[card.id].width})` },
-      { transform: 'none' }
-    ], {
+    card.animate(
+      [
+        {
+          transform: `translate(${
+            cardsOldInfo[card.id].x - cardsNewInfo[card.id].x
+          }px, ${cardsOldInfo[card.id].y - cardsNewInfo[card.id].y}px) scaleX(${
+            cardsOldInfo[card.id].width / cardsNewInfo[card.id].width
+          })`,
+        },
+        { transform: 'none' },
+      ],
+      {
         duration: 250,
-        easing: 'ease-out'
-      });
+        easing: 'ease-out',
+      }
+    );
   });
 }
 
@@ -1104,8 +1378,7 @@ function isUndone(id, exam) {
 
 function isEmpty(obj) {
   for (let key in obj) {
-    if (obj.hasOwnProperty(key))
-      return false;
+    if (obj.hasOwnProperty(key)) return false;
   }
   return true;
 }
@@ -1113,11 +1386,15 @@ function isEmpty(obj) {
 function showToast(message, action, code, time = 8000) {
   toast.style.display = 'none';
   // setCSSvar('toastTime', Math.max(0, (time-3000) +'ms'));
-  toast.style.animation = `goUp 500ms cubic-bezier(0.215, 0.61, 0.355, 1), fadeOut ${Math.max(0, (time - 3000))}ms 2.5s cubic-bezier(1, 0, 1, 1), opaque 2.5s`;
+  toast.style.animation = `goUp 500ms cubic-bezier(0.215, 0.61, 0.355, 1), fadeOut ${Math.max(
+    0,
+    time - 3000
+  )}ms 2.5s cubic-bezier(1, 0, 1, 1), opaque 2.5s`;
   toast.offsetHeight;
   toast.style.display = 'flex';
   toast.firstChild.innerHTML = `<p>${message}</p>`;
-  if (action && code) toast.firstChild.innerHTML += `<button onclick="${code}">${action}</button>`;
+  if (action && code)
+    toast.firstChild.innerHTML += `<button onclick="${code}">${action}</button>`;
 
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
@@ -1141,11 +1418,11 @@ function hideLoader(position) {
 }
 
 function getSubjectsLocalStorage() {
-  return JSON.parse(localStorage.getItem("subjects")) || {};
+  return JSON.parse(localStorage.getItem('subjects')) || {};
 }
 
 function saveSubjectsLocalStorage() {
-  localStorage.setItem("subjects", JSON.stringify(subjects || {}));
+  localStorage.setItem('subjects', JSON.stringify(subjects || {}));
   return subjects;
 }
 
@@ -1158,7 +1435,7 @@ function saveSubjectsLocalStorage() {
 function toNewEvalNeeeeeeeeew(evaluations) {
   var evaluationNew = {};
   for (let evaluation in evaluations) {
-    if(evaluations[evaluation].exams) return evaluations;
+    if (evaluations[evaluation].exams) return evaluations;
     evaluationNew[evaluation] = {};
     evaluationNew[evaluation].condition = '';
     evaluationNew[evaluation].passMark = 5;
@@ -1166,7 +1443,8 @@ function toNewEvalNeeeeeeeeew(evaluations) {
     for (let examType in evaluations[evaluation]) {
       for (let exam in evaluations[evaluation][examType]) {
         evaluationNew[evaluation].exams[exam] = {};
-        evaluationNew[evaluation].exams[exam].weight = evaluations[evaluation][examType][exam];
+        evaluationNew[evaluation].exams[exam].weight =
+          evaluations[evaluation][examType][exam];
         evaluationNew[evaluation].exams[exam].type = examType;
       }
     }
@@ -1195,14 +1473,14 @@ function getRandomID() {
 //   }
 // }
 
-
 function toNewEval(evaluations) {
   let newEval = {};
   for (const evaluation in evaluations) {
     for (const exam in evaluations[evaluation].exams) {
       if (!newEval[exam]) newEval[exam] = {};
       if (!newEval[exam].weight) newEval[exam].weight = {};
-      newEval[exam].weight[evaluation] = evaluations[evaluation].exams[exam].weight;
+      newEval[exam].weight[evaluation] =
+        evaluations[evaluation].exams[exam].weight;
       newEval[exam].mark = evaluations[evaluation].exams[exam].mark;
       newEval[exam].examType = evaluations[evaluation].exams[exam].type;
     }
@@ -1212,31 +1490,34 @@ function toNewEval(evaluations) {
 
 function updateSumWeight(grid, n) {
   let total = 0;
-  for (let element of grid.querySelectorAll(`.edit-weight[data-evaluation='${n}'] > input`)) {
+  for (let element of grid.querySelectorAll(
+    `.edit-weight[data-evaluation='${n}'] > input`
+  )) {
     total += element.value * 1;
   }
-  grid.querySelector(`.edit-total[data-evaluation='${n}']`).textContent = round(total, 4) + '%';
+  grid.querySelector(`.edit-total[data-evaluation='${n}']`).textContent =
+    round(total, 4) + '%';
   return total;
 }
 
-function freeze(message="", maxTime=10) {
+function freeze(message = '', maxTime = 10) {
   frozenLayerMessage = message;
-  frozenLayer.style.display = "flex";
+  frozenLayer.style.display = 'flex';
   frozenLayer.style.opacity = 1;
 
-  frozenLayerWarning.style.display = "none";
+  frozenLayerWarning.style.display = 'none';
   frozenWarningTimeout = setTimeout(() => {
-    frozenLayerWarning.style.display = "inline-block";
-  }, maxTime*1000);
+    frozenLayerWarning.style.display = 'inline-block';
+  }, maxTime * 1000);
 }
 
-function unfreeze(){
-  frozenLayerMessage = "Cargando...";
-  frozenLayer.style.display = "none";
+function unfreeze() {
+  frozenLayerMessage = 'Cargando...';
+  frozenLayer.style.display = 'none';
   frozenLayer.style.opacity = 0;
 
   clearTimeout(frozenWarningTimeout);
-  frozenLayerWarning.style.display = "none";
+  frozenLayerWarning.style.display = 'none';
 }
 
 // Adds or removes exams or evaluation input elements
@@ -1249,52 +1530,159 @@ function editUIUpdateGrid(grid, e, popup) {
   // if input is filled
   if (input.value) {
     // if is last evaluation --> add another column
-    if (parseInt(elem.dataset.evaluation) == parseInt(grid.dataset.evaluations)) {
+    if (
+      parseInt(elem.dataset.evaluation) == parseInt(grid.dataset.evaluations)
+    ) {
       ++grid.dataset.evaluations;
 
-      appendElement(grid, `<input style="grid-row: 1; grid-column: ${(5 + parseInt(grid.dataset.evaluations))};" class="edit-new-evaluation" data-evaluation="${grid.dataset.evaluations}" type="text" name="evaluationName" value="" placeholder="NEW" autocomplete="off" oninput="updateEvalName(this.dataset.evaluation, this.value, '${popup}');">`);
+      appendElement(
+        grid,
+        `<input style="grid-row: 1; grid-column: ${
+          5 + parseInt(grid.dataset.evaluations)
+        };" class="edit-new-evaluation" data-evaluation="${
+          grid.dataset.evaluations
+        }" type="text" name="evaluationName" value="" placeholder="NEW" autocomplete="off" oninput="updateEvalName(this.dataset.evaluation, this.value, '${popup}');">`
+      );
       for (let i = 0; i < parseInt(grid.dataset.exams); i++) {
-        editGridFadeOrUnfade(grid, appendElement(grid, `<div style="grid-row: ${(2 + i * 1)}; grid-column: ${(5 + parseInt(grid.dataset.evaluations))};" class="edit-weight edit-new-evaluation" data-exam="${i}" data-evaluation="${grid.dataset.evaluations}" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`), ['exam']);
+        editGridFadeOrUnfade(
+          grid,
+          appendElement(
+            grid,
+            `<div style="grid-row: ${2 + i * 1}; grid-column: ${
+              5 + parseInt(grid.dataset.evaluations)
+            };" class="edit-weight edit-new-evaluation" data-exam="${i}" data-evaluation="${
+              grid.dataset.evaluations
+            }" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`
+          ),
+          ['exam']
+        );
       }
-      appendElement(grid, `<div style="grid-row: ${(2 + parseInt(grid.dataset.exams))}; grid-column: ${(4 + parseInt(grid.dataset.evaluations))};" class="edit-weight edit-new-exam" data-exam="${grid.dataset.exams}" data-evaluation="${grid.dataset.evaluations - 1}" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`);
-      appendElement(grid, `<span style="grid-row: ${(3 + parseInt(grid.dataset.exams))}; grid-column: ${(4 + parseInt(grid.dataset.evaluations))};" class="edit-total" data-evaluation="${-1 + parseInt(grid.dataset.evaluations)}">0%</span>`);
+      appendElement(
+        grid,
+        `<div style="grid-row: ${
+          2 + parseInt(grid.dataset.exams)
+        }; grid-column: ${
+          4 + parseInt(grid.dataset.evaluations)
+        };" class="edit-weight edit-new-exam" data-exam="${
+          grid.dataset.exams
+        }" data-evaluation="${
+          grid.dataset.evaluations - 1
+        }" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`
+      );
+      appendElement(
+        grid,
+        `<span style="grid-row: ${
+          3 + parseInt(grid.dataset.exams)
+        }; grid-column: ${
+          4 + parseInt(grid.dataset.evaluations)
+        };" class="edit-total" data-evaluation="${
+          -1 + parseInt(grid.dataset.evaluations)
+        }">0%</span>`
+      );
 
-      appendElement(conditionsElem, `<label class="edit-conditions-label" data-evaluation="${parseInt(grid.dataset.evaluations) - 1}"></label>`);
-      appendElement(conditionsElem, `<input class="edit-conditions-input" type="text" placeholder="nombreExamen >= 2" name="condition" data-evaluation="${parseInt(grid.dataset.evaluations) - 1}">`);
-      if(input.name = 'evaluationName') updateEvalName(parseInt(grid.dataset.evaluations) - 1, input.value, popup);
+      appendElement(
+        conditionsElem,
+        `<label class="edit-conditions-label" data-evaluation="${
+          parseInt(grid.dataset.evaluations) - 1
+        }"></label>`
+      );
+      appendElement(
+        conditionsElem,
+        `<input class="edit-conditions-input" type="text" placeholder="nombreExamen >= 2" name="condition" data-evaluation="${
+          parseInt(grid.dataset.evaluations) - 1
+        }">`
+      );
+      if ((input.name = 'evaluationName'))
+        updateEvalName(
+          parseInt(grid.dataset.evaluations) - 1,
+          input.value,
+          popup
+        );
 
       //if is last exam --> add another row
     } else if (parseInt(elem.dataset.exam) == parseInt(grid.dataset.exams)) {
       ++grid.dataset.exams;
 
-      appendElement(grid, `<input style="grid-row: ${(2 + parseInt(grid.dataset.exams))}; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="${grid.dataset.exams}" placeholder="NEW" autocomplete="off" maxlength="5">`);
-      appendElement(grid, `<input style="grid-row: ${(2 + parseInt(grid.dataset.exams))}; grid-column: 2;" class="edit-new-exam" type="text"   name="examType"   value="" data-exam="${grid.dataset.exams}" placeholder="Parciales">`);
-      appendElement(grid, `<input style="grid-row: ${(2 + parseInt(grid.dataset.exams))}; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="${grid.dataset.exams}" placeholder="-" autocomplete="off" min="0" max="10" step="0.01">`);
+      appendElement(
+        grid,
+        `<input style="grid-row: ${
+          2 + parseInt(grid.dataset.exams)
+        }; grid-column: 1;" class="edit-new-exam" type="text"   name="exam"       value="" data-exam="${
+          grid.dataset.exams
+        }" placeholder="NEW" autocomplete="off" maxlength="5">`
+      );
+      appendElement(
+        grid,
+        `<input style="grid-row: ${
+          2 + parseInt(grid.dataset.exams)
+        }; grid-column: 2;" class="edit-new-exam" type="text"   name="examType"   value="" data-exam="${
+          grid.dataset.exams
+        }" placeholder="Parciales">`
+      );
+      appendElement(
+        grid,
+        `<input style="grid-row: ${
+          2 + parseInt(grid.dataset.exams)
+        }; grid-column: 3;" class="edit-new-exam" type="number" name="mark"       value="" data-exam="${
+          grid.dataset.exams
+        }" placeholder="-" autocomplete="off" min="0" max="10" step="0.01">`
+      );
       for (let i = 0; i < grid.dataset.evaluations; i++) {
-        editGridFadeOrUnfade(grid, appendElement(grid, `<div style="grid-row: ${(2 + parseInt(grid.dataset.exams))}; grid-column: ${(5 + i * 1)};" class="edit-weight edit-new-exam" data-exam="${grid.dataset.exams}" data-evaluation="${i}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`), ['exam']);
+        editGridFadeOrUnfade(
+          grid,
+          appendElement(
+            grid,
+            `<div style="grid-row: ${
+              2 + parseInt(grid.dataset.exams)
+            }; grid-column: ${
+              5 + i * 1
+            };" class="edit-weight edit-new-exam" data-exam="${
+              grid.dataset.exams
+            }" data-evaluation="${i}"><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`
+          ),
+          ['exam']
+        );
       }
-      appendElement(grid, `<div style="grid-row: ${(1 + parseInt(grid.dataset.exams))}; grid-column: ${(5 + parseInt(grid.dataset.evaluations))};" class="edit-weight edit-new-evaluation" data-exam="${-1 + parseInt(grid.dataset.exams)}" data-evaluation="${grid.dataset.evaluations}" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`);
+      appendElement(
+        grid,
+        `<div style="grid-row: ${
+          1 + parseInt(grid.dataset.exams)
+        }; grid-column: ${
+          5 + parseInt(grid.dataset.evaluations)
+        };" class="edit-weight edit-new-evaluation" data-exam="${
+          -1 + parseInt(grid.dataset.exams)
+        }" data-evaluation="${
+          grid.dataset.evaluations
+        }" ><input type="number" name="weight" value="" placeholder="0" autocomplete="off" min="0" max="100" step="0.0001"></div>`
+      );
 
       for (let element of grid.querySelectorAll('.edit-total')) {
         element.style.gridRow = 3 + parseInt(grid.dataset.exams);
       }
     }
-  // if input is empty
+    // if input is empty
   } else {
     // add on blur event to delete
   }
 
   editGridFadeOrUnfade(grid, elem);
 
-  if (elem.classList.contains('edit-weight') && !elem.classList.contains('edit-new-evaluation') && !elem.classList.contains('edit-new-exam') && elem.value != '') {
+  if (
+    elem.classList.contains('edit-weight') &&
+    !elem.classList.contains('edit-new-evaluation') &&
+    !elem.classList.contains('edit-new-exam') &&
+    elem.value != ''
+  ) {
     updateSumWeight(grid, elem.dataset.evaluation);
   }
-
 }
 
-function editGridFadeOrUnfade(grid, element, check=['exam','evaluation']) {
+function editGridFadeOrUnfade(grid, element, check = ['exam', 'evaluation']) {
   for (const type of check) {
-    if (element.dataset[type] != undefined && parseInt(element.dataset[type]) < parseInt(grid.dataset[type+'s'])) {
+    if (
+      element.dataset[type] != undefined &&
+      parseInt(element.dataset[type]) < parseInt(grid.dataset[type + 's'])
+    ) {
       if (editGridIsEmpty(grid, type, parseInt(element.dataset[type]))) {
         editGridFade(grid, type, parseInt(element.dataset[type]));
       } else {
@@ -1302,15 +1690,24 @@ function editGridFadeOrUnfade(grid, element, check=['exam','evaluation']) {
       }
     }
   }
-  grid.querySelector('.grid-separator-evaluation').style.gridRow = `2 / ${2 + parseInt(grid.dataset.exams)}`;
+  grid.querySelector('.grid-separator-evaluation').style.gridRow = `2 / ${
+    2 + parseInt(grid.dataset.exams)
+  }`;
 }
 
 function editGridUnfade(grid, type, n) {
   for (let element of grid.querySelectorAll(`*[data-${type}='${n}'`)) {
-    if ((element.dataset.evaluation == undefined || parseInt(element.dataset.evaluation) < parseInt(grid.dataset.evaluations)) && (element.dataset.exam == undefined || parseInt(element.dataset.exam) < parseInt(grid.dataset.exams))) {
+    if (
+      (element.dataset.evaluation == undefined ||
+        parseInt(element.dataset.evaluation) <
+          parseInt(grid.dataset.evaluations)) &&
+      (element.dataset.exam == undefined ||
+        parseInt(element.dataset.exam) < parseInt(grid.dataset.exams))
+    ) {
       element.classList.remove(`edit-new-exam`);
       element.classList.remove(`edit-new-evaluation`);
-      if(['exam', 'examType', 'evaluationName'].includes(element.name)) element.required = true;
+      if (['exam', 'examType', 'evaluationName'].includes(element.name))
+        element.required = true;
     }
   }
 }
@@ -1323,14 +1720,18 @@ function editGridFade(grid, type, n) {
       element.required = false;
       element.parentNode.removeChild(element);
       removed = true;
-    }else if (parseInt(element.dataset[type]) > n) {
+    } else if (parseInt(element.dataset[type]) > n) {
       element.dataset[type] = parseInt(element.dataset[type]) - 1;
       switch (type) {
         case 'evaluation':
-          element.style.gridColumn = `${parseInt(element.dataset[type]) + 5} / auto`;
+          element.style.gridColumn = `${
+            parseInt(element.dataset[type]) + 5
+          } / auto`;
           break;
         case 'exam':
-          element.style.gridRow = `${parseInt(element.dataset[type]) + 2} / auto`;
+          element.style.gridRow = `${
+            parseInt(element.dataset[type]) + 2
+          } / auto`;
           break;
       }
     }
@@ -1340,15 +1741,18 @@ function editGridFade(grid, type, n) {
     if (parseInt(element.dataset[type]) == n) {
       element.classList.add(`edit-new-${type}`);
       element.parentNode.removeChild(element);
-    }else if (parseInt(element.dataset[type]) > n) {
+    } else if (parseInt(element.dataset[type]) > n) {
       element.dataset[type] = parseInt(element.dataset[type]) - 1;
     }
   }
-  if(removed) grid.dataset[type+'s'] = parseInt(grid.dataset[type+'s']) - 1;
+  if (removed)
+    grid.dataset[type + 's'] = parseInt(grid.dataset[type + 's']) - 1;
 }
 
 function editGridIsEmpty(grid, type, n) {
-  for (let element of grid.querySelectorAll(`input[data-${type}='${n}'], div[data-${type}='${n}'] > input`)) {
+  for (let element of grid.querySelectorAll(
+    `input[data-${type}='${n}'], div[data-${type}='${n}'] > input`
+  )) {
     if (element.value) return false;
   }
   return true;
@@ -1358,19 +1762,23 @@ function saveEditSubject() {
   let newSubject = readSubjectFromPopup(editSubjectPopup);
   let id = newSubject.id;
 
-  if(newSubject.shortName != subjects[id].shortName) uploadShortName(id, newSubject.shortName);
-  if(newSubject.fullName != subjects[id].fullName)   uploadFullName(id, newSubject.fullName);
-  if(newSubject.course != subjects[id].course)       uploadCourse(id, newSubject.course);
-  if(newSubject.faculty != subjects[id].faculty)     uploadFaculty(id, newSubject.faculty);
-  if(newSubject.uni != subjects[id].uni)             uploadUni(id, newSubject.uni);
-  if(newSubject.color != subjects[id].color)         uploadColor(id, newSubject.color);
-  if(JSON.stringify(newSubject.evaluations) === 
-     JSON.stringify(subjects[id].evaluations))       uploadEvaluation(id, newSubject.evaluations);
+  if (newSubject.shortName != subjects[id].shortName)
+    uploadShortName(id, newSubject.shortName);
+  if (newSubject.fullName != subjects[id].fullName)
+    uploadFullName(id, newSubject.fullName);
+  if (newSubject.course != subjects[id].course)
+    uploadCourse(id, newSubject.course);
+  if (newSubject.faculty != subjects[id].faculty)
+    uploadFaculty(id, newSubject.faculty);
+  if (newSubject.uni != subjects[id].uni) uploadUni(id, newSubject.uni);
+  if (newSubject.color != subjects[id].color) uploadColor(id, newSubject.color);
+  if (
+    JSON.stringify(newSubject.evaluations) ===
+    JSON.stringify(subjects[id].evaluations)
+  )
+    uploadEvaluation(id, newSubject.evaluations);
 
-  subjects[id] = completeSubject(
-    subjects[id],
-    newSubject
-  );
+  subjects[id] = completeSubject(subjects[id], newSubject);
 
   updateSubjectCardInfo(id);
 
@@ -1384,25 +1792,41 @@ function readSubjectFromPopup(popup) {
   let newEval = {};
   let grid = popup.querySelector('.edit-popup-grid');
 
-  for (let evaluationN = 0; evaluationN < parseInt(grid.dataset['evaluations']); evaluationN++) {
-    let evaluationNameElem = grid.querySelector(`input[name='evaluationName'][data-evaluation='${evaluationN}']`);
+  for (
+    let evaluationN = 0;
+    evaluationN < parseInt(grid.dataset['evaluations']);
+    evaluationN++
+  ) {
+    let evaluationNameElem = grid.querySelector(
+      `input[name='evaluationName'][data-evaluation='${evaluationN}']`
+    );
     if (evaluationNameElem) {
       let evaluation = evaluationNameElem.value;
       if (evaluation) {
         for (let examN = 0; examN < parseInt(grid.dataset['exams']); examN++) {
-          let exam = grid.querySelector(`input[name='exam'][data-exam='${examN}']`).value;
-          let examType = grid.querySelector(`input[name='examType'][data-exam='${examN}']`).value;
-          let weight = grid.querySelector(`div[data-exam='${examN}'][data-evaluation='${evaluationN}'] > input[name='weight']`).value / 100;
+          let exam = grid.querySelector(
+            `input[name='exam'][data-exam='${examN}']`
+          ).value;
+          let examType = grid.querySelector(
+            `input[name='examType'][data-exam='${examN}']`
+          ).value;
+          let weight =
+            grid.querySelector(
+              `div[data-exam='${examN}'][data-evaluation='${evaluationN}'] > input[name='weight']`
+            ).value / 100;
           if (exam && examType && weight) {
             if (!newEval[evaluation]) newEval[evaluation] = {};
             if (!newEval[evaluation].exams) newEval[evaluation].exams = {};
-            if (!newEval[evaluation].exams[exam]) newEval[evaluation].exams[exam] = {};
+            if (!newEval[evaluation].exams[exam])
+              newEval[evaluation].exams[exam] = {};
             newEval[evaluation].exams[exam].weight = weight;
             newEval[evaluation].exams[exam].type = examType;
           }
         }
-      let condition = popup.querySelector(`input[name='condition'][data-evaluation='${evaluationN}']`).value;
-      if (condition) {
+        let condition = popup.querySelector(
+          `input[name='condition'][data-evaluation='${evaluationN}']`
+        ).value;
+        if (condition) {
           // if(!calcCondition(...)) {stop edition} // TODO: check if condition is valid
           newEval[evaluation].condition = condition;
         }
@@ -1414,11 +1838,11 @@ function readSubjectFromPopup(popup) {
   return {
     id,
     shortName: popup.querySelector('input[name="shortName"]').value,
-    fullName:  popup.querySelector('input[name="fullName"]').value,
-    course:    popup.querySelector('input[name="course"]').value,
-    faculty:   popup.querySelector('input[name="faculty"]').value,
-    uni:       popup.querySelector('input[name="uni"]').value,
-    color:     popup.querySelector('input[name="color-bar"]:checked').value,
+    fullName: popup.querySelector('input[name="fullName"]').value,
+    course: popup.querySelector('input[name="course"]').value,
+    faculty: popup.querySelector('input[name="faculty"]').value,
+    uni: popup.querySelector('input[name="uni"]').value,
+    color: popup.querySelector('input[name="color-bar"]:checked').value,
     evaluations: newEval,
   };
 }
@@ -1426,8 +1850,8 @@ function readSubjectFromPopup(popup) {
 function saveViewSubject() {
   let newSubject = readSubjectFromPopup(viewSubjectPopup);
   let id = newSubject.id;
-  
-  if(isValidSubjectFromPopup(newSubject)){
+
+  if (isValidSubjectFromPopup(newSubject)) {
     subjectsToAdd[id] = newSubject;
   }
 }
@@ -1436,13 +1860,13 @@ async function saveNewSubject() {
   let newSubject = readSubjectFromPopup(newSubjectPopup);
   delete newSubject.id;
 
-  if(isValidSubjectFromPopup(newSubject)){
+  if (isValidSubjectFromPopup(newSubject)) {
     freeze(`Creando asignatura`, 10);
     let id = await uploadSubject(newSubject);
     unfreeze();
-    
-    if(!id) showToast('Error al subir')
-    if(!uid) showToast('Inicia sesión para compartir assignaturas')
+
+    if (!id) showToast('Error al subir');
+    if (!uid) showToast('Inicia sesión para compartir assignaturas');
     addSubject(id, newSubject);
     router.navigate(`/`);
   }
@@ -1459,7 +1883,11 @@ function deleteSubject(id) {
     userDB.update(obj);
   }
   removeCard(getCard(id));
-  showToast(`Has borrado <b>${removedSubject.shortName}</b>`, 'Deshacer', 'undoRemoveSubject();');
+  showToast(
+    `Has borrado <b>${removedSubject.shortName}</b>`,
+    'Deshacer',
+    'undoRemoveSubject();'
+  );
 
   if (isEmpty(subjects)) showTutorial();
   congratulate();
@@ -1469,7 +1897,7 @@ function undoRemoveSubject() {
   let id = removedSubjectId;
   subjects[id] = removedSubject;
   createSubjectCardCollapsed(id);
-  saveSubjectsLocalStorage()
+  saveSubjectsLocalStorage();
   if (!isAnonymous) {
     let obj = {};
     obj['subjects.' + id + '.grades'] = subjects[id].grades;
@@ -1484,7 +1912,9 @@ function undoRemoveSubject() {
 
 function hideTutorial() {
   document.getElementById('tutorial').style.display = 'none';
-  document.getElementById('add-button-topbar').classList.remove('focus-animation-loop');
+  document
+    .getElementById('add-button-topbar')
+    .classList.remove('focus-animation-loop');
 }
 
 function showTutorial() {
@@ -1499,11 +1929,17 @@ provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
 
 firebase.auth().useDeviceLanguage();
 
-firebase.auth().getRedirectResult().catch(function (error) { console.error(error); });
+firebase
+  .auth()
+  .getRedirectResult()
+  .catch(function (error) {
+    console.error(error);
+  });
 
 firebase.auth().onAuthStateChanged(function (user) {
   let bntLogin = document.getElementById('loginButton');
-  if (user) { // User is signed in.
+  if (user) {
+    // User is signed in.
 
     displayName = user.displayName;
     photoURL = user.photoURL;
@@ -1515,7 +1951,10 @@ firebase.auth().onAuthStateChanged(function (user) {
     bntLogin.textContent = 'Cerrar sesión';
     bntLogin.classList.add('btn-red');
     bntLogin.classList.remove('btn-green');
-    bntLogin.onclick = function () { logoutGoogle(); window.history.back(); };
+    bntLogin.onclick = function () {
+      logoutGoogle();
+      window.history.back();
+    };
 
     //showToast(`Bienvenido de nuevo <b>${displayName}</b> 😊`);
 
@@ -1523,7 +1962,8 @@ firebase.auth().onAuthStateChanged(function (user) {
     userDB = db.collection('users').doc(uid);
 
     getAndDisplayUserSubjects();
-  } else { // User is signed out.
+  } else {
+    // User is signed out.
     hideLoader('dashboard');
     displayName = 'Anónimo';
     photoURL = 'media/profile-pic.jpg';
@@ -1531,17 +1971,28 @@ firebase.auth().onAuthStateChanged(function (user) {
     uid = 0;
     userDB = null;
 
-    console.info('Signed out')
+    console.info('Signed out');
     bntLogin.textContent = 'Iniciar sesión';
     bntLogin.classList.remove('btn-red');
     bntLogin.classList.add('btn-green');
-    bntLogin.onclick = function () { loginGoogle(); window.history.back(); };
-    showToast('Para guardar tus notas en la nube', 'Inicia sesión', 'loginGoogle();');
+    bntLogin.onclick = function () {
+      loginGoogle();
+      window.history.back();
+    };
+    showToast(
+      'Para guardar tus notas en la nube',
+      'Inicia sesión',
+      'loginGoogle();'
+    );
   }
-  document.getElementById('user-container').children[1].children[0].src = photoURL;
-  document.getElementById('profile-topbar').src = isAnonymous ? 'media/user-circle.svg' : photoURL;
-  document.getElementById('user-container').children[1].children[1].textContent = displayName;
-
+  document.getElementById('user-container').children[1].children[0].src =
+    photoURL;
+  document.getElementById('profile-topbar').src = isAnonymous
+    ? 'media/user-circle.svg'
+    : photoURL;
+  document.getElementById(
+    'user-container'
+  ).children[1].children[1].textContent = displayName;
 });
 
 function loginGoogle() {
@@ -1565,16 +2016,29 @@ function logoutGoogle() {
 //   }
 // }
 
-function uploadSubject(subject) { // TODO: add sanitise as cloud function
-  if (subject != undefined && subject != null && subject != '' && subject != {} && subject != []) {
-    if(uid){
-      return subjectsDB.add({creator: displayName, creatorId: uid, creationDate: new Date(), ...subject})
+function uploadSubject(subject) {
+  // TODO: add sanitise as cloud function
+  if (
+    subject != undefined &&
+    subject != null &&
+    subject != '' &&
+    subject != {} &&
+    subject != []
+  ) {
+    if (uid) {
+      return subjectsDB
+        .add({
+          creator: displayName,
+          creatorId: uid,
+          creationDate: new Date(),
+          ...subject,
+        })
         .then((doc) => {
           console.log(`Created ${subject.shortName} with id ${doc.id}`);
           return doc.id;
         })
         .catch((error) => {
-          console.error("Error creating subject ", error);
+          console.error('Error creating subject ', error);
           return false;
         });
     } else return 'local-id-' + getRandomID();
@@ -1584,34 +2048,67 @@ function uploadSubject(subject) { // TODO: add sanitise as cloud function
 function isValidSubjectFromPopup(subject) {
   // console.log(subject);
   // console.log(isEmpty(subject));
-  
+
   let wrongValue = '';
 
-  if(!subject.shortName){ showToast(`Rellena el Nombre`);       return false; }
-  if(!subject.fullName){  showToast(`Rellena el Nombre Largo`); return false; }
-  if(!subject.course){    showToast(`Rellena el Curso`);        return false; }
-  if(!subject.faculty){   showToast(`Rellena la Facultad`);     return false; }
-  if(!subject.uni){       showToast(`Rellena la Universidad`);  return false; }
-  if(!subject.color){     showToast(`Escoje un Color`);         return false; }
-  if(isEmpty(subject.evaluations)){ showToast(`Rellena la Evaluación`); return false; }
-  
-  // TODO: To implement this functions we need to check them before the subject is read
-  
-  for (const evaluation in subject.evaluations) {
-    if(isEmpty(subject.evaluations[evaluation].exams)) { wrongValue = evaluation; break; }
+  if (!subject.shortName) {
+    showToast(`Rellena el Nombre`);
+    return false;
   }
-  if(wrongValue){ showToast(`Pon almenos un examen en ${wrongValue}`); return false; }
-  
-  // if(wrongValue){ showToast(`Pon nombres distintos a los exámenes llamados ${wrongValue}`); return false; }
-  
-  // if(wrongValue){ showToast(`Pon nombres distintos a las evaluaciones llamadas ${wrongValue}`); return false; }
-  
+  if (!subject.fullName) {
+    showToast(`Rellena el Nombre Largo`);
+    return false;
+  }
+  if (!subject.course) {
+    showToast(`Rellena el Curso`);
+    return false;
+  }
+  if (!subject.faculty) {
+    showToast(`Rellena la Facultad`);
+    return false;
+  }
+  if (!subject.uni) {
+    showToast(`Rellena la Universidad`);
+    return false;
+  }
+  if (!subject.color) {
+    showToast(`Escoje un Color`);
+    return false;
+  }
+  if (isEmpty(subject.evaluations)) {
+    showToast(`Rellena la Evaluación`);
+    return false;
+  }
+
+  // TODO: To implement this functions we need to check them before the subject is read
+
   for (const evaluation in subject.evaluations) {
-    for (const exam in subject.evaluations[evaluation].exams) {
-      if(!subject.evaluations[evaluation].exams[exam].type) { wrongValue = exam; break; }
+    if (isEmpty(subject.evaluations[evaluation].exams)) {
+      wrongValue = evaluation;
+      break;
     }
   }
-  if(wrongValue){ showToast(`Pon categoria al examen ${wrongValue}`); return false; }
+  if (wrongValue) {
+    showToast(`Pon almenos un examen en ${wrongValue}`);
+    return false;
+  }
+
+  // if(wrongValue){ showToast(`Pon nombres distintos a los exámenes llamados ${wrongValue}`); return false; }
+
+  // if(wrongValue){ showToast(`Pon nombres distintos a las evaluaciones llamadas ${wrongValue}`); return false; }
+
+  for (const evaluation in subject.evaluations) {
+    for (const exam in subject.evaluations[evaluation].exams) {
+      if (!subject.evaluations[evaluation].exams[exam].type) {
+        wrongValue = exam;
+        break;
+      }
+    }
+  }
+  if (wrongValue) {
+    showToast(`Pon categoria al examen ${wrongValue}`);
+    return false;
+  }
 
   return true;
 }
@@ -1680,7 +2177,13 @@ function uploadToDB(db, ref, value) {
   if (!isAnonymous) {
     let obj = {};
     if (ref) {
-      if (value != undefined && value != null && value != '' && value != {} && value != []) {
+      if (
+        value != undefined &&
+        value != null &&
+        value != '' &&
+        value != {} &&
+        value != []
+      ) {
         obj[ref] = value;
       } else {
         obj[ref] = firebase.firestore.FieldValue.delete();
@@ -1701,52 +2204,76 @@ function uploadToDB(db, ref, value) {
 function getAndDisplayUserSubjects() {
   if (isAnonymous) {
     console.warn('To get user info you need to sign in');
-    showToast('Para guardar tus notas en la nube', 'Inicia sesión', 'loginGoogle();');
+    showToast(
+      'Para guardar tus notas en la nube',
+      'Inicia sesión',
+      'loginGoogle();'
+    );
     hideLoader('dashboard');
   } else {
     showLoader('Descargando asignaturas', 'dashboard');
-    userDB.get().then((doc) => {
-      if (doc.exists) {
-        let userInfo = doc.data();
-        for (const id in userInfo.subjects) {
+    userDB
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          let userInfo = doc.data();
+          for (const id in userInfo.subjects) {
+            subjectsDB
+              .doc(id)
+              .get()
+              .then((doc) => {
+                if (doc.exists) {
+                  var subjectInfo = doc.data();
+                  if (!subjects[id]) subjects[id] = {};
+                  if (!userInfo.subjects[id]) userInfo.subjects[id] = {};
 
-          subjectsDB.doc(id).get().then((doc) => {
-            if (doc.exists) {
-              var subjectInfo = doc.data();
-              if (!subjects[id]) subjects[id] = {};
-              if (!userInfo.subjects[id]) userInfo.subjects[id] = {};
+                  subjects[id] = completeSubject(
+                    subjectInfo,
+                    subjects[id],
+                    userInfo.subjects[id],
+                    {
+                      grades:
+                        !subjects[id].grades && !userInfo.subjects[id].grades
+                          ? subjectInfo.grades
+                          : Object.assign(
+                              {},
+                              subjects[id].grades,
+                              userInfo.subjects[id].grades
+                            ),
+                    }
+                  );
 
-              subjects[id] = completeSubject(
-                subjectInfo,
-                subjects[id],
-                userInfo.subjects[id],
-                { grades: (!subjects[id].grades && !userInfo.subjects[id].grades) ? subjectInfo.grades : Object.assign({}, subjects[id].grades, userInfo.subjects[id].grades) }
-              );
+                  updateFinalMark(id);
+                  updateNecesaryMark(id);
 
-              updateFinalMark(id);
-              updateNecesaryMark(id);
+                  updateCardGrades(id);
+                  saveSubjectsLocalStorage();
 
-              updateCardGrades(id);
-              saveSubjectsLocalStorage();
-
-              console.info(`Loaded subject: ${subjects[id].shortName} - ${id}`);
-            } else {
-              console.error(`Subject ${id} dosen\'t exist`, userInfo.subjects[id]);
-            }
-          }).catch((error) => {
-            console.error(`Error getting subject (${id}) info:`, error);
-          });
+                  console.info(
+                    `Loaded subject: ${subjects[id].shortName} - ${id}`
+                  );
+                } else {
+                  console.error(
+                    `Subject ${id} dosen\'t exist`,
+                    userInfo.subjects[id]
+                  );
+                }
+              })
+              .catch((error) => {
+                console.error(`Error getting subject (${id}) info:`, error);
+              });
+          }
+          console.info(`User has ${userInfo.subjects.length} saved subjects`);
+        } else {
+          userDB.set({});
+          console.error(`User ${uid} dosen\'t exist`, userInfo.subjects[id]);
         }
-        console.info(`User has ${userInfo.subjects.length} saved subjects`);
-      } else {
-        userDB.set({});
-        console.error(`User ${uid} dosen\'t exist`, userInfo.subjects[id]);
-      }
-      hideLoader('dashboard');
-    }).catch((error) => {
-      console.error("Error getting user info:", error);
-      hideLoader('dashboard');
-    });
+        hideLoader('dashboard');
+      })
+      .catch((error) => {
+        console.error('Error getting user info:', error);
+        hideLoader('dashboard');
+      });
   }
 }
 
@@ -1755,22 +2282,26 @@ function getSubjectsAllDB() {
 }
 
 function searchSubjects(query = '') {
-  query = query.trim()
-  if(query != ''){
-    index.search(query)
-      .then((responses) => {
-        console.log(`Results for ${query}:`, responses.hits);
-        searchResultsSubject.innerHTML = responses.hits.reduce((total, elem) => total + generateSearchResultSubject(elem._highlightResult, elem.objectID), '');
-        
-        if(responses.nbHits == 0) {
-          searchCreateDiv.style.display = 'block';
-          searchResultsNone.style.display = 'block';
-        }else{
-          searchCreateDiv.style.display = 'none';
-          searchResultsNone.style.display = 'none';
-        }
-      });
-  }else{
+  query = query.trim();
+  if (query != '') {
+    index.search(query).then((responses) => {
+      console.log(`Results for ${query}:`, responses.hits);
+      searchResultsSubject.innerHTML = responses.hits.reduce(
+        (total, elem) =>
+          total +
+          generateSearchResultSubject(elem._highlightResult, elem.objectID),
+        ''
+      );
+
+      if (responses.nbHits == 0) {
+        searchCreateDiv.style.display = 'block';
+        searchResultsNone.style.display = 'block';
+      } else {
+        searchCreateDiv.style.display = 'none';
+        searchResultsNone.style.display = 'none';
+      }
+    });
+  } else {
     searchResultsSubject.innerHTML = '';
     searchCreateDiv.style.display = 'block';
   }
@@ -1779,14 +2310,24 @@ function searchSubjects(query = '') {
 function generateSearchResultSubject(match, id) {
   return `<li onclick="addToSubjectsToAdd('${id}', this.querySelector('input[name=\\'id\\']').checked);" class="searchResult">
             <label for="checkbox-${id}">
-              <input style="display: none;" type="checkbox" value="${id}" name="id" id="checkbox-${id}" ${(subjects[id] || subjectsToAdd[id]) ? 'checked' : ''} ${(subjects[id]) ? 'disabled' : ''}>
+              <input style="display: none;" type="checkbox" value="${id}" name="id" id="checkbox-${id}" ${
+    subjects[id] || subjectsToAdd[id] ? 'checked' : ''
+  } ${subjects[id] ? 'disabled' : ''}>
               <div class="searchResultCheck" for="checkbox-${id}"></div>
             </label>
             <label class="searchResultTitle" for="checkbox-${id}">
-              <span class="searchResultRow1">${match.shortName.value} - ${match.fullName.value}</span><br>
-              <span class="searchResultRow2">${match.faculty.value} ${match.uni.value} - ${match.course.value}</span>
+              <span class="searchResultRow1">${match.shortName.value} - ${
+    match.fullName.value
+  }</span><br>
+              <span class="searchResultRow2">${match.faculty.value} ${
+    match.uni.value
+  } - ${match.course.value}</span>
             </label>
-            ${(subjects[id]) ? '<!-- ' : ''}<div class="searchResultAction" onclick="this.parentElement.querySelector('input[name=\\'id\\']').checked = true; showViewSubject('${id}');"><img src="media/edit.svg"></div>${(subjects[id]) ? ' --> ' : ''}
+            ${
+              subjects[id] ? '<!-- ' : ''
+            }<div class="searchResultAction" onclick="this.parentElement.querySelector('input[name=\\'id\\']').checked = true; showViewSubject('${id}');"><img src="media/edit.svg"></div>${
+    subjects[id] ? ' --> ' : ''
+  }
           </li>`;
 }
 
@@ -1798,7 +2339,9 @@ window.addEventListener('beforeinstallprompt', (e) => {
   console.log('App can be installed');
   // e.preventDefault();
   deferredPrompt = e;
-  setTimeout(() => { showToast('Usa GradeCalc offline', 'Instalar', 'install();'); }, 10000);
+  setTimeout(() => {
+    showToast('Usa GradeCalc offline', 'Instalar', 'install();');
+  }, 10000);
   return false;
 });
 
@@ -1817,7 +2360,6 @@ function install() {
   }
 }
 
-
 /* ------------------------------ Form satisfaction ------------------------------ */
 
 // function isValidDate(d) { return d instanceof Date && !isNaN(d); }
@@ -1825,7 +2367,7 @@ function install() {
 // const formUrl = 'https://forms.gle/DEsxsMLXKEDXHZaA9';
 // const storageDate = new Date(parseInt(localStorage.getItem('remindFormPopupDate')));
 
-// if (localStorage.getItem('stopFormPopup') !== 'true' 
+// if (localStorage.getItem('stopFormPopup') !== 'true'
 //   && (!isValidDate(storageDate) || storageDate <= new Date())
 //   && !isEmpty(subjects)) {
 //   document.body.innerHTML += `
@@ -1878,7 +2420,10 @@ function install() {
 /* ------------------------------ PWA redirect ------------------------------ */
 
 let redirectTimer, newUrl;
-if (window.location.hostname === 'gradecalc.net') {
+if (
+  window.location.hostname === 'gradecalc.net' ||
+  window.location.hostname === 'gradecalc.app'
+) {
   document.body.innerHTML += `
   <div id="redirect-container" class="popup popup-small" style="display: flex;">
     <div class="top-bar-popup"></div>
@@ -1897,16 +2442,20 @@ if (window.location.hostname === 'gradecalc.net') {
     </div>
   </div>`;
   let redirectTimerSpan = document.getElementById('redirectTimerSpan');
-  newUrl = 'https://gradecalc.app?replaceSubjects='+encodeURI(JSON.stringify(getSubjectsLocalStorage()));
+  newUrl =
+    'https://gradecalc.netlify.app?replaceSubjects=' +
+    encodeURI(JSON.stringify(getSubjectsLocalStorage()));
   document.getElementById('redirect-a').href = newUrl;
-  setInterval(() => {redirectTimerSpan.textContent -= 1;}, 1000);
+  setInterval(() => {
+    redirectTimerSpan.textContent -= 1;
+  }, 1000);
   redirectTimer = setTimeout(transferData, 30000);
-} else if (window.location.hostname === 'gradecalc.app') {
+} else if (window.location.hostname === 'gradecalc.netlify.app') {
   let replaceSubjectsStr = findGetParameter('replaceSubjects');
   let replaceSubjects = JSON.parse(replaceSubjectsStr);
   let replacedSubjects = localStorage.getItem('replacedSubjectsFromNetDomain');
   history.replaceState({}, '', '/');
-  if(replaceSubjectsStr && replaceSubjects && replacedSubjects !== 'true' ){
+  if (replaceSubjectsStr && replaceSubjects && replacedSubjects !== 'true') {
     subjects = replaceSubjects;
     saveSubjectsLocalStorage();
     localStorage.setItem('replacedSubjectsFromNetDomain', 'true');
@@ -1915,7 +2464,7 @@ if (window.location.hostname === 'gradecalc.net') {
   }
 }
 
-function transferData(){
+function transferData() {
   subjects = {};
   saveSubjectsLocalStorage();
   window.location = newUrl;
@@ -1923,11 +2472,11 @@ function transferData(){
 
 function findGetParameter(parameterName) {
   var result = null,
-      tmp = [];
-  var items = location.search.substr(1).split("&");
+    tmp = [];
+  var items = location.search.substr(1).split('&');
   for (var index = 0; index < items.length; index++) {
-      tmp = items[index].split("=");
-      if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    tmp = items[index].split('=');
+    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
   }
   return result;
 }

@@ -1,225 +1,378 @@
 <!DOCTYPE html>
 <html lang="es-ES">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Grade Calc</title>
-  <meta name="description" content="GradeCalc es aplicación web para calcular la nota que necesitas en cada examen para aprobar una asignatura. Originalmente hecha para la FIB, Facultad de Informàtica de Barcelona">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,700&display=swap" rel="stylesheet">
-  <link href="styles/main.min.css" rel="stylesheet" type="text/css">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <link rel="manifest" href="site.webmanifest">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Grade Calc</title>
+    <meta
+      name="description"
+      content="GradeCalc es aplicación web para calcular la nota que necesitas en cada examen para aprobar una asignatura. Originalmente hecha para la FIB, Facultad de Informàtica de Barcelona"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css"
+    />
+    gradecalc.netlify.app
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito:300,400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="styles/main.min.css" rel="stylesheet" type="text/css" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="site.webmanifest" />
 
-  <!-- SEO -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320"/>
-  <link rel="canonical" href="https://gradecalc.app">
+    <!-- SEO -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <link rel="canonical" href="https://gradecalc.netlify.app" />
 
-  <!-- FavIcons -->
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
-  <link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#1b9f64">
-  <link rel="shortcut icon" href="icons/favicon.ico">
-  <meta name="apple-mobile-web-app-title" content="Grade Calc">
-  <meta name="application-name" content="Grade Calc">
-  <meta name="msapplication-TileColor" content="#1b9f64">
-  <meta name="msapplication-config" content="icons/browserconfig.xml">
-  <meta name="theme-color" content="#1b9f64">
+    <!-- FavIcons -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="icons/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="icons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="icons/favicon-16x16.png"
+    />
+    <link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#1b9f64" />
+    <link rel="shortcut icon" href="icons/favicon.ico" />
+    <meta name="apple-mobile-web-app-title" content="Grade Calc" />
+    <meta name="application-name" content="Grade Calc" />
+    <meta name="msapplication-TileColor" content="#1b9f64" />
+    <meta name="msapplication-config" content="icons/browserconfig.xml" />
+    <meta name="theme-color" content="#1b9f64" />
 
-  <!-- OG image -->
-  <meta property="og:url"         content="https://gradecalc.app">
-  <meta property="og:image"       content="https://gradecalc.app/icons/maskable_icon_1024.png">
+    <!-- OG image -->
+    <meta property="og:url" content="https://gradecalc.netlify.app" />
+    <meta
+      property="og:image"
+      content="https://gradecalc.netlify.app/icons/maskable_icon_1024.png"
+    />
 
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-100348659-2"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-100348659-2"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('js', new Date())
 
-    gtag('config', 'UA-100348659-2');
-  </script>
+      gtag('config', 'UA-100348659-2')
+    </script>
+  </head>
+  <body>
+    <header id="top-bar">
+      <button onclick="showUserInfo();" style="padding: 0.625em">
+        <img src="media/user-circle.svg" alt="Perfil" id="profile-topbar" />
+      </button>
+      <h1>Grade Calc</h1>
+      <button
+        onclick="showAddSubject();"
+        class="focus-animation-loop"
+        id="add-button-topbar"
+      >
+        <img src="media/plus.svg" alt="Editar" />
+      </button>
+    </header>
 
-</head>
-<body>
-  <header id="top-bar">
-    <button onclick="showUserInfo();" style="padding: 0.625em;"><img src="media/user-circle.svg" alt="Perfil" id="profile-topbar"></button>
-    <h1>Grade Calc</h1>
-    <button onclick="showAddSubject();" class="focus-animation-loop" id="add-button-topbar"><img src="media/plus.svg" alt="Editar"></button>
-  </header>
-
-  <main class="screen">
-    <div id="dashboard" class="dashboard"></div>
-    <div id="dashboard-loader" class="loader">
-      <div class="loader-dots"><div></div><div></div><div></div><div></div></div>
-      <p>Cargando tus asignaturas</p>
-    </div>
-    <div id="tutorial">
-      <h2>🙋🏼‍♂️ Bienvenido 🙋🏼‍♀️</h2>
-      <p>Grade Calc es una aplicación web que te permite administrar tus notas de exámenes.</p>
-      <h3>Funciones:</h3>
-      <ul>
-        <li>- Calcula automáticamente la nota que necesitas para aprobar</li>
-        <li>- Crea/Busca/Edita plantillas de asignaturas.</li>
-        <li>- Guarda tus notas en el dispositivo automaticamente.</li>
-        <li>- "Añadir a inicio" en Google Chrome.</li>
-
-        <li>- Inicia sesión con Google y guarda tus notas en la nube.</li>
-        <li><i>Más próximamente ...</i></li>
-      </ul>
-      <br>
-      <p><i>Venga, añade tu primera asignatura pulsando el botón "+" de arriba a la derecha.</i></p>
-      <p>Una vez creada, tócala para editar tus notas</p>
-      <br>
-      <p><a href="https://github.com/mauriciabad/GradeCalc">Ver código fuente en GitHub</a></p>
-    </div>
-    <div id="congratulations-button" style="display: none;">     
-      <p><b>¡Lo has aprobado todo!</b></p>
-      <img id="congratulations-gift" onclick="ShowEasterEgg();" src="media/gift_jump_once.gif" alt="¡Felicidades!" loading="lazy" width="300" height="300" intrinsicsize="600x600">
-      <p>🥳 Celebralo abriendo el regalo 😉</p>
-    </div>
-    <!-- Without controlls --><!--  <iframe id="congratulations" style="display: none;" width="560" height="315" src="https://www.youtube-nocookie.com/embed/cvyrG9iOB2s?enablejsapi=1&modestbranding=1&autohide=1&showinfo=0&controls=0&disablekb=1&fs=0&iv_load_policy=3&loop=1&rel=0&&playlist=cvyrG9iOB2s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
-    <iframe id="congratulations" style="display: none;" width="560" height="315" loading="lazy" src="https://www.youtube-nocookie.com/embed/cvyrG9iOB2s?enablejsapi=1&modestbranding=1&autohide=1&showinfo=0&iv_load_policy=3&loop=1&rel=0&&playlist=cvyrG9iOB2s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    <!-- <a href="https://youtu.be/1Bix44C1EzY" target="_blank" id="congratulations" style="display: none">
-      <img src="media/congratulations.gif" alt="¡Felicidades!" loading="lazy">
-    </a> -->
-  </main>
-
-  <div id="add-container" class="popup" style="display: none;">
-    <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Ir atrás">Nueva asignatura</div>
-    <div class="popup-content add-popup">
-      <div id="add-popup-content">
-        <h2>Buscar</h2>
-        <input type="search" name="search-subject" id="search-subject-input" placeholder="Ejemplo: Matemáticas UPC FIB" onkeyup="searchSubjects(this.value);">
-        <label class="searchGroupDesc" for="search-subject-input">Puedes buscar por: siglas, nombre, universidad, facultad y curso.</label>
-        <!-- <h3>Resultados</h3> -->
-        <ul id="subjects-search-results" class="subjects-search-results"></ul>
-
-        <h3 id="subjects-search-none" style="display: none;">🥀😢 Ningún resultado 😢🥀</h3>
-        
-        <div id="subjects-search-create-div">
-          <h2>Crear</h2>
-          <p>¿No la encuentras o ninguna está bien?</p>
-          <button id="subject-start-creator" onclick="showNewSubject();">Crear</button>
-          <p>Evita contenido duplicado. Si ya existe la asignatura que buscas, no la crees. <small>plis</small></p>
+    <main class="screen">
+      <div id="dashboard" class="dashboard"></div>
+      <div id="dashboard-loader" class="loader">
+        <div class="loader-dots">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
-        <button class="popup-main-button" onclick="addSubjects();">Añadir</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="edit-container" class="popup" style="display: none;">
-    <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Ir atrás">Editar asignatura</div>
-    <div class="popup-content edit-popup">
-      <div id="edit-popup-content"></div>
-      <button class="popup-main-button" onclick="saveEditSubject(); window.history.back();">Guardar</button>
-    </div>
-  </div>
-
-  <div id="view-container" class="popup" style="display: none;">
-    <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Ir atrás">Editar y añadir asignatura</div>
-    <div class="popup-content edit-popup">
-      <div id="view-popup-content"></div>
-      <button class="popup-main-button" onclick="saveViewSubject(); window.history.back();">Añadir</button>
-    </div>
-  </div>
-
-  <div id="new-container" class="popup" style="display: none;">
-    <div onclick="window.history.back();" class="top-bar-popup"><img src="media/back.svg" alt="Ir atrás">Nueva asignatura</div>
-    <div class="popup-content edit-popup">
-      <div id="new-popup-content"></div>
-      <button class="popup-main-button" onclick="saveNewSubject();">Crear</button>
-    </div>
-  </div>
-
-  <div id="user-container" class="popup popup-small" style="display: none;">
-    <div onclick="window.history.back();" class="top-bar-popup"></div>
-    <div class="popup-content user-popup">
-      <img class="popup-round-img-top" src="media/default-user-avatar.png" alt="Profile Picture" width="128" height="128" loading="lazy" intrinsicsize="128x128">
-      <h2>Anónimo</h2>
-      <div>
-        <p>Puedes <b>iniciar sesion con Google</b> y:</p>
-        <ul>
-          <li>Guardar tus notas en la nube.</li>
-          <li>Compartir asignaturas que crees.</li>
-        </ul>
-        <p>Consulta la <a href="/legal" style="color: royalblue;">Politica de privacidad</a>.</p>
-      </div>
-      <div id="login-loader" class="loader">
-        <div class="loader-dots"><div></div><div></div><div></div><div></div></div>
         <p>Cargando tus asignaturas</p>
       </div>
-      <button class="popup-main-button" id="loginButton" onclick="loginGoogle(); window.history.back();">Iniciar sesión</button>
-    </div>
-  </div>
+      <div id="tutorial">
+        <h2>🙋🏼‍♂️ Bienvenido 🙋🏼‍♀️</h2>
+        <p>
+          Grade Calc es una aplicación web que te permite administrar tus notas
+          de exámenes.
+        </p>
+        <h3>Funciones:</h3>
+        <ul>
+          <li>- Calcula automáticamente la nota que necesitas para aprobar</li>
+          <li>- Crea/Busca/Edita plantillas de asignaturas.</li>
+          <li>- Guarda tus notas en el dispositivo automaticamente.</li>
+          <li>- "Añadir a inicio" en Google Chrome.</li>
 
-  <div id="frozen-layer" class="frozen-layer" style="display: none;">
-    <div class="sk-folding-cube frozen-layer__spinner">
-      <div class="sk-cube1 sk-cube"></div>
-      <div class="sk-cube2 sk-cube"></div>
-      <div class="sk-cube4 sk-cube"></div>
-      <div class="sk-cube3 sk-cube"></div>
-    </div>
-    <span id="frozen-layer-message" class="frozen-layer__message">Cargando...</span>
-    <span id="frozen-layer-warning" class="frozen-layer__warning">Parece que algo ha ido mal...</span>
-  </div>
+          <li>- Inicia sesión con Google y guarda tus notas en la nube.</li>
+          <li><i>Más próximamente ...</i></li>
+        </ul>
+        <br />
+        <p>
+          <i
+            >Venga, añade tu primera asignatura pulsando el botón "+" de arriba
+            a la derecha.</i
+          >
+        </p>
+        <p>Una vez creada, tócala para editar tus notas</p>
+        <br />
+        <p>
+          <a href="https://github.com/mauriciabad/GradeCalc"
+            >Ver código fuente en GitHub</a
+          >
+        </p>
+      </div>
+      <div id="congratulations-button" style="display: none">
+        <p><b>¡Lo has aprobado todo!</b></p>
+        <img
+          id="congratulations-gift"
+          onclick="ShowEasterEgg();"
+          src="media/gift_jump_once.gif"
+          alt="¡Felicidades!"
+          loading="lazy"
+          width="300"
+          height="300"
+          intrinsicsize="600x600"
+        />
+        <p>🥳 Celebralo abriendo el regalo 😉</p>
+      </div>
+      <!-- Without controlls --><!--  <iframe id="congratulations" style="display: none;" width="560" height="315" src="https://www.youtube-nocookie.com/embed/cvyrG9iOB2s?enablejsapi=1&modestbranding=1&autohide=1&showinfo=0&controls=0&disablekb=1&fs=0&iv_load_policy=3&loop=1&rel=0&&playlist=cvyrG9iOB2s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+      <iframe
+        id="congratulations"
+        style="display: none"
+        width="560"
+        height="315"
+        loading="lazy"
+        src="https://www.youtube-nocookie.com/embed/cvyrG9iOB2s?enablejsapi=1&modestbranding=1&autohide=1&showinfo=0&iv_load_policy=3&loop=1&rel=0&&playlist=cvyrG9iOB2s"
+        frameborder="0"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+      <!-- <a href="https://youtu.be/1Bix44C1EzY" target="_blank" id="congratulations" style="display: none">
+      <img src="media/congratulations.gif" alt="¡Felicidades!" loading="lazy">
+    </a> -->
+    </main>
 
-  <!-- <div class="ad">
+    <div id="add-container" class="popup" style="display: none">
+      <div onclick="window.history.back();" class="top-bar-popup">
+        <img src="media/back.svg" alt="Ir atrás" />Nueva asignatura
+      </div>
+      <div class="popup-content add-popup">
+        <div id="add-popup-content">
+          <h2>Buscar</h2>
+          <input
+            type="search"
+            name="search-subject"
+            id="search-subject-input"
+            placeholder="Ejemplo: Matemáticas UPC FIB"
+            onkeyup="searchSubjects(this.value);"
+          />
+          <label class="searchGroupDesc" for="search-subject-input"
+            >Puedes buscar por: siglas, nombre, universidad, facultad y
+            curso.</label
+          >
+          <!-- <h3>Resultados</h3> -->
+          <ul id="subjects-search-results" class="subjects-search-results"></ul>
+
+          <h3 id="subjects-search-none" style="display: none">
+            🥀😢 Ningún resultado 😢🥀
+          </h3>
+
+          <div id="subjects-search-create-div">
+            <h2>Crear</h2>
+            <p>¿No la encuentras o ninguna está bien?</p>
+            <button id="subject-start-creator" onclick="showNewSubject();">
+              Crear
+            </button>
+            <p>
+              Evita contenido duplicado. Si ya existe la asignatura que buscas,
+              no la crees. <small>plis</small>
+            </p>
+          </div>
+          <button class="popup-main-button" onclick="addSubjects();">
+            Añadir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="edit-container" class="popup" style="display: none">
+      <div onclick="window.history.back();" class="top-bar-popup">
+        <img src="media/back.svg" alt="Ir atrás" />Editar asignatura
+      </div>
+      <div class="popup-content edit-popup">
+        <div id="edit-popup-content"></div>
+        <button
+          class="popup-main-button"
+          onclick="saveEditSubject(); window.history.back();"
+        >
+          Guardar
+        </button>
+      </div>
+    </div>
+
+    <div id="view-container" class="popup" style="display: none">
+      <div onclick="window.history.back();" class="top-bar-popup">
+        <img src="media/back.svg" alt="Ir atrás" />Editar y añadir asignatura
+      </div>
+      <div class="popup-content edit-popup">
+        <div id="view-popup-content"></div>
+        <button
+          class="popup-main-button"
+          onclick="saveViewSubject(); window.history.back();"
+        >
+          Añadir
+        </button>
+      </div>
+    </div>
+
+    <div id="new-container" class="popup" style="display: none">
+      <div onclick="window.history.back();" class="top-bar-popup">
+        <img src="media/back.svg" alt="Ir atrás" />Nueva asignatura
+      </div>
+      <div class="popup-content edit-popup">
+        <div id="new-popup-content"></div>
+        <button class="popup-main-button" onclick="saveNewSubject();">
+          Crear
+        </button>
+      </div>
+    </div>
+
+    <div id="user-container" class="popup popup-small" style="display: none">
+      <div onclick="window.history.back();" class="top-bar-popup"></div>
+      <div class="popup-content user-popup">
+        <img
+          class="popup-round-img-top"
+          src="media/default-user-avatar.png"
+          alt="Profile Picture"
+          width="128"
+          height="128"
+          loading="lazy"
+          intrinsicsize="128x128"
+        />
+        <h2>Anónimo</h2>
+        <div>
+          <p>Puedes <b>iniciar sesion con Google</b> y:</p>
+          <ul>
+            <li>Guardar tus notas en la nube.</li>
+            <li>Compartir asignaturas que crees.</li>
+          </ul>
+          <p>
+            Consulta la
+            <a href="/legal" style="color: royalblue">Politica de privacidad</a
+            >.
+          </p>
+        </div>
+        <div id="login-loader" class="loader">
+          <div class="loader-dots">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <p>Cargando tus asignaturas</p>
+        </div>
+        <button
+          class="popup-main-button"
+          id="loginButton"
+          onclick="loginGoogle(); window.history.back();"
+        >
+          Iniciar sesión
+        </button>
+      </div>
+    </div>
+
+    <div id="frozen-layer" class="frozen-layer" style="display: none">
+      <div class="sk-folding-cube frozen-layer__spinner">
+        <div class="sk-cube1 sk-cube"></div>
+        <div class="sk-cube2 sk-cube"></div>
+        <div class="sk-cube4 sk-cube"></div>
+        <div class="sk-cube3 sk-cube"></div>
+      </div>
+      <span id="frozen-layer-message" class="frozen-layer__message"
+        >Cargando...</span
+      >
+      <span id="frozen-layer-warning" class="frozen-layer__warning"
+        >Parece que algo ha ido mal...</span
+      >
+    </div>
+
+    <!-- <div class="ad">
     <span class="ad__text">Si te gusta GradeCalc y quieres colaborar, <br>haz click el anuncio antes de comprar cualquier producto.</span>
     <iframe class="ad__banner" src="https://rcm-eu.amazon-adsystem.com/e/cm?o=30&p=42&l=ez&f=ifr&linkID=ae1b658675e930c0fe95468f7c564304&t=mauriciabad-21&tracking_id=mauriciabad-21" width="234" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
     <span class="ad__text ad__text--bottom">Este anuncio desaparecerá en un minuto.</span>
   </div> -->
-  <div id="toast" style="display: none;"><div><p>Has borrado <b>NADA</b></p><button onclick="undoRemoveSubject();">Deshacer</button></div></div>
+    <div id="toast" style="display: none">
+      <div>
+        <p>Has borrado <b>NADA</b></p>
+        <button onclick="undoRemoveSubject();">Deshacer</button>
+      </div>
+    </div>
 
-  <script>
-    var sw;
-    var isSubscribed;
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js')
-      .then((registration) => {
-        console.info('Service worker registration successful, scope is:', registration.scope);
-        sw = registration;
-        if ('PushManager' in window) {
-          // console.info('Service Worker and Push is supported');
-          sw.pushManager.getSubscription()
-          .then(function(subscription) {
-            isSubscribed = !(subscription === null);
-            if (isSubscribed) console.info('User IS subscribed.');
-            else console.info('User is NOT subscribed.');
-          });
-        } else {
-          console.warn('Push messaging is not supported');
-        }
-        })
-      .catch((error) => {console.warn('Service worker registration failed, error:', error);});
-    }
-  </script>
-  <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-firestore.js"></script>
-  <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearchLite.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jsep@0.3.4/build/jsep.min.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDQmE1YoLWHMJ0td05JiHd-0yIW2mvJojc",
-      authDomain: "gradecalc-2018.firebaseapp.com",
-      databaseURL: "https://gradecalc-2018.firebaseio.com",
-      projectId: "gradecalc-2018",
-      storageBucket: "gradecalc-2018.appspot.com",
-      messagingSenderId: "353677026446",
-      appId: "1:353677026446:web:f4774c6df4c0679070d5df"
-    };
-    firebase.initializeApp(firebaseConfig);
-  </script>
-  <script src="lib/confetti.js" async></script>
-  <script src="lib/web-animations.min.js" async></script>
-  <script src="lib/navigo.min.js"></script>
-  <script src="scripts/libs.min.js"></script>
-  <script src="scripts/script.min.js"></script>
-  <script src="https://www.youtube.com/iframe_api" async></script>
-</body>
+    <script>
+      var sw
+      var isSubscribed
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .register('sw.js')
+          .then((registration) => {
+            console.info(
+              'Service worker registration successful, scope is:',
+              registration.scope
+            )
+            sw = registration
+            if ('PushManager' in window) {
+              // console.info('Service Worker and Push is supported');
+              sw.pushManager.getSubscription().then(function (subscription) {
+                isSubscribed = !(subscription === null)
+                if (isSubscribed) console.info('User IS subscribed.')
+                else console.info('User is NOT subscribed.')
+              })
+            } else {
+              console.warn('Push messaging is not supported')
+            }
+          })
+          .catch((error) => {
+            console.warn('Service worker registration failed, error:', error)
+          })
+      }
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearchLite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsep@0.3.4/build/jsep.min.js"></script>
+    <script>
+      const firebaseConfig = {
+        apiKey: 'AIzaSyDQmE1YoLWHMJ0td05JiHd-0yIW2mvJojc',
+        authDomain: 'gradecalc-2018.firebaseapp.com',
+        databaseURL: 'https://gradecalc-2018.firebaseio.com',
+        projectId: 'gradecalc-2018',
+        storageBucket: 'gradecalc-2018.appspot.com',
+        messagingSenderId: '353677026446',
+        appId: '1:353677026446:web:f4774c6df4c0679070d5df',
+      }
+      firebase.initializeApp(firebaseConfig)
+    </script>
+    <script src="lib/confetti.js" async></script>
+    <script src="lib/web-animations.min.js" async></script>
+    <script src="lib/navigo.min.js"></script>
+    <script src="scripts/libs.min.js"></script>
+    <script src="scripts/script.min.js"></script>
+    <script src="https://www.youtube.com/iframe_api" async></script>
+  </body>
 </html>
