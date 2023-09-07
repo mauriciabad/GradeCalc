@@ -2443,14 +2443,14 @@ if (
   </div>`;
   let redirectTimerSpan = document.getElementById('redirectTimerSpan');
   newUrl =
-    'https://gradecalc.netlify.app?replaceSubjects=' +
+    'https://gradecalc.mauri.app?replaceSubjects=' +
     encodeURI(JSON.stringify(getSubjectsLocalStorage()));
   document.getElementById('redirect-a').href = newUrl;
   setInterval(() => {
     redirectTimerSpan.textContent -= 1;
   }, 1000);
   redirectTimer = setTimeout(transferData, 30000);
-} else if (window.location.hostname === 'gradecalc.netlify.app') {
+} else if (window.location.hostname === 'gradecalc.mauri.app') {
   let replaceSubjectsStr = findGetParameter('replaceSubjects');
   let replaceSubjects = JSON.parse(replaceSubjectsStr);
   let replacedSubjects = localStorage.getItem('replacedSubjectsFromNetDomain');

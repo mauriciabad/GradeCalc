@@ -2,13 +2,13 @@
 
 # GradeCalc
 
-[GradeCalc](https://gradecalc.netlify.app) is a progressive web app for students, it's main porpouse is calculating the necessary mark in the remaining exams to pass a subject.
+[GradeCalc](https://gradecalc.mauri.app) is a progressive web app for students, it's main porpouse is calculating the necessary mark in the remaining exams to pass a subject.
 
 You can create your own subject and share it, or if someone created it before, you can use theirs.
 
 Also, it allows you to login with Google and store your subjects in the cloud, so you can acces them from yout mobile and pc.
 
-Use it here: [gradecalc.netlify.app](https://gradecalc.netlify.app)
+Use it here: [gradecalc.mauri.app](https://gradecalc.mauri.app)
 
 ## Features
 
