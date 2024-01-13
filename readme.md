@@ -2,11 +2,11 @@
 
 # GradeCalc
 
-[GradeCalc](https://gradecalc.mauri.app) is a progressive web app for students, it's main porpouse is calculating the necessary mark in the remaining exams to pass a subject.
+[GradeCalc](https://gradecalc.mauri.app) is a progressive web app for students, its main purpose is to calculate the necessary mark in the remaining exams to pass a subject.
 
 You can create your own subject and share it, or if someone created it before, you can use theirs.
 
-Also, it allows you to login with Google and store your subjects in the cloud, so you can acces them from yout mobile and pc.
+Also, it allows you to login with Google and store your subjects in the cloud, so you can access them from your mobile and pc.
 
 Use it here: [gradecalc.mauri.app](https://gradecalc.mauri.app)
 
@@ -26,7 +26,7 @@ Use it here: [gradecalc.mauri.app](https://gradecalc.mauri.app)
 
 ### Setup
 
-Use this command to insatll all dependencies.
+Use this command to install all dependencies.
 
 ```bash
 npm i
@@ -34,11 +34,20 @@ npm i
 
 ### Develop
 
-Use this command to compile the js and css when you save the files.
+First, install dependencies and build the app:
 
 ```bash
-gulp watch
+npm i
+npm run dist
 ```
+
+Use this command to compile the JS and CSS when you save the files.
+
+```bash
+npm run dev
+```
+
+Finally, serve the `dist` folder to view the changes.
 
 ### Build
 

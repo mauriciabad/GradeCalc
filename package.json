@@ -9,6 +9,7 @@
   "scripts": {
     "test": "jest",
     "predist": "rm -rf dist/* && touch dist/.gitkeep",
+    "dev": "gulp watch",
     "dist": "run-p dist:*",
     "dist:assets": "gulp assets",
     "dist:_redirects": "cp src/_redirects dist/",
