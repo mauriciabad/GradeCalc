@@ -1085,6 +1085,8 @@ function random(min, max) {
 // Congratulations
 function ShowEasterEgg() {
   document.getElementById('congratulations-button').style.display = 'none';
+  document.getElementById('congratulations').src =
+    'https://www.youtube-nocookie.com/embed/cvyrG9iOB2s?enablejsapi=1&modestbranding=1&autohide=1&showinfo=0&iv_load_policy=3&loop=1&rel=0&&playlist=cvyrG9iOB2s';
   document.getElementById('congratulations').style.display = 'block';
   document.body.style.setProperty('--background-color', '#000');
   // document.body.classList.add('rainbow-bg');
