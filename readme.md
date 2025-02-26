@@ -1,4 +1,3 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/3e698f7a-6ceb-49e5-a3bf-142c72746188/deploy-status)](https://app.netlify.com/sites/gradecalc/deploys) [![Build Status](https://travis-ci.com/mauriciabad/GradeCalc.svg?branch=master)](https://travis-ci.com/mauriciabad/GradeCalc) [![Maintainability](https://api.codeclimate.com/v1/badges/f3f3cbb1736c40546d06/maintainability)](https://codeclimate.com/github/mauriciabad/GradeCalc/maintainability)
 
 # GradeCalc
 
@@ -59,7 +58,7 @@ npm run dist
 
 ### Deploy
 
-_100% automated_ with Netlify, just push to master.
+_100% automated_ with GitHub Actions and pages, just push to main.
 
 ### Gulp commands
 
