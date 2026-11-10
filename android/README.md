@@ -81,3 +81,13 @@ The workflow uploads with the service account `play-publisher@gradecalc-2018.iam
 Play Console → Users and permissions it can only release GradeCalc to production and testing tracks.
 To rotate its key: `gcloud iam service-accounts keys create key.json --iam-account play-publisher@gradecalc-2018.iam.gserviceaccount.com`,
 then `gh secret set PLAY_SERVICE_ACCOUNT_JSON < key.json`, `rm key.json`, and delete the old key in Cloud Console.
+
+## Android developer verification
+
+Since 2026 Google requires each package name to be registered to your verified developer identity
+(Play Console → Manage account → Android developer verification). Without it, Play rejects releases with
+"your app's package name must be registered to your verified developer identity".
+
+GradeCalc was registered in Nov 2026 with the **upload key** (`9D:1D…`). Ownership is proven with an APK signed by
+that key that contains `assets/adi-registration.properties` with the account's snippet from that page. This only
+has to be done again for a new package name or a new upload key.
