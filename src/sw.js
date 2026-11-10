@@ -1,4 +1,4 @@
-var CACHE_NAME = 'v0.26.0';
+var CACHE_NAME = 'v0.27.0';
 
 var urlsToCache = [
   '/',
@@ -35,6 +35,8 @@ var urlsToCache = [
 ];
 
 self.addEventListener('install', (event) => {
+  // Take over right away instead of waiting for every open tab/app window to close.
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(urlsToCache);
@@ -52,14 +54,22 @@ self.addEventListener('activate', (event) => {
           return caches.delete(cacheName);
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
 
+// Network first, cache as offline fallback.
 self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  // GitHub Pages lets browsers reuse files for 10 minutes without checking, so after a
+  // deploy the app kept running old scripts. Revalidate our own files (304 if unchanged).
+  const isOwnFile =
+    request.method === 'GET' &&
+    request.mode !== 'navigate' &&
+    new URL(request.url).origin === self.location.origin;
   event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.match(event.request);
+    fetch(isOwnFile ? new Request(request, { cache: 'no-cache' }) : request).catch(() => {
+      return caches.match(request);
     })
   );
 });

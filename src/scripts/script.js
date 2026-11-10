@@ -1611,7 +1611,7 @@ function editUIUpdateGrid(grid, e, popup) {
           parseInt(grid.dataset.evaluations) - 1
         }">`
       );
-      if ((input.name = 'evaluationName'))
+      if (input.name === 'evaluationName')
         updateEvalName(
           parseInt(grid.dataset.evaluations) - 1,
           input.value,
