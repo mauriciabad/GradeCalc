@@ -1,11 +1,14 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target" : {
-    "namespace": "android_app",
-    "package_name": "org.mauriciabad.app.gradecalc",
-    "sha256_cert_fingerprints": [
-      "74:5D:36:84:F5:41:41:19:65:78:C2:95:4F:5D:32:BA:CC:9E:02:F2:BB:FD:83:B9:9B:E2:C5:2F:15:1C:A4:AC",
-      "AC:35:AA:72:3C:48:0D:7E:0D:19:0D:A5:35:4C:9D:55:8E:6D:FB:97:14:E4:05:43:1C:81:C7:16:58:23:37:47"
-    ]
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "org.mauriciabad.app.gradecalc",
+      "sha256_cert_fingerprints": [
+        "E7:13:EF:F6:2D:40:33:3D:0F:FE:AB:BB:15:5D:B9:13:F2:75:76:23:10:B8:B9:9D:B4:3D:72:BE:C0:85:18:98",
+        "AC:35:AA:72:3C:48:0D:7E:0D:19:0D:A5:35:4C:9D:55:8E:6D:FB:97:14:E4:05:43:1C:81:C7:16:58:23:37:47",
+        "9D:1D:24:FA:39:3D:06:91:1E:5A:E6:5E:6C:9C:A9:04:3F:E1:ED:AB:F4:B7:39:C6:91:0E:7D:60:E7:6A:21:B4"
+      ]
+    }
   }
-}]
+]

@@ -63,20 +63,6 @@
       content="https://gradecalc.mauri.app/icons/maskable_icon_1024.png"
     />
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=UA-100348659-2"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-
-      gtag('config', 'UA-100348659-2');
-    </script>
   </head>
   <body>
     <header id="top-bar">
@@ -287,6 +273,14 @@
           onclick="loginGoogle(); window.history.back();"
         >
           Iniciar sesión
+        </button>
+        <button
+          id="deleteAccountButton"
+          class="delete-account-button"
+          onclick="deleteAccount();"
+          hidden
+        >
+          Eliminar mi cuenta
         </button>
       </div>
     </div>

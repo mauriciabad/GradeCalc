@@ -1,0 +1,12 @@
+{
+  "name": "gradecalc-android",
+  "private": true,
+  "description": "Trusted Web Activity (Play Store wrapper) for https://gradecalc.mauri.app",
+  "scripts": {
+    "build": "./build.sh",
+    "bump": "node bump.js"
+  },
+  "devDependencies": {
+    "@bubblewrap/cli": "1.27.0"
+  }
+}
