@@ -73,3 +73,11 @@ GitHub Actions secrets:
 `static/.well-known/assetlinks.json` (served at <https://gradecalc.mauri.app/.well-known/assetlinks.json>) must list
 the SHA-256 fingerprints in `twa-manifest.json` → `fingerprints`. If it doesn't, the app shows a browser URL bar.
 Play Console shows the expected JSON under Protected with Play → Manage Play app signing.
+
+## Publishing from GitHub Actions
+
+The workflow uploads with the service account `play-publisher@gradecalc-2018.iam.gserviceaccount.com`
+(Google Cloud project `gradecalc-2018`, Google Play Android Developer API enabled). It has no Cloud IAM roles. In
+Play Console → Users and permissions it can only release GradeCalc to production and testing tracks.
+To rotate its key: `gcloud iam service-accounts keys create key.json --iam-account play-publisher@gradecalc-2018.iam.gserviceaccount.com`,
+then `gh secret set PLAY_SERVICE_ACCOUNT_JSON < key.json`, `rm key.json`, and delete the old key in Cloud Console.
