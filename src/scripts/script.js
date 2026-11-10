@@ -1394,9 +1394,9 @@ function showToast(message, action, code, time = 8000) {
   )}ms 2.5s cubic-bezier(1, 0, 1, 1), opaque 2.5s`;
   toast.offsetHeight;
   toast.style.display = 'flex';
-  toast.firstChild.innerHTML = `<p>${message}</p>`;
+  toast.firstElementChild.innerHTML = `<p>${message}</p>`;
   if (action && code)
-    toast.firstChild.innerHTML += `<button onclick="${code}">${action}</button>`;
+    toast.firstElementChild.innerHTML += `<button onclick="${code}">${action}</button>`;
 
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
@@ -2385,16 +2385,53 @@ function generateSearchResultSubject(match, id) {
 
 /* ------------------------------ PWA install ------------------------------ */
 
+const PLAY_STORE_URL =
+  'https://play.google.com/store/apps/details?id=org.mauriciabad.app.gradecalc';
+const PLAY_PROMO_INTERVAL = 30 * 24 * 60 * 60 * 1000; // 30 days
 var deferredPrompt;
+
+// The Play Store app (TWA) opens the site with an android-app:// referrer, only on the first page load.
+if (document.referrer.startsWith('android-app://org.mauriciabad.app.gradecalc')) {
+  try { sessionStorage.setItem('inPlayApp', '1'); } catch (e) {}
+}
+const isInstalledApp =
+  window.matchMedia('(display-mode: standalone)').matches ||
+  (function () { try { return sessionStorage.getItem('inPlayApp') === '1'; } catch (e) { return false; } })();
+const isAndroid = /Android/i.test(navigator.userAgent);
+
+// Hide "Get it on Google Play" links inside the installed app.
+if (isInstalledApp) document.documentElement.classList.add('installed-app');
+
+if (isAndroid && !isInstalledApp) setTimeout(promotePlayStore, 10000);
+
+async function promotePlayStore() {
+  try {
+    const lastShown = parseInt(localStorage.getItem('playPromoDate')) || 0;
+    if (Date.now() - lastShown < PLAY_PROMO_INTERVAL) return;
+    if ('getInstalledRelatedApps' in navigator) {
+      const apps = await navigator.getInstalledRelatedApps();
+      if (apps.length > 0) return;
+    }
+    localStorage.setItem('playPromoDate', Date.now());
+  } catch (e) {}
+  showToast('GradeCalc está en Google Play', 'Descargar', 'openPlayStore();');
+}
+
+function openPlayStore() {
+  window.open(PLAY_STORE_URL, '_blank', 'noopener');
+}
 
 window.addEventListener('beforeinstallprompt', (e) => {
   console.log('App can be installed');
-  // e.preventDefault();
   deferredPrompt = e;
+  // On Android we promote the Play Store app instead (the PWA stays installable from Chrome's menu).
+  if (isAndroid) {
+    e.preventDefault();
+    return;
+  }
   setTimeout(() => {
     showToast('Usa GradeCalc offline', 'Instalar', 'install();');
   }, 10000);
-  return false;
 });
 
 function install() {
