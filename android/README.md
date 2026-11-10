@@ -17,9 +17,9 @@ The Gradle project is generated on every build and is **not** committed (see `.g
 
 1. `cd android && npm run bump` (or `npm run bump -- 5.0.0`). Play rejects a version code it has already seen.
 2. Commit and push to `main`.
-3. GitHub → Actions → **Android (TWA)** → *Run workflow* → choose a track (`internal` by default).
+3. GitHub → Actions → **Android (TWA)** → *Run workflow* (track `production` by default). Or: `gh workflow run android.yml -f track=production`.
    Without a Play service account it builds the signed AAB and attaches it to the run, so you can upload it by hand in Play Console.
-4. In Play Console, check the release and promote it to production.
+4. Google reviews it (usually hours to a few days). If the run fails with "Changes cannot be sent for review automatically", re-run with *manual_review_submission* checked, then click **Send for review** in Play Console → Publishing overview.
 
 ## Yearly target SDK update
 

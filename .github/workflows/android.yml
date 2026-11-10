@@ -14,8 +14,15 @@ on:
       track:
         description: 'Google Play track to upload to ("none" = only build the signed AAB)'
         type: choice
-        default: internal
+        default: production
         options: [none, internal, alpha, beta, production]
+      manual_review_submission:
+        description: >-
+          Don't send for review automatically. Needed when Play says "Changes cannot be sent for review
+          automatically" (e.g. other pending changes in Play Console); then click "Send for review" in
+          Play Console → Publishing overview.
+        type: boolean
+        default: false
 
 jobs:
   build:
@@ -77,5 +84,6 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: org.mauriciabad.app.gradecalc
           releaseFiles: android/out/*.aab
-          track: ${{ inputs.track }}
+          tracks: ${{ inputs.track }}
           status: completed
+          changesNotSentForReview: ${{ inputs.manual_review_submission }}
