@@ -88,6 +88,11 @@ Since 2026 Google requires each package name to be registered to your verified d
 (Play Console → Manage account → Android developer verification). Without it, Play rejects releases with
 "your app's package name must be registered to your verified developer identity".
 
-GradeCalc was registered in Nov 2026 with the **upload key** (`9D:1D…`). Ownership is proven with an APK signed by
-that key that contains `assets/adi-registration.properties` with the account's snippet from that page. This only
-has to be done again for a new package name or a new upload key.
+GradeCalc was registered in Nov 2026 with these keys, all of which are needed:
+
+- **Upload key** (`9D:1D…`): ownership proven with an APK signed by it that contains
+  `assets/adi-registration.properties` with the account's snippet from that page.
+- **Play app signing keys** (`E7:13…` current, `AC:35…` from 2020): just add the fingerprint and Play verifies its own keys.
+  Until Play's signing key was registered, releases kept failing even though the package showed "Registered".
+
+This only has to be repeated for a new package name or a new key (e.g. after an upload key reset or a signing key upgrade).
