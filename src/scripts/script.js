@@ -1940,6 +1940,7 @@ firebase
 
 firebase.auth().onAuthStateChanged(function (user) {
   let bntLogin = document.getElementById('loginButton');
+  document.getElementById('deleteAccountButton').hidden = !user;
   if (user) {
     // User is signed in.
 
@@ -2005,6 +2006,55 @@ function loginGoogle() {
 
 function logoutGoogle() {
   firebase.auth().signOut();
+}
+
+// Required by Google Play's account deletion policy. Also documented at /legal#eliminar-cuenta
+async function deleteAccount() {
+  const user = firebase.auth().currentUser;
+  if (!user) return;
+  if (
+    !confirm(
+      '¿Eliminar tu cuenta y todas las notas guardadas en la nube? Esta acción no se puede deshacer.'
+    )
+  )
+    return;
+
+  showLoader('Eliminando cuenta', 'login');
+  try {
+    // Subjects shared publicly stay available for other students, but without the creator's name.
+    const shared = await subjectsDB.where('creatorId', '==', user.uid).get();
+    await Promise.all(
+      shared.docs.map((doc) =>
+        doc.ref
+          .update({
+            creator: 'Anónimo',
+            creatorId: firebase.firestore.FieldValue.delete(),
+          })
+          .catch((error) => console.warn('Could not anonymize subject', error))
+      )
+    );
+
+    await db.collection('users').doc(user.uid).delete();
+
+    try {
+      await user.delete();
+    } catch (error) {
+      // Firebase requires a recent sign-in to delete the account.
+      if (error.code !== 'auth/requires-recent-login') throw error;
+      await user.reauthenticateWithPopup(provider);
+      await user.delete();
+    }
+
+    hideLoader('login');
+    window.history.back();
+    showToast('Tu cuenta y tus datos se han eliminado');
+  } catch (error) {
+    console.error(error);
+    hideLoader('login');
+    showToast(
+      'No se ha podido eliminar la cuenta. Inténtalo de nuevo o escribe a hello@mauriciabad.com'
+    );
+  }
 }
 
 // //for testing

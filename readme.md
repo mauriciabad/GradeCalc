@@ -60,6 +60,10 @@ npm run dist
 
 _100% automated_ with GitHub Actions and pages, just push to main.
 
+### Android app (Google Play)
+
+The Play Store app is a Trusted Web Activity built with Bubblewrap. See [`android/README.md`](android/README.md) for releases and the yearly target SDK update.
+
 ### Gulp commands
 
 You can use `gulp js`, `gulp css`, `gulp libs` or `gulp watch`.

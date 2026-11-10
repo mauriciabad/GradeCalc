@@ -19,15 +19,6 @@
   <meta name="msapplication-config" content="icons/browserconfig.xml">
   <meta name="theme-color" content="#1b9f64">
 
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-100348659-2"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-100348659-2');
-  </script>
   
   <style>
     body {
@@ -41,8 +32,9 @@
       padding: 1rem;
       box-sizing: border-box;
     }
-    p {
-      max-width: 20rem;
+    p, h1, h2 {
+      max-width: 32rem;
+      width: 100%;
       line-height: 1.5;
     }
     a{
@@ -52,19 +44,37 @@
   <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>Politica de privacidad</h1>
+  <h1>Política de privacidad</h1>
   <p>
-    GradeCalc almacena tus notas en el almacenamiento local de tu dispositivo, y si inicia sesión también en Google Firebase. El propio usuario es el único con acceso a sus notas.
+    GradeCalc guarda tus asignaturas y notas en el almacenamiento local de tu dispositivo.
+    Si inicias sesión con Google, también se guardan en Google Firebase para sincronizarlas entre dispositivos.
+    Solo tú tienes acceso a tus notas.
   </p>
   <p>
-    GradeCalc almacena las asignaturas creadas por los usuarios en Google Firebase, contienen el nombre del usuario creador y los otros usuarios pueden acceder a ellas.
+    Al iniciar sesión, GradeCalc recibe de Google tu nombre, tu email, tu foto de perfil y un identificador de usuario.
+    No se usan para publicidad ni se comparten con terceros.
   </p>
   <p>
-    Para cualquier consulta, petición o soporte envia un email a hello@mauriciabad.com
+    Las asignaturas que creas y compartes se guardan en Google Firebase junto con tu nombre, y otros usuarios pueden verlas y usarlas.
+  </p>
+  <p>GradeCalc no usa herramientas de analítica ni publicidad.</p>
+
+  <h2 id="eliminar-cuenta">Eliminar tu cuenta</h2>
+  <p>
+    Desde la app: pulsa tu foto de perfil (arriba a la izquierda) y luego <b>Eliminar mi cuenta</b>.
+    También puedes pedirlo enviando un email a <b>hello@mauriciabad.com</b> desde la dirección de tu cuenta de Google.
+  </p>
+  <p>
+    Se eliminan tu cuenta, tus asignaturas y tus notas guardadas en la nube.
+    Las asignaturas que hayas compartido siguen disponibles para otros estudiantes, pero sin tu nombre.
+  </p>
+
+  <h2>Contacto</h2>
+  <p>
+    Para cualquier consulta, petición o soporte envía un email a hello@mauriciabad.com
   </p>
   <p><a href="https://github.com/mauriciabad/GradeCalc">Código fuente</a></p>
 
-  
   <script>
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);

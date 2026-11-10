@@ -1,0 +1,16 @@
+version: 2
+updates:
+  # New Bubblewrap releases bring new target SDK / androidbrowserhelper versions.
+  # The "Android (TWA)" workflow builds each PR to confirm it still works.
+  - package-ecosystem: npm
+    directory: /android
+    schedule:
+      interval: weekly
+    groups:
+      bubblewrap:
+        patterns: ['@bubblewrap/*']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

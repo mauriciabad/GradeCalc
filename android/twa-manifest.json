@@ -1,0 +1,60 @@
+{
+  "packageId": "org.mauriciabad.app.gradecalc",
+  "host": "gradecalc.mauri.app",
+  "name": "GradeCalc",
+  "launcherName": "GradeCalc",
+  "display": "standalone",
+  "themeColor": "#1B9F64",
+  "themeColorDark": "#1B9F64",
+  "navigationColor": "#1B9F64",
+  "navigationColorDark": "#1B9F64",
+  "navigationDividerColor": "#1B9F64",
+  "navigationDividerColorDark": "#1B9F64",
+  "backgroundColor": "#1B9F64",
+  "enableNotifications": false,
+  "startUrl": "/index.html",
+  "iconUrl": "https://gradecalc.mauri.app/icons/android-chrome-512x512.png",
+  "maskableIconUrl": "https://gradecalc.mauri.app/icons/maskable_icon_512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./upload.keystore",
+    "alias": "gradecalc-keystore-2"
+  },
+  "appVersionName": "4.0.0",
+  "appVersionCode": 6,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://gradecalc.mauri.app/site.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://gradecalc.mauri.app/",
+  "minSdkVersion": 24,
+  "orientation": "default",
+  "fingerprints": [
+    {
+      "name": "Play app signing key (current)",
+      "value": "E7:13:EF:F6:2D:40:33:3D:0F:FE:AB:BB:15:5D:B9:13:F2:75:76:23:10:B8:B9:9D:B4:3D:72:BE:C0:85:18:98"
+    },
+    {
+      "name": "Play app signing key (2020, still on older installs)",
+      "value": "AC:35:AA:72:3C:48:0D:7E:0D:19:0D:A5:35:4C:9D:55:8E:6D:FB:97:14:E4:05:43:1C:81:C7:16:58:23:37:47"
+    },
+    {
+      "name": "Upload key, for locally built/sideloaded APKs",
+      "value": "9D:1D:24:FA:39:3D:06:91:1E:5A:E6:5E:6C:9C:A9:04:3F:E1:ED:AB:F4:B7:39:C6:91:0E:7D:60:E7:6A:21:B4"
+    }
+  ],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "4.0.0"
+}

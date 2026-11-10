@@ -689,6 +689,21 @@ input[type='number']:focus:not(:invalid) {
 .user-popup .popup-main-button {
   position: absolute;
 }
+.delete-account-button {
+  display: block;
+  margin: 0.5em 0 0;
+  padding: 0.5em 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.8em;
+  color: #cf5155;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.delete-account-button[hidden] {
+  display: none;
+}
 .user-popup {
   margin: 4em 0.5em 0.5em;
   padding-bottom: 2.5em;
