@@ -12,7 +12,7 @@ const TARGET_SDK = 37;
 // API 37 requires AGP >= 9.1.1 (https://developer.android.com/build/releases/about-agp).
 const AGP_VERSION = '9.5.1';
 // Gradle version required by that AGP (https://developer.android.com/build/releases/gradle-plugin).
-const GRADLE_VERSION = '9.6.0';
+const GRADLE_VERSION = '9.9.1';
 
 const patches = {
   'build.gradle': [
