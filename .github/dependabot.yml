@@ -1,5 +1,14 @@
 version: 2
 updates:
+  # Website build tools. The "Deploy to GitHub Pages" workflow builds and tests each PR.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      website:
+        patterns: ['*']
+
   # New Bubblewrap releases bring new target SDK / androidbrowserhelper versions.
   # The "Android (TWA)" workflow builds each PR to confirm it still works.
   - package-ecosystem: npm
