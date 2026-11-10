@@ -35,7 +35,6 @@ var isAnonymous = true;
 var uid = 0;
 
 var db = firebase.firestore();
-db.settings({ timestampsInSnapshots: true }); //remove when timestamps are updated
 var userDB = null;
 var subjectsDB = db.collection('subjects');
 
@@ -1102,6 +1101,17 @@ function ShowEasterEgg() {
   if (congratulationsVideo != undefined) {
     congratulationsVideo.setVolume(100);
     congratulationsVideo.playVideo();
+  } else if (!window.YT) {
+    // Load the YouTube API only once the iframe has loaded the real video
+    document.getElementById('congratulations').addEventListener(
+      'load',
+      () => {
+        const ytScript = document.createElement('script');
+        ytScript.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(ytScript);
+      },
+      { once: true }
+    );
   }
 }
 
@@ -1118,7 +1128,14 @@ function HideEasterEgg() {
 
 var congratulationsVideo;
 function onYouTubeIframeAPIReady() {
-  congratulationsVideo = new YT.Player('congratulations');
+  congratulationsVideo = new YT.Player('congratulations', {
+    events: {
+      onReady: (event) => {
+        event.target.setVolume(100);
+        event.target.playVideo();
+      },
+    },
+  });
 }
 function congratulate() {
   if (hasPassedEverything()) {
@@ -1931,13 +1948,6 @@ provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
 
 firebase.auth().useDeviceLanguage();
 
-firebase
-  .auth()
-  .getRedirectResult()
-  .catch(function (error) {
-    console.error(error);
-  });
-
 firebase.auth().onAuthStateChanged(function (user) {
   let bntLogin = document.getElementById('loginButton');
   document.getElementById('deleteAccountButton').hidden = !user;
@@ -2000,7 +2010,18 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 function loginGoogle() {
   showLoader('Redireccionando', 'login');
-  firebase.auth().signInWithRedirect(provider);
+  // Popup instead of redirect: the redirect flow silently fails in browsers that
+  // partition third-party storage, because authDomain (firebaseapp.com) != this domain.
+  firebase
+    .auth()
+    .signInWithPopup(provider)
+    .catch((error) => {
+      if (
+        error.code !== 'auth/popup-closed-by-user' &&
+        error.code !== 'auth/cancelled-popup-request'
+      )
+        console.error(error);
+    });
   hideLoader('login');
 }
 
