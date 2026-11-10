@@ -1536,3 +1536,7 @@ input[type='number']:focus:not(:invalid) {
 } */
 
 /* ----------------- Next section -------------------*/
+
+.installed-app .play-store-link {
+  display: none;
+}

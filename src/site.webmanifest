@@ -1,6 +1,15 @@
 {
+    "id": "/index.html",
     "name": "GradeCalc",
     "short_name": "GradeCalc",
+    "description": "Calcula la nota que necesitas en cada examen para aprobar tus asignaturas. Guarda tus notas en el dispositivo o en la nube y comparte las asignaturas que crees.",
+    "lang": "es",
+    "dir": "ltr",
+    "categories": [
+        "education",
+        "productivity",
+        "utilities"
+    ],
     "icons": [
         {
             "src": "/icons/android-chrome-192x192.png",
@@ -28,15 +37,51 @@
         },
         {
             "src": "/icons/safari-pinned-tab.svg",
-            "type": "image/svg",
+            "type": "image/svg+xml",
             "purpose": "monochrome"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/screenshots/dashboard.webp",
+            "sizes": "750x1334",
+            "type": "image/webp",
+            "form_factor": "narrow",
+            "label": "Tus asignaturas con la nota que necesitas para aprobar"
+        },
+        {
+            "src": "/screenshots/edit-subject.webp",
+            "sizes": "750x1334",
+            "type": "image/webp",
+            "form_factor": "narrow",
+            "label": "Configura la evaluación de cada asignatura"
+        },
+        {
+            "src": "/screenshots/search-subjects.webp",
+            "sizes": "750x1334",
+            "type": "image/webp",
+            "form_factor": "narrow",
+            "label": "Busca asignaturas creadas por otros estudiantes"
+        },
+        {
+            "src": "/screenshots/account.webp",
+            "sizes": "750x1334",
+            "type": "image/webp",
+            "form_factor": "narrow",
+            "label": "Inicia sesión con Google para guardar tus notas en la nube"
+        },
+        {
+            "src": "/screenshots/all-passed.webp",
+            "sizes": "750x1334",
+            "type": "image/webp",
+            "form_factor": "narrow",
+            "label": "Celébralo cuando lo apruebes todo"
         }
     ],
     "theme_color": "#1b9f64",
     "background_color": "#1b9f64",
     "start_url": "/index.html",
     "display": "standalone",
-    "prefer_related_applications": true,
     "related_applications": [
         {
             "platform": "play",
