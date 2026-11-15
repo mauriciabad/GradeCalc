@@ -36,6 +36,8 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: dist
+          # Needed for .well-known/assetlinks.json (Play Store app verification).
+          include-hidden-files: true
 
   deploy:
     if: github.event_name != 'pull_request'
